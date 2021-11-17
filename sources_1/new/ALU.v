@@ -24,12 +24,14 @@ module ALU
 #(
   //PARAMETERS
   parameter     SIZEDATA = 8,
-                SIZEOP = 6
+                SIZEOP = 6,
+                SIZESA = 5
 )
 (
   //INPUTS
   input signed  [SIZEDATA - 1:0]   i_datoa,
   input signed  [SIZEDATA - 1:0]   i_datob,
+  input         [SIZESA - 1:0]     i_shamt,
   input         [SIZEOP - 1:0]     i_opcode,
   //OUTPUTS
   output reg    [SIZEDATA - 1:0]   o_result
@@ -64,9 +66,9 @@ module ALU
   always@(*)
     begin
       case(i_opcode)
-        SLL: o_result = i_datoa << i_datob;
-        SRL: o_result = i_datoa >> i_datob;
-        SRA: o_result = i_datoa >>> i_datob;
+        SLL: o_result = i_datob << i_shamt;
+        SRL: o_result = i_datob >> i_shamt;
+        SRA: o_result = i_datob >>> i_shamt;
         SLLV: o_result = i_datoa << i_datob;
         SRLV: o_result = i_datoa >> i_datob;
         SRAV: o_result = i_datoa >>> i_datob;
@@ -81,7 +83,7 @@ module ALU
         ANDI:  o_result = i_datoa & i_datob;
         ORI: o_result = i_datoa | i_datob;
         XORI: o_result = i_datoa ^ i_datob;
-        LUI: o_result = i_datoa << i_datob;
+        LUI: o_result = i_datob << 16;
         SLTI: o_result = i_datoa < i_datob;
         default: o_result = 0;
       endcase
