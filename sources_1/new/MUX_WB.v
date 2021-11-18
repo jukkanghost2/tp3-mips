@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 11/16/2021 06:52:29 PM
+// Create Date: 11/17/2021 07:34:11 PM
 // Design Name: 
-// Module Name: MUX_2_1_EX
+// Module Name: MUX_WB
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,16 +20,17 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module MUX_2_1_EX
+module MUX_WB
     #(
         parameter DATA_WIDTH = 32
     )
     (
-        input [DATA_WIDTH - 1 : 0]  i_regB,
-        input [DATA_WIDTH - 1 : 0]  i_extendido,
-        input                       i_alusrc,
-        output [DATA_WIDTH - 1 : 0] o_datoBAlu
+        input [DATA_WIDTH - 1 : 0]  i_address,
+        input [DATA_WIDTH - 1 : 0]  i_dataread,
+        input                       i_memtoreg,
+        output [DATA_WIDTH - 1 : 0] o_mem_or_reg
     );
 
-    assign o_datoBAlu = i_alusrc ? i_extendido : i_regB;
+    assign o_mem_or_reg = i_memtoreg ? i_address : i_dataread;
+    
 endmodule

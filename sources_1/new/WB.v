@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 11/16/2021 10:14:09 AM
+// Create Date: 11/18/2021 12:28:14 AM
 // Design Name: 
-// Module Name: MEM_INSTRUCCIONES
+// Module Name: WB
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,25 +20,29 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module MEM_INSTRUCCIONES
+module WB
     #(  //PARAMETERS
         parameter DATA_WIDTH = 32
     )
     (   //INPUTS
         input i_clock,
-        input [DATA_WIDTH - 1:0] i_pc,
+        input i_reset,
+        input [DATA_WIDTH - 1:0] i_dataread,
+        input [DATA_WIDTH - 1:0] i_address,
+        input i_memtoreg,
         //OUTPUTS
-        output [DATA_WIDTH - 1:0] o_instruccion
+        output [DATA_WIDTH - 1:0] o_mem_or_reg
     );
-    //BLOQUE DE MEMORIA
-    reg [DATA_WIDTH - 1:0] memoria_instrucciones [DATA_WIDTH - 1:0];
-    reg [DATA_WIDTH - 1:0] instr;
 
-    assign o_instruccion = instr;
-    
-    always @(posedge i_clock) begin
-        instr <= memoria_instrucciones[i_pc];
-    end
+     MUX_WB 
+    #( 
+     .DATA_WIDTH    (DATA_WIDTH)
+     )
+     mux_wb (
+     .i_address   (i_address),
+     .i_dataread       (i_dataread),
+     .i_memtoreg       (i_memtoreg),
+     .o_mem_or_reg       (o_mem_or_reg)
+     );
 
-    
 endmodule

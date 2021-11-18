@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 11/16/2021 05:11:28 PM
+// Create Date: 11/17/2021 07:05:49 PM
 // Design Name: 
-// Module Name: ID_EX
+// Module Name: EX_MEM
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,59 +20,44 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module ID_EX
+module EX_MEM
     #(  //PARAMETERS
         parameter DATA_WIDTH = 32
     )
     (   //INPUTS
         input i_clock,
         input i_reset,
-        input [DATA_WIDTH - 1:0] i_regA,
+        input [DATA_WIDTH - 1:0] i_aluresult,
         input [DATA_WIDTH - 1:0] i_regB,
-        input [DATA_WIDTH - 1:0] i_extendido,
-        input [4:0] i_rt,
-        input [4:0] i_rd,
-        input [3:0] i_ex,
+        input [4:0] i_rd_rt,
         input [2:0] i_mem,
         input [1:0] i_wb,
         //OUTPUTS
-        output [DATA_WIDTH - 1:0] o_regA,
+        output [DATA_WIDTH - 1:0] o_aluresult,
         output [DATA_WIDTH - 1:0] o_regB,
-        output [DATA_WIDTH - 1:0] o_extendido,
-        output [4:0] o_rt,
-        output [4:0] o_rd,
-        output [3:0] o_ex,
+        output [4:0] o_rd_rt,
         output [2:0] o_mem,
         output [1:0] o_wb
     );
 
-    reg [DATA_WIDTH - 1:0] regA;
+    reg [DATA_WIDTH - 1:0] aluresult;
     reg [DATA_WIDTH - 1:0] regB;
-    reg [DATA_WIDTH - 1:0] extendido;
-    reg [4:0] rt;
-    reg [4:0] rd;
-    reg [3:0] ex;
+    reg [4:0] rd_rt;
     reg [2:0] mem;
     reg [1:0] wb;
 
-    assign o_regA = regA;
+    assign o_aluresult = aluresult;
     assign o_regB = regB;
-    assign o_extendido = extendido;
-    assign o_rt = rt;
-    assign o_rd = rd;
-    assign o_ex = ex;
+    assign o_rd_rt = rd_rt;
     assign o_mem = mem;
     assign o_wb = wb;
-    
+
     always @(posedge i_clock) begin
-        regA <= i_regA;
+        aluresult <= i_aluresult;
         regB <= i_regB;
-        extendido <= i_extendido;
-        rt <= i_rt;
-        rd <= i_rd;
-        ex <= i_ex;
+        rd_rt <= o_rd_rt;
         mem <= i_mem;
         wb <= i_wb;
     end
-
+    
 endmodule

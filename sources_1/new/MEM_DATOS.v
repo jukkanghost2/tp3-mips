@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 11/16/2021 10:14:09 AM
+// Create Date: 11/17/2021 07:18:09 PM
 // Design Name: 
-// Module Name: MEM_INSTRUCCIONES
+// Module Name: MEM_DATOS
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,25 +20,33 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module MEM_INSTRUCCIONES
+module MEM_DATOS
     #(  //PARAMETERS
         parameter DATA_WIDTH = 32
     )
     (   //INPUTS
         input i_clock,
-        input [DATA_WIDTH - 1:0] i_pc,
+        input [DATA_WIDTH - 1:0] i_address,
+        input [DATA_WIDTH - 1:0] i_datawrite,
+        input i_memread,
+        input i_memwrite,
         //OUTPUTS
-        output [DATA_WIDTH - 1:0] o_instruccion
+        output [DATA_WIDTH - 1:0] o_dataread
     );
     //BLOQUE DE MEMORIA
-    reg [DATA_WIDTH - 1:0] memoria_instrucciones [DATA_WIDTH - 1:0];
-    reg [DATA_WIDTH - 1:0] instr;
+    reg [DATA_WIDTH - 1:0] memoria_datos [DATA_WIDTH - 1:0];
+    reg [DATA_WIDTH - 1:0] dataread;
 
-    assign o_instruccion = instr;
-    
+    assign o_dataread = dataread;
+
     always @(posedge i_clock) begin
-        instr <= memoria_instrucciones[i_pc];
+        if(i_memread)
+        dataread <= memoria_datos[i_address];
     end
 
+    always @(posedge i_clock) begin
+        if(i_memwrite)
+        memoria_datos[i_address] <= i_datawrite;
+    end
     
 endmodule

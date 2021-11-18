@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 11/16/2021 06:52:29 PM
+// Create Date: 11/17/2021 08:03:04 PM
 // Design Name: 
-// Module Name: MUX_2_1_EX
+// Module Name: MUX_RT_RD
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,16 +20,17 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module MUX_2_1_EX
+module MUX_RT_RD
     #(
         parameter DATA_WIDTH = 32
     )
     (
-        input [DATA_WIDTH - 1 : 0]  i_regB,
-        input [DATA_WIDTH - 1 : 0]  i_extendido,
-        input                       i_alusrc,
-        output [DATA_WIDTH - 1 : 0] o_datoBAlu
+        input [4:0]  i_rt,
+        input [4:0]  i_rd,
+        input        i_regdst,
+        output [4:0] o_rt_rd
     );
 
-    assign o_datoBAlu = i_alusrc ? i_extendido : i_regB;
+    assign o_rt_rd = i_regdst ? i_rt : i_rd;
+    
 endmodule

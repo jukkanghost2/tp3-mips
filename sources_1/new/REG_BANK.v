@@ -27,9 +27,11 @@ module REG_BANK
     (   //INPUTS
         input i_clock,
         input i_reset,
-        input i_write,
-        input [DATA_WIDTH - 1:0] i_instruccion,
+        input i_regwrite,
         input [DATA_WIDTH - 1:0] i_writedata,
+        input [4:0] i_rs,
+        input [4:0] i_rt,
+        input [4:0] i_rd,
         //OUTPUTS
         output [DATA_WIDTH - 1:0] o_regA,
         output [DATA_WIDTH - 1:0] o_regB
@@ -37,21 +39,21 @@ module REG_BANK
     //BANCO DE REGISTROS
     reg [DATA_WIDTH - 1:0] registros [DATA_WIDTH - 1:0];
 
-    reg [DATA_WIDTH - 1:0] rs;
-    reg [DATA_WIDTH - 1:0] rt;
-    reg [DATA_WIDTH - 1:0] rd;
-
+    reg [4:0] rs;
+    reg [4:0] rt;
+    reg [4:0] rd;
+    
     assign o_regA = registros[rs];
     assign o_regB = registros[rt];
     
     always @(posedge i_clock) begin
-        rs <= i_instruccion[25:21];
-        rt <= i_instruccion[20:16];
-        rd <= i_instruccion[15:11];
+        rs <= i_rs;
+        rt <= i_rt;
+        rd <= i_rd;
     end
 
     always @(posedge i_clock) begin
-        if (i_write)
+        if (i_regwrite)
         registros[rd] <= i_writedata;
     end
     

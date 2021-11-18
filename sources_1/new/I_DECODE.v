@@ -27,19 +27,25 @@ module I_DECODE
     (   //INPUTS
         input i_clock,
         input i_reset,
-        input i_write,
+        input i_regwrite,
         input [DATA_WIDTH - 1:0] i_writedata,
         input [DATA_WIDTH - 1:0] i_instruccion,
         input [DATA_WIDTH - 1:0] i_currentpc,
+        input [4:0] i_rt_rd,
         //OUTPUTS
         output [DATA_WIDTH - 1:0] o_regA,
         output [DATA_WIDTH - 1:0] o_regB,
         output [DATA_WIDTH - 1:0] o_extendido,
         output [DATA_WIDTH - 1:0] o_pcbranch,
+        output [4:0] o_rt,
+        output [4:0] o_rd,
         output [3:0] o_ex,
         output [2:0] o_mem,
         output [1:0] o_wb
     );
+
+    assign o_rt = i_instruccion[20:16];
+    assign o_rd = i_instruccion[15:11];
 
     CONTROL_PRINCIPAL 
     #( 
@@ -59,8 +65,10 @@ module I_DECODE
      reg_bank (
      .i_clock    (i_clock),
      .i_reset    (i_reset),
-     .i_write    (i_write),
-     .i_instruccion   (i_instruccion),
+     .i_regwrite    (i_regwrite),
+     .i_rs   (i_instruccion[25:21]),
+     .i_rt   (i_instruccion[20:16]),
+     .i_rd   (i_rt_rd),
      .i_writedata   (i_writedata),
      .o_regA       (o_regA),
      .o_regB       (o_regB)
