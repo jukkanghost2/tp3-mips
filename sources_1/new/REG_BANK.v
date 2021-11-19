@@ -46,6 +46,11 @@ module REG_BANK
     assign o_regA = registros[rs];
     assign o_regB = registros[rt];
     
+    initial begin
+        registros[0] = 1;
+        registros[1] = 2;
+    end
+
     always @(posedge i_clock) begin
         rs <= i_rs;
         rt <= i_rt;

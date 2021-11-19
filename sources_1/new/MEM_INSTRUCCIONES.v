@@ -27,6 +27,9 @@ module MEM_INSTRUCCIONES
     (   //INPUTS
         input i_clock,
         input [DATA_WIDTH - 1:0] i_pc,
+        input [DATA_WIDTH - 1:0] i_instruccion,
+        input [DATA_WIDTH - 1:0] i_address,
+        input i_loading,
         //OUTPUTS
         output [DATA_WIDTH - 1:0] o_instruccion
     );
@@ -37,8 +40,10 @@ module MEM_INSTRUCCIONES
     assign o_instruccion = instr;
     
     always @(posedge i_clock) begin
+        if(i_loading)
+        memoria_instrucciones[i_address] = i_instruccion;
+        else
         instr <= memoria_instrucciones[i_pc];
     end
-
-    
+  
 endmodule

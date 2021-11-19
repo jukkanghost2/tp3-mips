@@ -30,6 +30,7 @@ module EXECUTE
         input [DATA_WIDTH - 1:0] i_regA,
         input [DATA_WIDTH - 1:0] i_regB,
         input [DATA_WIDTH - 1:0] i_extendido,
+        input [SIZEOP - 1:0] i_opcode,
         input [4:0] i_rt,
         input [4:0] i_rd,
         input [3:0] i_ex,
@@ -54,7 +55,7 @@ module EXECUTE
      .i_datoa   (i_regA),
      .i_datob       (datoBAlu),
      .i_shamt       (i_extendido[10:6]),
-     .i_opcode       (alucontrol),
+     .i_alucontrol       (alucontrol),
      .o_result       (o_aluresult)
      );
 
@@ -64,6 +65,7 @@ module EXECUTE
      )
      alu_control (
      .i_aluop   (i_ex[1:0]),
+     .i_opcode   (i_opcode),
      .i_funct       (i_extendido[5:0]),
      .o_alucontrol       (alucontrol)
      );

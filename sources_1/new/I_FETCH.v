@@ -28,8 +28,11 @@ module I_FETCH
         input i_clock,
         input i_reset,
         input [1:0] i_select,
+        input [DATA_WIDTH - 1:0] i_instruccion,
+        input [DATA_WIDTH - 1:0] i_address,
         input [DATA_WIDTH - 1:0] i_pc_branch,
         input [DATA_WIDTH - 1:0] i_pc_jump,
+        input i_loading,
         //OUTPUTS
         output [DATA_WIDTH - 1:0] o_instruccion,
         output [DATA_WIDTH - 1:0] o_pc_incr
@@ -78,6 +81,9 @@ module I_FETCH
      (
      .i_clock           (i_clock),
      .i_pc              (current_pc),
+     .i_instruccion              (i_instruccion),
+     .i_address              (i_address),
+     .i_loading              (i_loading),
      .o_instruccion     (o_instruccion)
      );
 

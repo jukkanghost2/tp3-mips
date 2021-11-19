@@ -36,14 +36,25 @@ module CONTROL_PRINCIPAL
      //OPERATIONS
   //R-TYPE
   localparam [SIZEOP - 1:0]     R_TYPE = 6'b000000;
+ //I-TYPE
   localparam [SIZEOP - 1:0]     LW = 6'b100011;
   localparam [SIZEOP - 1:0]     SW = 6'b101011;
   localparam [SIZEOP - 1:0]     BEQ = 6'b000100;
+  localparam [SIZEOP - 1:0]     ADDI = 6'b001000;
+  localparam [SIZEOP - 1:0]     ANDI = 6'b001100;
+  localparam [SIZEOP - 1:0]     ORI = 6'b001101;
+  localparam [SIZEOP - 1:0]     XORI = 6'b001110;
+  localparam [SIZEOP - 1:0]     LUI = 6'b001111;
+  localparam [SIZEOP - 1:0]     SLTI = 6'b001010;
 
     reg [SIZEOP - 1:0] opcode;
     reg [3:0] ex;
     reg [2:0] mem;
     reg [1:0] wb;
+
+    assign o_ex = ex;
+    assign o_mem = mem;
+    assign o_wb = wb;
 
     always @(*) begin
         opcode = i_instruccion[31:26];
@@ -65,6 +76,36 @@ module CONTROL_PRINCIPAL
             end
             BEQ: begin
                 ex = 4'bx001;
+                mem = 3'b001;
+                wb = 2'b0x;
+            end
+            ADDI: begin
+                ex = 4'bx011;
+                mem = 3'b001;
+                wb = 2'b0x;
+            end
+            ANDI: begin
+                ex = 4'bx011;
+                mem = 3'b001;
+                wb = 2'b0x;
+            end
+            ORI: begin
+                ex = 4'bx011;
+                mem = 3'b001;
+                wb = 2'b0x;
+            end
+            XORI: begin
+                ex = 4'bx011;
+                mem = 3'b001;
+                wb = 2'b0x;
+            end
+            LUI: begin
+                ex = 4'bx011;
+                mem = 3'b001;
+                wb = 2'b0x;
+            end
+            SLTI: begin
+                ex = 4'bx011;
                 mem = 3'b001;
                 wb = 2'b0x;
             end

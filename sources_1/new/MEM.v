@@ -27,12 +27,11 @@ module MEM
     (   //INPUTS
         input i_clock,
         input i_reset,
-        input [DATA_WIDTH - 1:0] i_aluresult,
-        input [DATA_WIDTH - 1:0] i_regB,
+        input [DATA_WIDTH - 1:0] i_address,
+        input [DATA_WIDTH - 1:0] i_datawrite,
         input [2:0] i_mem,
         //OUTPUTS
-        output [DATA_WIDTH - 1:0] o_dataread,
-        output [DATA_WIDTH - 1:0] o_address
+        output [DATA_WIDTH - 1:0] o_dataread
     );
 
      MEM_DATOS 
@@ -41,8 +40,8 @@ module MEM
      )
      mem_datos (
      .i_clock   (i_clock),
-     .i_address       (i_aluresult),
-     .i_datawrite       (i_regB),
+     .i_address       (i_address),
+     .i_datawrite       (i_datawrite),
      .i_memwrite       (i_mem[1]),
      .o_dataread       (o_dataread)
      );

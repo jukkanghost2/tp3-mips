@@ -26,7 +26,8 @@ module ALU_CONTROL
     )
     (   //INPUTS
         input [1:0] i_aluop,
-        input [1:0] i_funct,
+        input [SIZEOP - 1:0] i_opcode,
+        input [SIZEOP- 1:0] i_funct,
         //OUTPUTS
         output [3:0] o_alucontrol
     );
@@ -58,64 +59,93 @@ module ALU_CONTROL
   localparam [SIZEOP - 1:0]     LUI = 6'b001111;
   localparam [SIZEOP - 1:0]     SLTI = 6'b001010;
 
-//   always @(*) begin
-//       case (i_aluop)
-//           //LW Y SW
-//           2'b00: begin
-              
-//           end
-//           //BEQ 
-//           2'b01: begin
-              
-//           end
-//           //R-TYPE 
-//           2'b10: begin
-//               case (i_funct)
-//                   SLL: begin
-                      
-//                   end 
-//                   SRL: begin
-                      
-//                   end 
-//                   SRA: begin
-                      
-//                   end 
-//                   SLLV: begin
-                      
-//                   end 
-//                   SRLV: begin
-                      
-//                   end 
-//                   SRAV: begin
-                      
-//                   end 
-//                   ADDU: begin
-                      
-//                   end 
-//                   SUBU: begin
-                      
-//                   end 
-//                   OR: begin
-                      
-//                   end 
-//                   XOR: begin
-                      
-//                   end 
-//                   AND: begin
-                      
-//                   end 
-//                   NOR: begin
-                      
-//                   end 
-//                   SLT: begin
-                      
-//                   end 
-//                   default: 
-//               endcase              
-//           end 
-//           default: 
-//       endcase
-//   end
-
+   always @(*) begin
+       case (i_aluop)
+           //LW Y SW
+           2'b00: begin
+               alucontrol = 4'b1111;          
+           end
+           //BEQ 
+           2'b01: begin
+              alucontrol = 4'b1111;  
+           end
+           //R-TYPE 
+           2'b10: begin
+               case (i_funct)
+                   SLL: begin
+                        alucontrol = 4'b0000;
+                   end 
+                   SRL: begin
+                        alucontrol = 4'b0001;                   
+                   end 
+                   SRA: begin
+                        alucontrol = 4'b0010;                   
+                   end 
+                   SLLV: begin
+                        alucontrol = 4'b0011;                   
+                   end 
+                   SRLV: begin
+                        alucontrol = 4'b0100;                   
+                   end 
+                   SRAV: begin
+                        alucontrol = 4'b0101;                   
+                   end 
+                   ADDU: begin
+                        alucontrol = 4'b0110;                   
+                   end 
+                   SUBU: begin
+                        alucontrol = 4'b0111;                   
+                   end 
+                   OR: begin
+                        alucontrol = 4'b1000;                   
+                   end 
+                   XOR: begin
+                        alucontrol = 4'b1001;                    
+                   end 
+                   AND: begin
+                        alucontrol = 4'b1010;                   
+                   end 
+                   NOR: begin
+                        alucontrol = 4'b1011;                  
+                   end 
+                   SLT: begin
+                        alucontrol = 4'b1100;                   
+                   end 
+                   default: begin
+                        alucontrol = 4'b1111; // invalido
+                   end
+               endcase              
+           end 
+           //I_TYPE
+           2'b11: begin
+               case (i_opcode)
+                    ADDI: begin
+                        alucontrol = 4'b0110;                   
+                   end 
+                    ANDI: begin
+                        alucontrol = 4'b1010;                   
+                   end 
+                    ORI: begin
+                        alucontrol = 4'b1000;                   
+                   end 
+                    XORI: begin
+                        alucontrol = 4'b1001;                   
+                   end 
+                   LUI: begin
+                        alucontrol = 4'b1101;                  
+                   end 
+                   SLTI: begin
+                        alucontrol = 4'b1100;      
+                    end
+                    default: begin
+                         alucontrol = 4'b1111; //invalido
+                    end
+               endcase
+           end
+          default: begin
+               alucontrol = 4'b1111;
+          end
+          endcase
+     end
 
 endmodule

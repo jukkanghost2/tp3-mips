@@ -22,7 +22,8 @@
 
 module I_DECODE
    #(  //PARAMETERS
-        parameter DATA_WIDTH = 32
+        parameter DATA_WIDTH = 32,
+        parameter SIZEOP = 6
     )
     (   //INPUTS
         input i_clock,
@@ -37,6 +38,7 @@ module I_DECODE
         output [DATA_WIDTH - 1:0] o_regB,
         output [DATA_WIDTH - 1:0] o_extendido,
         output [DATA_WIDTH - 1:0] o_pcbranch,
+        output [SIZEOP - 1:0] o_opcode,
         output [4:0] o_rt,
         output [4:0] o_rd,
         output [3:0] o_ex,
@@ -44,12 +46,14 @@ module I_DECODE
         output [1:0] o_wb
     );
 
+    assign o_opcode = i_instruccion[31:26];
     assign o_rt = i_instruccion[20:16];
     assign o_rd = i_instruccion[15:11];
 
     CONTROL_PRINCIPAL 
     #( 
-     .DATA_WIDTH    (DATA_WIDTH)
+     .DATA_WIDTH    (DATA_WIDTH),
+     .SIZEOP    (SIZEOP)
      )
      control_principal (
      .i_instruccion   (i_instruccion),

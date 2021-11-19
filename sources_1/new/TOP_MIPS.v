@@ -30,6 +30,9 @@ module TOP_MIPS
     (   //INPUTS
          input i_clock,
         input i_reset,
+        input [DATA_WIDTH - 1:0] i_instruccion,
+        input [DATA_WIDTH - 1:0] i_address,
+        input i_loading,
         //OUTPUTS
         output [DATA_WIDTH - 1:0] o_result_wb
     );
@@ -51,6 +54,7 @@ module TOP_MIPS
     wire [DATA_WIDTH - 1:0] regA_id_ex;
     wire [DATA_WIDTH - 1:0] regB_id_ex;
     wire [DATA_WIDTH - 1:0] extendido_id_ex;
+    wire [SIZEOP - 1:0] opcode_id_ex;
     wire [4:0] rt_id_ex;
     wire [4:0] rd_id_ex;
     wire [3:0] ex_id_ex;
@@ -60,6 +64,7 @@ module TOP_MIPS
     wire [DATA_WIDTH - 1:0] regA_execute;
     wire [DATA_WIDTH - 1:0] regB_execute;
     wire [DATA_WIDTH - 1:0] extendido_execute;
+    wire [SIZEOP - 1:0] opcode_execute;
     wire [4:0] rt_execute;
     wire [4:0] rd_execute;
     wire [3:0] ex_execute;
@@ -91,6 +96,9 @@ module TOP_MIPS
      i_fetch (
      .i_clock   (i_clock),
      .i_reset       (i_reset),
+     .i_instruccion       (i_instruccion),
+     .i_address       (i_address),
+     .i_loading              (i_loading),
      .i_select       (i_select), // branch predictor
      .i_pc_branch       (pc_branch_i_fetch),
      .i_pc_jump       (i_pc_jump),
@@ -127,6 +135,7 @@ module TOP_MIPS
      .o_regB       (regB_id_ex),
      .o_extendido       (extendido_id_ex),
      .o_pcbranch       (pc_branch_i_fetch),
+     .o_opcode      (opcode_id_ex),
      .o_rt       (rt_id_ex),
      .o_rd       (rd_id_ex),
      .o_ex       (ex_id_ex),
@@ -143,7 +152,8 @@ module TOP_MIPS
      .i_reset       (i_reset),
      .i_regA       (regA_id_ex), 
      .i_regB       (regB_id_ex), 
-     .i_extendido       (extendido_id_ex), 
+     .i_extendido       (extendido_id_ex),
+     .i_opcode      (opcode_id_ex), 
      .i_rt       (rt_id_ex), 
      .i_rd       (rd_id_ex), 
      .i_ex       (ex_id_ex),
@@ -152,6 +162,7 @@ module TOP_MIPS
      .o_regA       (regA_execute),
      .o_regB       (regB_execute),
      .o_extendido       (extendido_execute),
+     .o_opcode       (opcode_execute),
      .o_rt       (rt_execute),
      .o_rd       (rd_execute),
      .o_ex       (ex_execute),
@@ -168,7 +179,8 @@ module TOP_MIPS
      execute (
      .i_regA   (regA_execute),
      .i_regB       (regB_execute),
-     .i_extendido       (extendido_execute), 
+     .i_extendido       (extendido_execute),
+     .i_opcode     (opcode_execute), 
      .i_rt       (rt_execute), 
      .i_rd       (rd_execute), 
      .i_ex       (ex_execute), 
@@ -204,11 +216,10 @@ module TOP_MIPS
      mem (
      .i_clock   (i_clock),
      .i_reset       (i_reset),
-     .i_aluresult       (aluresult_mem), 
-     .i_regB       (regB_mem), 
+     .i_address       (aluresult_mem), 
+     .i_datawrite       (regB_mem), 
      .i_mem       (mem_mem), 
-     .o_dataread       (dataread_mem_wb),
-     .o_address       (address_mem_wb)
+     .o_dataread       (dataread_mem_wb)
      );
 
      MEM_WB
@@ -219,7 +230,7 @@ module TOP_MIPS
      .i_clock   (i_clock),
      .i_reset       (i_reset),
      .i_dataread       (dataread_mem_wb), 
-     .i_address       (address_mem_wb), 
+     .i_address       (aluresult_mem), 
      .i_rd_rt       (rd_rt_mem_wb), 
      .i_wb       (wb_mem_wb), 
      .o_dataread       (dataread_wb), 
