@@ -25,11 +25,11 @@ module MUX_2_1_EX
         parameter DATA_WIDTH = 32
     )
     (
-        input [DATA_WIDTH - 1 : 0]  i_regB,
+        input [DATA_WIDTH - 1 : 0]  i_mux_ex_regb_result_mem,
         input [DATA_WIDTH - 1 : 0]  i_extendido,
         input                       i_alusrc,
         output [DATA_WIDTH - 1 : 0] o_datoBAlu
     );
 
-    assign o_datoBAlu = i_alusrc ? i_extendido : i_regB;
+    assign o_datoBAlu = i_alusrc ? i_extendido : i_mux_ex_regb_result_mem;
 endmodule

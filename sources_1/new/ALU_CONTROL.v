@@ -58,6 +58,9 @@ module ALU_CONTROL
   localparam [SIZEOP - 1:0]     XORI = 6'b001110;
   localparam [SIZEOP - 1:0]     LUI = 6'b001111;
   localparam [SIZEOP - 1:0]     SLTI = 6'b001010;
+  //NOP y HALT
+  localparam [SIZEOP - 1:0]     NOP = 6'b111000;
+  localparam [SIZEOP - 1:0]     HALT = 6'b111111;
 
    always @(*) begin
        case (i_aluop)
@@ -136,6 +139,12 @@ module ALU_CONTROL
                    end 
                    SLTI: begin
                         alucontrol = 4'b1100;      
+                    end
+                     NOP: begin
+                        alucontrol = 4'b1111;      
+                    end
+                     HALT: begin
+                        alucontrol = 4'b1111;      
                     end
                     default: begin
                          alucontrol = 4'b1111; //invalido

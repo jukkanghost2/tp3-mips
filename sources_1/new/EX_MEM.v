@@ -55,7 +55,7 @@ module EX_MEM
     always @(posedge i_clock) begin
         aluresult <= i_aluresult;
         regB <= i_regB;
-        rd_rt <= o_rd_rt;
+        rd_rt <= i_rd_rt;
         mem <= i_mem;
         wb <= i_wb;
     end

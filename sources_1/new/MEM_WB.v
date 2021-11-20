@@ -51,7 +51,7 @@ module MEM_WB
     always @(posedge i_clock) begin
         dataread <= i_dataread;
         address <= i_address;
-        rd_rt <= o_rd_rt;
+        rd_rt <= i_rd_rt;
         wb <= i_wb;
     end
     

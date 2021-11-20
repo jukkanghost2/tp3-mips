@@ -46,6 +46,10 @@ module CONTROL_PRINCIPAL
   localparam [SIZEOP - 1:0]     XORI = 6'b001110;
   localparam [SIZEOP - 1:0]     LUI = 6'b001111;
   localparam [SIZEOP - 1:0]     SLTI = 6'b001010;
+  //NOP y HALT
+  localparam [SIZEOP - 1:0]     NOP = 6'b111000;
+  localparam [SIZEOP - 1:0]     HALT = 6'b111111;
+
 
     reg [SIZEOP - 1:0] opcode;
     reg [3:0] ex;
@@ -108,6 +112,16 @@ module CONTROL_PRINCIPAL
                 ex = 4'bx011;
                 mem = 3'b001;
                 wb = 2'b0x;
+            end
+            NOP: begin
+                ex = 4'b0011;
+                mem = 3'b000;
+                wb = 2'b00;
+            end
+            HALT: begin
+                ex = 4'b0011;
+                mem = 3'b000;
+                wb = 2'b00;
             end
             default: begin
                 ex = 4'b0000;

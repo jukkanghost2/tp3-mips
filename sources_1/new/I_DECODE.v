@@ -39,6 +39,7 @@ module I_DECODE
         output [DATA_WIDTH - 1:0] o_extendido,
         output [DATA_WIDTH - 1:0] o_pcbranch,
         output [SIZEOP - 1:0] o_opcode,
+        output [4:0] o_rs,
         output [4:0] o_rt,
         output [4:0] o_rd,
         output [3:0] o_ex,
@@ -47,6 +48,7 @@ module I_DECODE
     );
 
     assign o_opcode = i_instruccion[31:26];
+    assign o_rs = i_instruccion[25:21];
     assign o_rt = i_instruccion[20:16];
     assign o_rd = i_instruccion[15:11];
 

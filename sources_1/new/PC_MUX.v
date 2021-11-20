@@ -42,7 +42,7 @@ module PC_MUX
             2'b00: out = i_pc_branch;
             2'b01: out = i_pc_jump;
             2'b10: out = i_pc_incr;
-            default: out = 0;
+            default: out = i_pc_incr;
         endcase
     end
     

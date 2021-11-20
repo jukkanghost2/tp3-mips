@@ -55,6 +55,7 @@ module TOP_MIPS
     wire [DATA_WIDTH - 1:0] regB_id_ex;
     wire [DATA_WIDTH - 1:0] extendido_id_ex;
     wire [SIZEOP - 1:0] opcode_id_ex;
+    wire [4:0] rs_id_ex;
     wire [4:0] rt_id_ex;
     wire [4:0] rd_id_ex;
     wire [3:0] ex_id_ex;
@@ -88,6 +89,11 @@ module TOP_MIPS
     wire [DATA_WIDTH - 1:0] dataread_wb;
     wire [DATA_WIDTH - 1:0] address_wb;
     wire [DATA_WIDTH - 1:0] mem_or_reg_wb;
+    // ID_EX - CORTOCIRCUITO
+    wire [4:0] rs_cortocircuito;
+    // CORTOCIRCUITO - EXECUTE
+    wire [1:0] cortocircuitoA;
+    wire [1:0] cortocircuitoB;
 
       I_FETCH 
     #( 
@@ -136,6 +142,7 @@ module TOP_MIPS
      .o_extendido       (extendido_id_ex),
      .o_pcbranch       (pc_branch_i_fetch),
      .o_opcode      (opcode_id_ex),
+     .o_rs       (rs_id_ex),
      .o_rt       (rt_id_ex),
      .o_rd       (rd_id_ex),
      .o_ex       (ex_id_ex),
@@ -154,6 +161,7 @@ module TOP_MIPS
      .i_regB       (regB_id_ex), 
      .i_extendido       (extendido_id_ex),
      .i_opcode      (opcode_id_ex), 
+     .i_rs       (rs_id_ex), 
      .i_rt       (rt_id_ex), 
      .i_rd       (rd_id_ex), 
      .i_ex       (ex_id_ex),
@@ -163,6 +171,7 @@ module TOP_MIPS
      .o_regB       (regB_execute),
      .o_extendido       (extendido_execute),
      .o_opcode       (opcode_execute),
+     .o_rs       (rs_cortocircuito),
      .o_rt       (rt_execute),
      .o_rd       (rd_execute),
      .o_ex       (ex_execute),
@@ -180,10 +189,14 @@ module TOP_MIPS
      .i_regA   (regA_execute),
      .i_regB       (regB_execute),
      .i_extendido       (extendido_execute),
+     .i_aluresult       (aluresult_mem),
+     .i_reg_mem       (mem_or_reg_i_decode),
      .i_opcode     (opcode_execute), 
      .i_rt       (rt_execute), 
      .i_rd       (rd_execute), 
      .i_ex       (ex_execute), 
+     .i_cortocircuitoA       (cortocircuitoA), 
+     .i_cortocircuitoB       (cortocircuitoB), 
      .o_aluresult       (aluresult_ex_mem),
      .o_regB       (regB_ex_mem),
      .o_rd_rt       (rd_rt_ex_mem)
@@ -250,6 +263,21 @@ module TOP_MIPS
      .i_address       (address_wb), 
      .i_memtoreg       (wb_i_decode_wb[0]), 
      .o_mem_or_reg       (mem_or_reg_i_decode)
+     );
+
+      CORTOCIRCUITO
+    #( 
+     .DATA_WIDTH    (DATA_WIDTH)
+     )
+     cortocircuito (
+     .i_rd_rt_mem       (rd_rt_mem_wb), 
+     .i_rd_rt_wb       (rt_rd_i_decode), 
+     .i_rs       (rs_cortocircuito), 
+     .i_rt       (rt_execute), 
+     .i_wb_mem       (wb_mem_wb), 
+     .i_wb_wb       (wb_i_decode_wb), 
+     .o_cortocircuitoA       (cortocircuitoA), 
+     .o_cortocircuitoB       (cortocircuitoB)
      );
     
 

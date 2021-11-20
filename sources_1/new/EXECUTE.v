@@ -30,17 +30,23 @@ module EXECUTE
         input [DATA_WIDTH - 1:0] i_regA,
         input [DATA_WIDTH - 1:0] i_regB,
         input [DATA_WIDTH - 1:0] i_extendido,
+        input [DATA_WIDTH - 1:0] i_aluresult,
+        input [DATA_WIDTH - 1:0] i_reg_mem,
         input [SIZEOP - 1:0] i_opcode,
         input [4:0] i_rt,
         input [4:0] i_rd,
         input [3:0] i_ex,
+        input [1:0] i_cortocircuitoA,
+        input [1:0] i_cortocircuitoB,
         //OUTPUTS
         output [DATA_WIDTH - 1:0] o_aluresult,
         output [DATA_WIDTH - 1:0] o_regB,
         output [4:0] o_rd_rt
     );
 
+    wire [DATA_WIDTH - 1:0] datoAAlu;
     wire [DATA_WIDTH - 1:0] datoBAlu;
+    wire [DATA_WIDTH - 1:0] mux_ex_regb_result;
     wire [3:0] alucontrol;
     
     assign o_regB = i_regB;
@@ -52,7 +58,7 @@ module EXECUTE
      .SIZESA    (SIZESA)
      )
      alu (
-     .i_datoa   (i_regA),
+     .i_datoa   (datoAAlu),
      .i_datob       (datoBAlu),
      .i_shamt       (i_extendido[10:6]),
      .i_alucontrol       (alucontrol),
@@ -86,10 +92,34 @@ module EXECUTE
      .DATA_WIDTH    (DATA_WIDTH)
      )
      mux_2_1_ex (
-     .i_regB   (i_regB),
-     .i_extendido       (i_extendido),
+     .i_mux_ex_regb_result_mem   (mux_ex_regb_result),
+     .i_extendido       (i_extendido[15:0]),
      .i_alusrc       (i_ex[2]),
      .o_datoBAlu       (datoBAlu)
+     );
+
+      MUX_EX_REGA_RESULT_MEM
+    #( 
+     .DATA_WIDTH    (DATA_WIDTH)
+     )
+     mux_ex_rega_result_mem (
+     .i_regA   (i_regA),
+     .i_datawrite       (i_reg_mem),
+     .i_aluresult       (i_aluresult),
+     .i_cortocircuitoA       (i_cortocircuitoA),
+     .o_datoAAlu       (datoAAlu)
+     );
+     
+      MUX_EX_REGB_RESULT_MEM
+    #( 
+     .DATA_WIDTH    (DATA_WIDTH)
+     )
+     mux_ex_regb_result_mem (
+     .i_regB   (i_regB),
+     .i_datawrite       (i_reg_mem),
+     .i_aluresult       (i_aluresult),
+     .i_cortocircuitoB       (i_cortocircuitoB),
+     .o_datoBAlu       (mux_ex_regb_result)
      );
     
 endmodule

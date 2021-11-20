@@ -31,6 +31,6 @@ module MUX_RT_RD
         output [4:0] o_rt_rd
     );
 
-    assign o_rt_rd = i_regdst ? i_rt : i_rd;
+    assign o_rt_rd = i_regdst ? i_rd : i_rt;
     
 endmodule
