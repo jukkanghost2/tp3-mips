@@ -58,13 +58,51 @@ module top_tb;
         i_address = 32'b0;
         i_loading = 1'b0;
         #10000
+        // ADDU R1 CON R2 => R3
         i_loading = 1'b1;
-        i_instruccion = 32'b00000000000000010001000000100001;
+        i_instruccion = 32'b00000000001000100001100000100001;
+        #10000
+        // ADDU R3 CON R2 => R1
+        i_address = 32'b1;
+        i_instruccion = 32'b00000000011000100000100000100001;
+        #10000
+        // ADDI R1 CON INMEDIATO 3 => R4
+        i_address = 32'b10;
+        i_instruccion = 32'b00100000001001000000000000000011;
+        #10000
+        // STORE (R1 + 0) <= R2
+        i_address = 32'b11;
+        i_instruccion = 32'b10101100001000100000000000000000;
+        #10000
+        // NOP
+        i_address = 32'b100;
+        i_instruccion = 32'b11100000000000000000000000000000;
+        #10000
+        // LOAD (R1 + 0) => R7
+        i_address = 32'b101;
+        i_instruccion = 32'b10001100001001110000000000000000;
+        #10000
+        // BNE 
+        i_address = 32'b110;
+        i_instruccion = 32'b00010100001011110000000000001000;
+        #10000
+        i_address = 32'b111;
+        i_instruccion = 32'b11100000000000000000000000000000;
+        #10000
+        i_address = 32'b1000;
+        i_instruccion = 32'b11111100000000000000000000000000;
+        #10000
+        i_address = 32'b1001;
+        i_instruccion = 32'b0;
         i_reset = 1'b1;
         #10000
         i_reset = 1'b0;
         i_loading = 1'b0;
-        #1000000000
+        #100000
+        i_reset = 1'b1;
+        #400
+        i_reset = 1'b0;
+        #100000
         $finish;
     end
 
