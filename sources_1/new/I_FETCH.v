@@ -39,8 +39,10 @@ module I_FETCH
     );
 
     wire [DATA_WIDTH - 1:0] current_pc;
-    wire [DATA_WIDTH - 1:0] o_pc_mux;
-    
+    wire [DATA_WIDTH - 1:0] pc_mux_wire;
+    wire [DATA_WIDTH - 1:0] instr_mux;
+    wire haltsignal_pc;
+
     PC 
     #( 
      .DATA_WIDTH    (DATA_WIDTH)
@@ -48,7 +50,8 @@ module I_FETCH
      pc (
      .i_clock    (i_clock),
      .i_reset    (i_reset),
-     .i_pc_mux   (o_pc_mux),
+     .i_pc_mux   (pc_mux_wire),
+     .i_haltsignal   (haltsignal_pc),
      .o_pc       (current_pc)
      );
 
@@ -61,7 +64,7 @@ module I_FETCH
      .i_pc_jump      (i_pc_jump),
      .i_pc_incr      (o_pc_incr),
      .i_select       (i_select),   
-     .o_pc           (o_pc_mux)
+     .o_pc           (pc_mux_wire)
      );
 
     PC_ADDER 
@@ -80,11 +83,23 @@ module I_FETCH
      mem_instruccions
      (
      .i_clock           (i_clock),
+     .i_reset           (i_reset),
      .i_pc              (current_pc),
      .i_instruccion              (i_instruccion),
      .i_address              (i_address),
      .i_loading              (i_loading),
-     .o_instruccion     (o_instruccion)
+     .o_instruccion     (instr_mux),
+     .o_haltsignal     (haltsignal_pc)
+     );
+
+     MUX_INSTR_NOP
+     #( 
+     .DATA_WIDTH    (DATA_WIDTH)
+     )
+     mux_instr_nop (
+     .i_instruccion          (instr_mux),
+     .i_branch     (i_select[0]),
+     .o_instr_nop     (o_instruccion)
      );
 
 endmodule

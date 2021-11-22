@@ -39,7 +39,7 @@ module MEM_DATOS
 
     assign o_dataread = dataread;
 
-    always @(posedge i_clock) begin
+    always @(*) begin
         if(i_memread)
         dataread <= memoria_datos[i_address];
     end

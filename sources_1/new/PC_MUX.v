@@ -39,9 +39,9 @@ module PC_MUX
 
     always @(*) begin
         case(i_select)
-            2'b00: out = i_pc_branch;
-            2'b01: out = i_pc_jump;
-            2'b10: out = i_pc_incr;
+            2'b00: out = i_pc_incr;
+            2'b01: out = i_pc_branch;
+            2'b10: out = i_pc_jump;
             default: out = i_pc_incr;
         endcase
     end

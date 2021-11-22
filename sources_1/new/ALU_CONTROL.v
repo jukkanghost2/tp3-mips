@@ -66,7 +66,7 @@ module ALU_CONTROL
        case (i_aluop)
            //LW Y SW
            2'b00: begin
-               alucontrol = 4'b1111;          
+               alucontrol = 4'b0110;          
            end
            //BEQ 
            2'b01: begin

@@ -44,6 +44,7 @@ module MEM
      .i_address       (i_address),
      .i_datawrite       (i_datawrite),
      .i_memwrite       (i_mem[1]),
+     .i_memread       (i_mem[2]),
      .o_dataread       (o_dataread)
      );
     

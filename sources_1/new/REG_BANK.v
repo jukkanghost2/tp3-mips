@@ -41,7 +41,6 @@ module REG_BANK
 
     reg [4:0] rs;
     reg [4:0] rt;
-    reg [4:0] rd;
     
     assign o_regA = registros[rs];
     assign o_regB = registros[rt];
@@ -54,12 +53,11 @@ module REG_BANK
     always @(*) begin
         rs <= i_rs;
         rt <= i_rt;
-        rd <= i_rd;
     end
 
     always @(posedge i_clock) begin
         if (i_regwrite)
-        registros[rd] <= i_writedata;
+        registros[i_rd] <= i_writedata;
     end
     
 endmodule

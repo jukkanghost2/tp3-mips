@@ -44,13 +44,16 @@ module I_DECODE
         output [4:0] o_rd,
         output [3:0] o_ex,
         output [2:0] o_mem,
-        output [1:0] o_wb
+        output [1:0] o_wb,
+        output o_branch
     );
 
     assign o_opcode = i_instruccion[31:26];
     assign o_rs = i_instruccion[25:21];
     assign o_rt = i_instruccion[20:16];
     assign o_rd = i_instruccion[15:11];
+
+    wire beq_or_bne;
 
     CONTROL_PRINCIPAL 
     #( 
@@ -61,7 +64,8 @@ module I_DECODE
      .i_instruccion   (i_instruccion),
      .o_ex       (o_ex),
      .o_mem       (o_mem),
-     .o_wb       (o_wb)
+     .o_wb       (o_wb),
+     .o_beq_or_bne   (beq_or_bne)
      );
 
     REG_BANK 
@@ -97,6 +101,18 @@ module I_DECODE
      .i_currentpc          (i_currentpc),
      .i_extendido          (o_extendido),
      .o_pcbranch            (o_pcbranch)
+     );
+
+     U_BRANCH
+      #( 
+     .DATA_WIDTH    (DATA_WIDTH)
+     )
+     u_branch (
+     .i_branch          (o_mem[0]),
+     .i_regA          (o_regA),
+     .i_regB            (o_regB),
+     .i_beq_or_bne         (beq_or_bne),
+     .o_branch            (o_branch)
      );
 
 endmodule

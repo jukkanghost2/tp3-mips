@@ -93,7 +93,7 @@ module EXECUTE
      )
      mux_2_1_ex (
      .i_mux_ex_regb_result_mem   (mux_ex_regb_result),
-     .i_extendido       (i_extendido[15:0]),
+     .i_extendido       (i_extendido),
      .i_alusrc       (i_ex[2]),
      .o_datoBAlu       (datoBAlu)
      );

@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 11/16/2021 10:13:08 AM
+// Create Date: 11/21/2021 06:38:05 PM
 // Design Name: 
-// Module Name: PC
+// Module Name: MUX_INSTR_NOP
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,28 +20,19 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module PC
-    #(  //PARAMETERS
+module MUX_INSTR_NOP
+  #(  //PARAMETERS
         parameter DATA_WIDTH = 32
     )
     (   //INPUTS
-        input i_clock,
-        input i_reset,
-        input [DATA_WIDTH - 1:0] i_pc_mux,
-        input i_haltsignal,
+        input [DATA_WIDTH - 1:0] i_instruccion,
+        input i_branch,
         //OUTPUTS
-        output [DATA_WIDTH - 1:0] o_pc
+        output [DATA_WIDTH - 1:0] o_instr_nop
     );
 
-    reg [DATA_WIDTH - 1:0] pcout;
+    localparam [DATA_WIDTH - 1:0]     NOP = 32'b11100000000000000000000000000000;
 
-    assign o_pc = pcout;
-    
-    always @(posedge i_clock) begin
-        if (i_reset)
-        pcout <= 0;
-        else if (!i_haltsignal)
-        pcout <= i_pc_mux;
-    end
+    assign o_instr_nop = i_branch ? NOP : i_instruccion;
 
 endmodule

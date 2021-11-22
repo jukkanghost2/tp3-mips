@@ -94,6 +94,10 @@ module TOP_MIPS
     // CORTOCIRCUITO - EXECUTE
     wire [1:0] cortocircuitoA;
     wire [1:0] cortocircuitoB;
+    // DECODE - I_FETCH
+    wire [1:0] select;
+
+    assign select[1] = 0;
 
       I_FETCH 
     #( 
@@ -105,7 +109,7 @@ module TOP_MIPS
      .i_instruccion       (i_instruccion),
      .i_address       (i_address),
      .i_loading              (i_loading),
-     .i_select       (i_select), // branch predictor
+     .i_select       (select), // branch predictor
      .i_pc_branch       (pc_branch_i_fetch),
      .i_pc_jump       (i_pc_jump),
      .o_instruccion       (instr_if_id),
@@ -147,7 +151,8 @@ module TOP_MIPS
      .o_rd       (rd_id_ex),
      .o_ex       (ex_id_ex),
      .o_mem       (mem_id_ex),
-     .o_wb       (wb_id_ex)
+     .o_wb       (wb_id_ex),
+     .o_branch   (select[0])
      );
 
       ID_EX
