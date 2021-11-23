@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company: UNC FCEFyN
+// Engineer: Daniele - Gonzalez
 // 
 // Create Date: 11/16/2021 10:14:09 AM
 // Design Name: 
 // Module Name: MEM_INSTRUCCIONES
-// Project Name: 
+// Project Name: MIPS
 // Target Devices: 
 // Tool Versions: 
 // Description: 
@@ -26,26 +26,26 @@ module MEM_INSTRUCCIONES
         parameter SIZEOP = 6
     )
     (   //INPUTS
-        input i_clock,
-        input i_reset,
-        input [DATA_WIDTH - 1:0] i_pc,
-        input [DATA_WIDTH - 1:0] i_instruccion,
-        input [DATA_WIDTH - 1:0] i_address,
-        input i_loading,
+        input                       i_clock,
+        input                       i_reset,
+        input [DATA_WIDTH - 1:0]    i_pc,
+        input [DATA_WIDTH - 1:0]    i_instruccion,
+        input [DATA_WIDTH - 1:0]    i_address,
+        input                       i_loading,
         //OUTPUTS
-        output [DATA_WIDTH - 1:0] o_instruccion,
-        output o_haltsignal
+        output [DATA_WIDTH - 1:0]   o_instruccion,
+        output                      o_haltsignal
     );
 
-    localparam [SIZEOP - 1:0]     HALT = 6'b111111;
+    localparam [SIZEOP - 1:0]       HALT = 6'b111111;
 
     //BLOQUE DE MEMORIA
-    reg [DATA_WIDTH - 1:0] memoria_instrucciones [DATA_WIDTH - 1:0];
-    reg [DATA_WIDTH - 1:0] instr;
-    reg haltsignal;
+    reg [DATA_WIDTH - 1:0]  memoria_instrucciones [DATA_WIDTH - 1:0];
+    reg [DATA_WIDTH - 1:0]  instr;
+    reg                     haltsignal;
 
-    assign o_instruccion = instr;
-    assign o_haltsignal = haltsignal;
+    assign o_instruccion    = instr;
+    assign o_haltsignal     = haltsignal;
     
     always @(*) begin
         if (i_reset)
@@ -62,5 +62,4 @@ module MEM_INSTRUCCIONES
         else
             haltsignal = 1'b0;
     end
-  
 endmodule

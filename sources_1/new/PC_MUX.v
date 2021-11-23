@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company: UNC FCEFyN
+// Engineer: Daniele - Gonzalez
 // 
 // Create Date: 11/16/2021 10:13:44 AM
 // Design Name: 
 // Module Name: PC_MUX
-// Project Name: 
+// Project Name: MIPS
 // Target Devices: 
 // Tool Versions: 
 // Description: 
@@ -25,12 +25,12 @@ module PC_MUX
         parameter DATA_WIDTH = 32
     )
     (   //INPUTS
-        input [DATA_WIDTH - 1:0] i_pc_branch,
-        input [DATA_WIDTH - 1:0] i_pc_jump,
-        input [DATA_WIDTH - 1:0] i_pc_incr,
+        input [DATA_WIDTH - 1:0]    i_pc_branch,
+        input [DATA_WIDTH - 1:0]    i_pc_jump,
+        input [DATA_WIDTH - 1:0]    i_pc_incr,
         input [1:0] i_select,
         //OUTPUTS
-        output [DATA_WIDTH - 1:0] o_pc
+        output [DATA_WIDTH - 1:0]   o_pc
     );
 
     reg [DATA_WIDTH - 1 : 0] out;
@@ -45,5 +45,4 @@ module PC_MUX
             default: out = i_pc_incr;
         endcase
     end
-    
 endmodule

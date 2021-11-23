@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company: UNC FCEFyN
+// Engineer: Daniele - Gonzalez
 // 
 // Create Date: 11/17/2021 07:34:11 PM
 // Design Name: 
 // Module Name: MUX_WB
-// Project Name: 
+// Project Name: MIPS
 // Target Devices: 
 // Tool Versions: 
 // Description: 
@@ -32,5 +32,4 @@ module MUX_WB
     );
 
     assign o_mem_or_reg = i_memtoreg ? i_address : i_dataread;
-    
 endmodule

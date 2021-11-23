@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
+// Company: UNC FCEFyN
+// Engineer: Daniele - Gonzalez
+//
 // Create Date: 11/16/2021 10:13:08 AM
 // Design Name: 
 // Module Name: PC
-// Project Name: 
+// Project Name: MIPS
 // Target Devices: 
 // Tool Versions: 
 // Description: 
@@ -25,13 +25,13 @@ module PC
         parameter DATA_WIDTH = 32
     )
     (   //INPUTS
-        input i_clock,
-        input i_reset,
-        input i_pcburbuja,
-        input [DATA_WIDTH - 1:0] i_pc_mux,
-        input i_haltsignal,
+        input                       i_clock,
+        input                       i_reset,
+        input                       i_pcburbuja,
+        input [DATA_WIDTH - 1:0]    i_pc_mux,
+        input                       i_haltsignal,
         //OUTPUTS
-        output [DATA_WIDTH - 1:0] o_pc
+        output [DATA_WIDTH - 1:0]   o_pc
     );
 
     reg [DATA_WIDTH - 1:0] pcout;
@@ -44,5 +44,4 @@ module PC
         else if ((!i_haltsignal) && (!i_pcburbuja))
         pcout <= i_pc_mux;
     end
-
 endmodule

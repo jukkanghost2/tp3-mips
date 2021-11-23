@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company: UNC FCEFyN
+// Engineer: Daniele - Gonzalez
 // 
 // Create Date: 11/21/2021 05:50:06 PM
 // Design Name: 
 // Module Name: U_BRANCH
-// Project Name: 
+// Project Name: MIPS
 // Target Devices: 
 // Tool Versions: 
 // Description: 
@@ -25,21 +25,21 @@ module U_BRANCH
         parameter DATA_WIDTH = 32
     )
     (   //INPUTS
-        input i_branch,
-        input [DATA_WIDTH - 1:0] i_regA,
-        input [DATA_WIDTH - 1:0] i_regB,
-        input i_beq_or_bne,
+        input                       i_branch,
+        input [DATA_WIDTH - 1:0]    i_regA,
+        input [DATA_WIDTH - 1:0]    i_regB,
+        input                       i_beq_or_bne,
         //OUTPUTS
-        output o_branch
+        output                      o_branch
     );
-
-    initial begin
-        branch = 1'b0;
-    end
 
     reg branch;
 
     assign o_branch = branch;
+
+    initial begin
+        branch = 1'b0;
+    end
 
     always @(*) begin
         branch = 1'b0;

@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company: UNC FCEFyN
+// Engineer: Daniele - Gonzalez
 // 
 // Create Date: 11/11/2021 04:42:50 PM
 // Design Name: 
 // Module Name: MUX
-// Project Name: 
+// Project Name: MIPS
 // Target Devices: 
 // Tool Versions: 
 // Description: 
@@ -32,5 +32,4 @@ module MUX
     );
 
     assign o_o = i_select ? i_b : i_a;
-
 endmodule

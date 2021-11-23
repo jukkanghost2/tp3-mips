@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company: UNC FCEFyN
+// Engineer: Daniele - Gonzalez
 // 
 // Create Date: 11/11/2021 05:03:11 PM
 // Design Name: 
 // Module Name: MUX4
-// Project Name: 
+// Project Name: MIPS
 // Target Devices: 
 // Tool Versions: 
 // Description: 
@@ -43,6 +43,5 @@ module MUX4
             2'b10: out = i_c;
             2'b11: out = i_d;
         endcase
-    end
-    
+    end  
 endmodule

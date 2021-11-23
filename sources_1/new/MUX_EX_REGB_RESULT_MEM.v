@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company: UNC FCEFyN
+// Engineer: Daniele - Gonzalez
 // 
 // Create Date: 11/20/2021 12:17:42 PM
 // Design Name: 
 // Module Name: MUX_EX_REGB_RESULT_MEM
-// Project Name: 
+// Project Name: MIPS
 // Target Devices: 
 // Tool Versions: 
 // Description: 
@@ -28,7 +28,7 @@ module MUX_EX_REGB_RESULT_MEM
         input [DATA_WIDTH - 1 : 0]  i_regB,
         input [DATA_WIDTH - 1 : 0]  i_datawrite,
         input [DATA_WIDTH - 1 : 0]  i_aluresult,
-        input  [1:0]                 i_cortocircuitoB,
+        input  [1:0]                i_cortocircuitoB,
         output [DATA_WIDTH - 1 : 0] o_datoBAlu
     );
 

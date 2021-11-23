@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company: UNC FCEFyN
+// Engineer: Daniele - Gonzalez
 // 
 // Create Date: 11/16/2021 06:52:29 PM
 // Design Name: 
 // Module Name: MUX_2_1_EX
-// Project Name: 
+// Project Name: MIPS
 // Target Devices: 
 // Tool Versions: 
 // Description: 
@@ -26,7 +26,7 @@ module MUX_2_1_EX
     )
     (
         input [DATA_WIDTH - 1 : 0]  i_mux_ex_regb_result_mem,
-        input [15:0]  i_extendido,
+        input [15:0]                i_extendido,
         input                       i_alusrc,
         output [DATA_WIDTH - 1 : 0] o_datoBAlu
     );

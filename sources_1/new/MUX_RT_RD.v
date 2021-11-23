@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company: UNC FCEFyN
+// Engineer: Daniele - Gonzalez
 // 
 // Create Date: 11/17/2021 08:03:04 PM
 // Design Name: 
 // Module Name: MUX_RT_RD
-// Project Name: 
+// Project Name: MIPS
 // Target Devices: 
 // Tool Versions: 
 // Description: 
@@ -32,5 +32,4 @@ module MUX_RT_RD
     );
 
     assign o_rt_rd = i_regdst ? i_rd : i_rt;
-    
 endmodule

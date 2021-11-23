@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company: UNC FCEFyN
+// Engineer: Daniele - Gonzalez
 // 
 // Create Date: 11/16/2021 04:14:21 PM
 // Design Name: 
 // Module Name: REG_BANK
-// Project Name: 
+// Project Name: MIPS
 // Target Devices: 
 // Tool Versions: 
 // Description: 
@@ -25,17 +25,18 @@ module REG_BANK
         parameter DATA_WIDTH = 32
     )
     (   //INPUTS
-        input i_clock,
-        input i_reset,
-        input i_regwrite,
-        input [DATA_WIDTH - 1:0] i_writedata,
-        input [4:0] i_rs,
-        input [4:0] i_rt,
-        input [4:0] i_rd,
+        input                       i_clock,
+        input                       i_reset,
+        input                       i_regwrite,
+        input [DATA_WIDTH - 1:0]    i_writedata,
+        input [4:0]                 i_rs,
+        input [4:0]                 i_rt,
+        input [4:0]                 i_rd,
         //OUTPUTS
-        output [DATA_WIDTH - 1:0] o_regA,
-        output [DATA_WIDTH - 1:0] o_regB
+        output [DATA_WIDTH - 1:0]   o_regA,
+        output [DATA_WIDTH - 1:0]   o_regB
     );
+
     //BANCO DE REGISTROS
     reg [DATA_WIDTH - 1:0] registros [DATA_WIDTH - 1:0];
 
@@ -59,5 +60,4 @@ module REG_BANK
         if (i_regwrite)
         registros[i_rd] <= i_writedata;
     end
-    
 endmodule
