@@ -27,6 +27,7 @@ module IF_ID
     (   //INPUTS
         input i_clock,
         input i_reset,
+        input i_if_id_burbuja,
         input [DATA_WIDTH - 1:0] i_instruccion,
         input [DATA_WIDTH - 1:0] i_pc,
         //OUTPUTS
@@ -41,8 +42,10 @@ module IF_ID
     assign o_pc = pcout;
     
     always @(posedge i_clock) begin
-        instrout <= i_instruccion;
-        pcout <= i_pc;
+        if (!i_if_id_burbuja) begin
+            instrout <= i_instruccion;
+            pcout <= i_pc;
+        end
     end
     
 endmodule

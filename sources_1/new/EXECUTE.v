@@ -49,7 +49,7 @@ module EXECUTE
     wire [DATA_WIDTH - 1:0] mux_ex_regb_result;
     wire [3:0] alucontrol;
     
-    assign o_regB = i_regB;
+    assign o_regB = mux_ex_regb_result;
 
      ALU 
     #( 

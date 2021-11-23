@@ -61,6 +61,8 @@ module TOP_MIPS
     wire [3:0] ex_id_ex;
     wire [2:0] mem_id_ex;
     wire [1:0] wb_id_ex;
+    wire [1:0] sizemem_id_ex;
+    wire signedmem_id_ex;
     // ID_EX - EXECUTE
     wire [DATA_WIDTH - 1:0] regA_execute;
     wire [DATA_WIDTH - 1:0] regB_execute;
@@ -76,10 +78,14 @@ module TOP_MIPS
     // ID_EX - EX_MEM
     wire [2:0] mem_ex_mem;
     wire [1:0] wb_ex_mem;
+    wire [1:0] sizemem_ex_mem;
+    wire signedmem_ex_mem;
     // EX_MEM - MEM
     wire [DATA_WIDTH - 1:0] aluresult_mem;
     wire [DATA_WIDTH - 1:0] regB_mem;
     wire [2:0] mem_mem;
+    wire [1:0] sizemem_mem;
+    wire signedmem_mem;
     // MEM - MEM_WB
     wire [DATA_WIDTH - 1:0] dataread_mem_wb;
     wire [DATA_WIDTH - 1:0] address_mem_wb;
@@ -96,7 +102,14 @@ module TOP_MIPS
     wire [1:0] cortocircuitoB;
     // DECODE - I_FETCH
     wire [1:0] select;
+    // RIESGO - I_DECODE
+    wire burbuja_i_decode;
+    // RIESGO - I_FETCH
+    wire pcburbuja;
+    // RIESGO - IF_ID
+    wire if_id_burbuja;
 
+    
     assign select[1] = 0;
 
       I_FETCH 
@@ -106,6 +119,7 @@ module TOP_MIPS
      i_fetch (
      .i_clock   (i_clock),
      .i_reset       (i_reset),
+     .i_pcburbuja       (pcburbuja),
      .i_instruccion       (i_instruccion),
      .i_address       (i_address),
      .i_loading              (i_loading),
@@ -123,6 +137,7 @@ module TOP_MIPS
      if_id (
      .i_clock   (i_clock),
      .i_reset       (i_reset),
+     .i_if_id_burbuja       (if_id_burbuja),
      .i_instruccion       (instr_if_id),
      .i_pc              (pc_if_id),
      .o_instruccion       (instr_i_decode),
@@ -140,7 +155,8 @@ module TOP_MIPS
      .i_writedata       (mem_or_reg_i_decode), 
      .i_instruccion       (instr_i_decode), 
      .i_currentpc       (pc_i_decode), 
-     .i_rt_rd       (rt_rd_i_decode), 
+     .i_rt_rd       (rt_rd_i_decode),
+     .i_burbuja    (burbuja_i_decode), 
      .o_regA       (regA_id_ex),
      .o_regB       (regB_id_ex),
      .o_extendido       (extendido_id_ex),
@@ -152,7 +168,9 @@ module TOP_MIPS
      .o_ex       (ex_id_ex),
      .o_mem       (mem_id_ex),
      .o_wb       (wb_id_ex),
-     .o_branch   (select[0])
+     .o_branch   (select[0]),
+     .o_sizemem   (sizemem_id_ex),
+     .o_signedmem   (signedmem_id_ex)
      );
 
       ID_EX
@@ -172,6 +190,8 @@ module TOP_MIPS
      .i_ex       (ex_id_ex),
      .i_mem       (mem_id_ex),
      .i_wb       (wb_id_ex),
+     .i_sizemem       (sizemem_id_ex),
+     .i_signedmem       (signedmem_id_ex),
      .o_regA       (regA_execute),
      .o_regB       (regB_execute),
      .o_extendido       (extendido_execute),
@@ -181,7 +201,9 @@ module TOP_MIPS
      .o_rd       (rd_execute),
      .o_ex       (ex_execute),
      .o_mem       (mem_ex_mem),
-     .o_wb       (wb_ex_mem)
+     .o_wb       (wb_ex_mem),
+     .o_sizemem       (sizemem_ex_mem),
+     .o_signedmem       (signedmem_ex_mem)
      );
 
       EXECUTE
@@ -219,11 +241,15 @@ module TOP_MIPS
      .i_rd_rt       (rd_rt_ex_mem), 
      .i_mem       (mem_ex_mem), 
      .i_wb       (wb_ex_mem), 
+     .i_sizemem       (sizemem_ex_mem),
+     .i_signedmem       (signedmem_ex_mem),
      .o_aluresult       (aluresult_mem),
      .o_regB       (regB_mem),
      .o_rd_rt       (rd_rt_mem_wb),
      .o_mem       (mem_mem),
-     .o_wb       (wb_mem_wb)
+     .o_wb       (wb_mem_wb),
+     .o_sizemem       (sizemem_mem),
+     .o_signedmem       (signedmem_mem)
      );
 
 
@@ -237,6 +263,8 @@ module TOP_MIPS
      .i_address       (aluresult_mem), 
      .i_datawrite       (regB_mem), 
      .i_mem       (mem_mem), 
+     .i_sizemem      (sizemem_mem),
+     .i_signedmem      (signedmem_mem),
      .o_dataread       (dataread_mem_wb)
      );
 
@@ -283,6 +311,17 @@ module TOP_MIPS
      .i_wb_wb       (wb_i_decode_wb), 
      .o_cortocircuitoA       (cortocircuitoA), 
      .o_cortocircuitoB       (cortocircuitoB)
+     );
+
+     DETECTOR_RIESGOS
+     detector_riesgos (
+     .i_rs       (instr_if_id[25:21]), 
+     .i_rt       (instr_if_id[20:16]), 
+     .i_id_ex_rt       (rt_execute), 
+     .i_id_ex_mem       (mem_ex_mem), 
+     .o_pc_write       (pcburbuja), 
+     .o_if_id_write       (if_id_burbuja), 
+     .o_mux_zero       (burbuja_i_decode)
      );
     
 

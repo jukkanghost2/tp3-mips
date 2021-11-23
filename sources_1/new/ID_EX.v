@@ -38,6 +38,8 @@ module ID_EX
         input [3:0] i_ex,
         input [2:0] i_mem,
         input [1:0] i_wb,
+        input [1:0] i_sizemem,
+        input i_signedmem,
         //OUTPUTS
         output [DATA_WIDTH - 1:0] o_regA,
         output [DATA_WIDTH - 1:0] o_regB,
@@ -48,7 +50,9 @@ module ID_EX
         output [4:0] o_rd,
         output [3:0] o_ex,
         output [2:0] o_mem,
-        output [1:0] o_wb
+        output [1:0] o_wb,
+        output [1:0] o_sizemem,
+        output o_signedmem
     );
 
     reg [DATA_WIDTH - 1:0] regA;
@@ -61,6 +65,8 @@ module ID_EX
     reg [3:0] ex;
     reg [2:0] mem;
     reg [1:0] wb;
+    reg [1:0] sizemem;
+    reg signedmem;
 
     assign o_regA = regA;
     assign o_regB = regB;
@@ -72,6 +78,8 @@ module ID_EX
     assign o_ex = ex;
     assign o_mem = mem;
     assign o_wb = wb;
+    assign o_sizemem = sizemem;
+    assign o_signedmem = signedmem;
     
     always @(posedge i_clock) begin
         regA <= i_regA;
@@ -84,6 +92,8 @@ module ID_EX
         ex <= i_ex;
         mem <= i_mem;
         wb <= i_wb;
+        sizemem <= i_sizemem;
+        signedmem <= i_signedmem;
     end
 
 endmodule

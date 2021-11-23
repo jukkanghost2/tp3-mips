@@ -29,6 +29,7 @@ module I_DECODE
         input i_clock,
         input i_reset,
         input i_regwrite,
+        input i_burbuja,
         input [DATA_WIDTH - 1:0] i_writedata,
         input [DATA_WIDTH - 1:0] i_instruccion,
         input [DATA_WIDTH - 1:0] i_currentpc,
@@ -45,6 +46,8 @@ module I_DECODE
         output [3:0] o_ex,
         output [2:0] o_mem,
         output [1:0] o_wb,
+        output [1:0] o_sizemem,
+        output o_signedmem,
         output o_branch
     );
 
@@ -52,7 +55,12 @@ module I_DECODE
     assign o_rs = i_instruccion[25:21];
     assign o_rt = i_instruccion[20:16];
     assign o_rd = i_instruccion[15:11];
+    assign o_ex = control_id_ex[8:5];
+    assign o_mem = control_id_ex[4:2];
+    assign o_wb = control_id_ex[1:0];
 
+    wire [8:0] control_mux;
+    wire [8:0] control_id_ex;
     wire beq_or_bne;
 
     CONTROL_PRINCIPAL 
@@ -62,10 +70,19 @@ module I_DECODE
      )
      control_principal (
      .i_instruccion   (i_instruccion),
-     .o_ex       (o_ex),
-     .o_mem       (o_mem),
-     .o_wb       (o_wb),
+     .o_ex       (control_mux[8:5]),
+     .o_mem       (control_mux[4:2]),
+     .o_wb       (control_mux[1:0]),
+     .o_sizemem       (o_sizemem),
+     .o_signedmem       (o_signedmem),
      .o_beq_or_bne   (beq_or_bne)
+     );
+
+     MUX_CONTROL_PRINCIPAL 
+     mux_control_principal (
+     .i_control   (control_mux),
+     .i_burbuja       (i_burbuja),
+     .o_control       (control_id_ex)
      );
 
     REG_BANK 

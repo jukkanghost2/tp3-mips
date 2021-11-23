@@ -51,6 +51,9 @@ module ALU_CONTROL
   localparam [SIZEOP - 1:0]     AND = 6'b100100;
   localparam [SIZEOP - 1:0]     NOR = 6'b100111;
   localparam [SIZEOP - 1:0]     SLT = 6'b101010;
+  // J-TYPE
+  localparam [SIZEOP - 1:0]     JR = 6'b001000;
+  localparam [SIZEOP - 1:0]     JALR = 6'b001001;
   //I-TYPE
   localparam [SIZEOP - 1:0]     ADDI = 6'b001000;
   localparam [SIZEOP - 1:0]     ANDI = 6'b001100;
@@ -68,7 +71,7 @@ module ALU_CONTROL
            2'b00: begin
                alucontrol = 4'b0110;          
            end
-           //BEQ 
+           //BEQ Y BNE
            2'b01: begin
               alucontrol = 4'b1111;  
            end

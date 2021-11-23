@@ -47,7 +47,7 @@ module MEM_INSTRUCCIONES
     assign o_instruccion = instr;
     assign o_haltsignal = haltsignal;
     
-    always @(posedge i_clock) begin
+    always @(*) begin
         if (i_reset)
         haltsignal = 1'b0;
         if(i_loading)
