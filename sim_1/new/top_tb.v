@@ -58,42 +58,68 @@ module top_tb;
         i_address = 32'b0;
         i_loading = 1'b0;
         #10000
-        // ADDU R1 CON R2 => R3
+        // ADDU R1 CON R2 => R3 = 3
         i_loading = 1'b1;
         i_instruccion = 32'b00000000001000100001100000100001;
         #10000
-        // ADDU R3 CON R2 => R1
+        // ADDU R3 CON R2 => R1 = 5
         i_address = 32'b1;
         i_instruccion = 32'b00000000011000100000100000100001;
         #10000
-        // ADDI R1 CON INMEDIATO 3 => R4
+        // ADDI R1 CON INMEDIATO 3grande => R2 = 8 grande
         i_address = 32'b10;
-        i_instruccion = 32'b00100000001001000000000000000011;
+        i_instruccion = 32'b00100000001000100000111110111101;
         #10000
-        // STORE (R1 + 0) <= R2
+        // // STORE (R1 + 0) <= R2 = POS 5 = 2
+        // i_address = 32'b11;
+        // i_instruccion = 32'b10101100001000100000000000000000;
+        // #10000
+        // // NOP
+        // i_address = 32'b11;
+        // i_instruccion = 32'b11100000000000000000000000000000;
+        // #10000
+        // // NOP
+        // i_address = 32'b100;
+        // i_instruccion = 32'b11100000000000000000000000000000;
+        // #10000
+         // STOREBYTE (R1 + 0) <= R2 = POS 5 = 2
         i_address = 32'b11;
-        i_instruccion = 32'b10101100001000100000000000000000;
+        i_instruccion = 32'b10100000001000100000000000000000;
+        #10000
+        // // ADDI R1 CON INMEDIATO 3 => R4 = 8
+        // i_address = 32'b100;
+        // i_instruccion = 32'b00100000001001000000000000000011;
+        // #10000
+        // // LOAD (R1 + 0) => R7  = 2
+        // i_address = 32'b100;
+        // i_instruccion = 32'b10001100001001110000000000000000;
+        // #10000
+        // LOAD HALF (R1 + 0) => R7  = 2
+        i_address = 32'b100;
+        i_instruccion = 32'b10010000001001110000000000000000;
         #10000
         // NOP
-        i_address = 32'b100;
-        i_instruccion = 32'b11100000000000000000000000000000;
-        #10000
-        // LOAD (R1 + 0) => R7
         i_address = 32'b101;
-        i_instruccion = 32'b10001100001001110000000000000000;
-        #10000
-        // BNE 
-        i_address = 32'b110;
-        i_instruccion = 32'b00010100001011110000000000001000;
-        #10000
-        i_address = 32'b111;
         i_instruccion = 32'b11100000000000000000000000000000;
         #10000
-        i_address = 32'b1000;
-        i_instruccion = 32'b11111100000000000000000000000000;
+        // ADD R7 + R1 => R2 = 7
+        i_address = 32'b110;
+        i_instruccion = 32'b00000000111000010001000000100001;
         #10000
+        // ADDU R1 CON R2 => R3 = 12
+        i_address = 32'b111;
+        i_instruccion = 32'b00000000001000100001100000100001;
+        #10000
+        // BNE  R1 != R7 = 1 => PC incr + 4
+        i_address = 32'b1000;
+        i_instruccion = 32'b00010100001001110000000000000001;
+        #10000
+        //HALT
         i_address = 32'b1001;
-        i_instruccion = 32'b0;
+        i_instruccion = 32'b11100000000000000000000000000000;
+        #10000
+        i_address = 32'b1010;
+        i_instruccion = 32'b11111100000000000000000000000000;
         i_reset = 1'b1;
         #10000
         i_reset = 1'b0;
