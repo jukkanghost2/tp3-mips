@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company: UNC FCEFyN
+// Engineer: Daniele - Gonzalez
 // 
 // Create Date: 11/16/2021 04:40:02 PM
 // Design Name: 
 // Module Name: extensor_tb
-// Project Name: 
+// Project Name: MIPS
 // Target Devices: 
 // Tool Versions: 
 // Description: 
@@ -25,9 +25,9 @@ module extensor_tb;
  parameter IMM_WIDTH = 16;
 
 	//INPUTS
-  reg     [DATA_WIDTH - 1:0]    i_instruccion;
+  reg     [DATA_WIDTH - 1:0]  i_instruccion;
   	//OUTPUTS
-  wire   [DATA_WIDTH - 1:0]    o_branchoffset;
+  wire   [DATA_WIDTH - 1:0]   o_branchoffset;
 
   EXTENSOR extensorcito (
     .i_instruccion      (i_instruccion), 
