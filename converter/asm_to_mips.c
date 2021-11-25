@@ -20,6 +20,7 @@
 #define SLTI  "001010"
 #define J  "000010"
 #define JAL  "000011"
+//FALTA JR Y JALR
 #define NOP  "111000"
 #define HALT  "111111"
 
@@ -84,8 +85,10 @@ char *which_reg(const char *);
 int main(int argc, char **argv){
 
 	FILE *fpr, *fpw;            /* declare the file pointer */
-	char line[80];	// from input
+	char *line;	// from input
 	int line_n;		// for input
+	size_t line_length = 80;
+	size_t read_characters;
 	int address;	// for output
 	char *new_field, *buffer;
 	char final_fld[200];
@@ -115,14 +118,18 @@ int main(int argc, char **argv){
 		fprintf(stderr, "Error: Can't allocate memory for the line buffer!\n");
 		exit(3);
 	}
+	if(NULL == (line = malloc(line_length*sizeof(char)))){
+		fprintf(stderr, "Error: Can't allocate memory for the line buffer!\n");
+		exit(3);
+	}
 	
 	line_n = 1;
-	while(NULL != fgets(line, 80, fpr)){
-	
+	while( (read_characters = getline(&line, &line_length, fpr)) != -1){
+		printf("linea de asm %s\n", line);
 		/*  STAGE 1  */
 		// Get the first token to check the opcode
 		op = strtok(line, delim);
-        printf("%s\n", op);
+       // printf("%s\n", op);
 		/*  STAGE 2  */
 		// Check the instruction format &&
 		// Return the field parsed
@@ -194,14 +201,14 @@ char *is_i_format(int line_n, char **argv, const char *op, char *new_field){
 	
 	if(!strcmp(op, "ADDI") || !strcmp(op, "ANDI") || !strcmp(op, "ORI") \
      || !strcmp(op, "XORI") || !strcmp(op, "LUI") || !strcmp(op, "SLTI") ){
-printf("es una inmediata\n");
+//printf("es una inmediata\n");
 		char *oper[] = {"\0\0\0\0\0\0", "\0\0\0\0\0\0", "\0\0\0\0\0\0\0\0\0\0\0\0\0"};
 		
 		// Walk through other tokens
 		i = 0;
 		while(i < 3){	// strtok() saves the previous state :P
 			oper[i] = strtok(NULL, delim);
-            printf("%s\n", oper[i]);
+          //  printf("%s\n", oper[i]);
 			i++;
 		}
 		
@@ -217,7 +224,7 @@ printf("es una inmediata\n");
 		else if(!strcmp(op, "LUI"))	    strcat(new_field,LUI );
         else if(!strcmp(op, "SLTI"))	    strcat(new_field,SLTI );
 		strcat(new_field, "_");
-		printf("%s\n", new_field);
+		//printf("%s\n", new_field);
 		// REGISTERS
 		if(NULL == (rs = malloc(6*sizeof(char)))){
 			printf("Error: Unable to allocate memory for rs.\n");
@@ -228,15 +235,15 @@ printf("es una inmediata\n");
 			exit(1);
 		}
         strcpy(rs, which_reg(oper[1]));
-        printf("%s\n", rs);
+        //printf("%s\n", rs);
 		if(NULL != (strcpy(rs, which_reg(oper[1]))))strcat(new_field, rs);
 		else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, oper[0]);
 		strcat(new_field, "_");
-		printf("%s\n", new_field);
+		//printf("%s\n", new_field);
 		if(NULL != (strcpy(rt, which_reg(oper[0])))) strcat(new_field, rt);
 		else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, oper[0]);
 		strcat(new_field, "_");
-		printf("%s\n", new_field);
+		//printf("%s\n", new_field);
 		// IMMEDIATE
 		sscanf(oper[2], "%d ", &offset);	// convert the string to integer
 		
@@ -365,7 +372,7 @@ printf("es una inmediata\n");
 	else if(!strcmp(op, "NOP") || !strcmp(op, "HALT")) {
 		// Initialize the input/output string just to be sure
 		for(i=0; i<strlen(new_field); ++i) new_field[i] = '\0';
-	printf("es nop o halt\n");
+	//printf("es nop o halt\n");
 
 		// MAKE UP THE FIELDS -->
 		// OPCODE
@@ -382,7 +389,7 @@ printf("es una inmediata\n");
 		strcat(new_field, "_");
 		strcat(new_field, "000000");// FUNCT
 		strcat(new_field, "\0");
-		printf("%s\n", new_field);
+		//printf("%s\n", new_field);
 		// <-- END
 
 		return(new_field);
@@ -402,7 +409,7 @@ char *is_r_format(int line_n, char **argv, const char *op, char *new_field){
 	char *regs[] = {"\0\0\0\0\0\0", "\0\0\0\0\0\0", "\0\0\0\0\0\0"};
 	char *binary;
 	int offset;
-	printf("es del tipo R\n");
+	//printf("es del tipo R\n");
 	if(!strcmp(op, "SLL") || !strcmp(op, "SRL") || !strcmp(op, "SRA") \
 		|| !strcmp(op, "SLLV") || !strcmp(op, "SRLV") || !strcmp(op, "SRAV") \
         || !strcmp(op, "ADDU") || !strcmp(op, "SUBU") || !strcmp(op, "OR") \
@@ -413,7 +420,7 @@ char *is_r_format(int line_n, char **argv, const char *op, char *new_field){
 		i = 0;
 		while(i < 3){	// strtok() saves the previous state :P
 			regs[i] = strtok(NULL, delim);
-			printf("%s\n", regs[i]);
+		//	printf("%s\n", regs[i]);
 			i++;
 		}
 	
@@ -459,20 +466,20 @@ char *is_r_format(int line_n, char **argv, const char *op, char *new_field){
 		    if(NULL != (strcpy(rs, which_reg(regs[1]))))strcat(new_field, rs);
 		    else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, regs[1]);
 		    strcat(new_field, "_");
-		printf("%s\n", new_field);
+		//printf("%s\n", new_field);
 
 		    if(NULL != (strcpy(rt, which_reg(regs[2])))) strcat(new_field, rt);
 		    else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, regs[2]);
 		    strcat(new_field, "_");
-		printf("%s\n", new_field);
+		//printf("%s\n", new_field);
 		    if(NULL != (strcpy(rd, which_reg(regs[0])))) strcat(new_field, rd);
 		    else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, regs[0]);
 		    strcat(new_field, "_");  
-		printf("%s\n", new_field);
+		//printf("%s\n", new_field);
 		    // SHIFT AMOUNT
 		    strcat(new_field, "00000");	// shamt
 		    strcat(new_field, "_");
-		printf("%s\n", new_field);
+		//printf("%s\n", new_field);
         }
 		// FUNC
 		if(!strcmp(op, "SLL"))	        strcat(new_field,SLL );
@@ -498,7 +505,6 @@ char *is_r_format(int line_n, char **argv, const char *op, char *new_field){
 		
 		return(new_field);
 	}
-printf("no es del tipo R\n");
 	return(NULL);
 }
 
@@ -508,7 +514,6 @@ printf("no es del tipo R\n");
  */
 char *which_reg(const char *reg){
 	if(NULL == reg) return(NULL);
-    printf("%s \n", reg);
 	if(!strcmp(reg, "$0") || !strcmp(reg, "$zero")) return(REG0);
 	else if(!strcmp(reg, "$1") || !strcmp(reg, "$at")) {return(REG1);}
 	else if(!strcmp(reg, "$2") || !strcmp(reg, "$v0")) {return(REG2);}
