@@ -27,6 +27,8 @@ module I_FETCH
     (   //INPUTS
         input                       i_clock,
         input                       i_reset,
+        input                       i_start,
+        input                       i_step,
         input [1:0]                 i_select,
         input                       i_pcburbuja,
         input [DATA_WIDTH - 1:0]    i_instruccion,
@@ -51,6 +53,8 @@ module I_FETCH
     pc (
      .i_clock       (i_clock),
      .i_reset       (i_reset),
+     .i_start       (i_start),
+     .i_step       (i_step),
      .i_pcburbuja   (i_pcburbuja),
      .i_pc_mux      (pc_mux_wire),
      .i_haltsignal  (haltsignal_pc),

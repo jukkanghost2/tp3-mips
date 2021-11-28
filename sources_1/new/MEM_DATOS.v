@@ -25,7 +25,6 @@ module MEM_DATOS
         parameter DATA_WIDTH = 32
     )
     (   //INPUTS
-        input                       i_clock,
         input [DATA_WIDTH - 1:0]    i_address,
         input [DATA_WIDTH - 1:0]    i_datawrite,
         input                       i_memread,

@@ -27,6 +27,8 @@ module PC
     (   //INPUTS
         input                       i_clock,
         input                       i_reset,
+        input                       i_start,
+        input                       i_step,
         input                       i_pcburbuja,
         input [DATA_WIDTH - 1:0]    i_pc_mux,
         input                       i_haltsignal,
@@ -40,8 +42,8 @@ module PC
     
     always @(posedge i_clock) begin
         if (i_reset)
-        pcout <= 0;
-        else if ((!i_haltsignal) && (!i_pcburbuja))
+        pcout <= 32'b0;
+        else if ((!i_haltsignal) && (!i_pcburbuja) && (i_start) && (i_step))
         pcout <= i_pc_mux;
     end
 endmodule

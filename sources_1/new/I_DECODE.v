@@ -48,13 +48,17 @@ module I_DECODE
         output [1:0]                o_wb,
         output [1:0]                o_sizemem,
         output                      o_signedmem,
-        output                      o_branch
+        output                      o_branch,
+        output [DATA_WIDTH - 1:0]   o_pcjump,
+        output                      o_jump,
+        output [DATA_WIDTH - 1:0]   o_return_address,
+        output o_return,
+        output o_halt
     );
 
     assign o_opcode = i_instruccion[31:26];
     assign o_rs     = i_instruccion[25:21];
     assign o_rt     = i_instruccion[20:16];
-    assign o_rd     = i_instruccion[15:11];
     assign o_ex     = control_id_ex[8:5];
     assign o_mem    = control_id_ex[4:2];
     assign o_wb     = control_id_ex[1:0];
@@ -62,6 +66,7 @@ module I_DECODE
     wire [8:0]  control_mux;
     wire [8:0]  control_id_ex;
     wire        beq_or_bne;
+    wire rd_selector;
 
     CONTROL_PRINCIPAL 
     #( 
@@ -75,7 +80,8 @@ module I_DECODE
      .o_wb       (control_mux[1:0]),
      .o_sizemem       (o_sizemem),
      .o_signedmem       (o_signedmem),
-     .o_beq_or_bne   (beq_or_bne)
+     .o_beq_or_bne   (beq_or_bne),
+     .o_halt   (o_halt)
     );
 
     MUX_CONTROL_PRINCIPAL 
@@ -131,4 +137,27 @@ module I_DECODE
      .i_beq_or_bne      (beq_or_bne),
      .o_branch          (o_branch)
     );
+
+    U_JUMP
+      #( 
+     .DATA_WIDTH        (DATA_WIDTH)
+    )
+     u_jump (
+     .i_currentpc          (i_currentpc),
+     .i_instruccion        (i_instruccion),
+     .i_regA            (o_regA),
+     .o_pcjump              (o_pcjump),
+     .o_return_address       (o_return_address),
+     .o_rd_selector          (rd_selector),
+     .o_jump          (o_jump),
+     .o_return      (o_return)
+    );
+
+    MUX_RD_31
+     mux_rd_31 (
+     .i_rd          (i_instruccion[15:11]),
+     .i_rd_selector    (rd_selector),
+     .o_rd            (o_rd)
+    );
+
 endmodule
