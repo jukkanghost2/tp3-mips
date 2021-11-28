@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: UNC FCEFyN
-// Engineer: Daniele - Gonzalez
+// Company: 
+// Engineer: 
 // 
 // Create Date: 11/11/2021 04:53:07 PM
 // Design Name: 
 // Module Name: mux_tb
-// Project Name: MIPS
+// Project Name: 
 // Target Devices: 
 // Tool Versions: 
 // Description: 
@@ -28,37 +28,38 @@ module mux_tb;
   reg     [DATA_WIDTH - 1:0]    i_b;
   reg     [DATA_WIDTH - 1:0]    i_c;
   reg     [DATA_WIDTH - 1:0]    i_d;
-  reg     [1:0]                 i_select;
+  reg     [1:0]                      i_select;
   	//OUTPUTS
-  wire   [DATA_WIDTH - 1:0]     o_o;
+  wire   [DATA_WIDTH - 1:0]    o_o;
 
   MUX4 muxito4 (
     .i_a      (i_a), 
     .i_b      (i_b), 
     .i_c      (i_c), 
     .i_d      (i_d), 
-    .i_select (i_select), 
-    .o_o      (o_o)
+    .i_select     (i_select), 
+    .o_o     (o_o)
   );
 
     initial begin
-        i_a       = 0;
-        i_b       = 0;
-        i_c       = 0;
-        i_d       = 0;
-        i_select  = 2'b00;
+        i_a = 0;
+        i_b = 0;
+        i_c = 0;
+        i_d = 0;
+        i_select = 2'b00;
         #20
-        i_a       = 3;
-        i_b       = 4;
-        i_c       = 5;
-        i_d       = 6;
+        i_a = 3;
+        i_b = 4;
+        i_c = 5;
+        i_d = 6;
         #20
-        i_select  = 2'b01;
+        i_select = 2'b01;
         #20
-        i_select  = 2'b10;
+        i_select = 2'b10;
         #20
-        i_select  = 2'b11;
+        i_select = 2'b11;
         #20
         $finish;
-    end 
+    end
+    
 endmodule
