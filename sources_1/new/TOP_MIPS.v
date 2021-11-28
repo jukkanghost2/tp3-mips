@@ -25,7 +25,6 @@ module TOP_MIPS
         parameter DATA_WIDTH = 32,
         parameter SIZEOP = 6,
         parameter SIZESA = 5
-
     )
     (   //INPUTS
         input                     i_clock,

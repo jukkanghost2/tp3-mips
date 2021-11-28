@@ -75,25 +75,25 @@ module ID_EX
     reg [1:0]               wb;
     reg [1:0]               sizemem;
     reg                     signedmem;
-    reg [DATA_WIDTH - 1:0] return_address;
-    reg return;
-    reg halt;
+    reg [DATA_WIDTH - 1:0]  return_address;
+    reg                     return;
+    reg                     halt;
 
-    assign o_regA       = regA;
-    assign o_regB       = regB;
-    assign o_extendido  = extendido;
-    assign o_opcode     = opcode;
-    assign o_rs         = rs;
-    assign o_rt         = rt;
-    assign o_rd         = rd;
-    assign o_ex         = ex;
-    assign o_mem        = mem;
-    assign o_wb         = wb;
-    assign o_sizemem    = sizemem;
-    assign o_signedmem  = signedmem;
+    assign o_regA           = regA;
+    assign o_regB           = regB;
+    assign o_extendido      = extendido;
+    assign o_opcode         = opcode;
+    assign o_rs             = rs;
+    assign o_rt             = rt;
+    assign o_rd             = rd;
+    assign o_ex             = ex;
+    assign o_mem            = mem;
+    assign o_wb             = wb;
+    assign o_sizemem        = sizemem;
+    assign o_signedmem      = signedmem;
     assign o_return_address = return_address;
-    assign o_return = return;
-    assign o_halt = halt;
+    assign o_return         = return;
+    assign o_halt           = halt;
 
     always @(posedge i_clock) begin
         if(i_reset) begin
@@ -111,7 +111,7 @@ module ID_EX
             signedmem        <= 0;
             return           <= 0;
             return_address   <= 0;
-            halt   <= 0;
+            halt             <= 0;
         end
         else if (i_start && i_step) begin
             regA             <= i_regA;
@@ -128,7 +128,7 @@ module ID_EX
             signedmem        <= i_signedmem;
             return           <= i_return;
             return_address   <= i_return_address;
-            halt   <= i_halt;
+            halt             <= i_halt;
         end
     end
 endmodule

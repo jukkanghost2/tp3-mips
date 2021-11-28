@@ -52,9 +52,14 @@ module I_DECODE
         output [DATA_WIDTH - 1:0]   o_pcjump,
         output                      o_jump,
         output [DATA_WIDTH - 1:0]   o_return_address,
-        output o_return,
-        output o_halt
+        output                      o_return,
+        output                      o_halt
     );
+
+    wire [8:0]  control_mux;
+    wire [8:0]  control_id_ex;
+    wire        beq_or_bne;
+    wire        rd_selector;
 
     assign o_opcode = i_instruccion[31:26];
     assign o_rs     = i_instruccion[25:21];
@@ -63,39 +68,34 @@ module I_DECODE
     assign o_mem    = control_id_ex[4:2];
     assign o_wb     = control_id_ex[1:0];
 
-    wire [8:0]  control_mux;
-    wire [8:0]  control_id_ex;
-    wire        beq_or_bne;
-    wire rd_selector;
-
     CONTROL_PRINCIPAL 
     #( 
-     .DATA_WIDTH    (DATA_WIDTH),
-     .SIZEOP    (SIZEOP)
+     .DATA_WIDTH        (DATA_WIDTH),
+     .SIZEOP            (SIZEOP)
     )
     control_principal (
-     .i_instruccion   (i_instruccion),
-     .o_ex       (control_mux[8:5]),
-     .o_mem       (control_mux[4:2]),
-     .o_wb       (control_mux[1:0]),
-     .o_sizemem       (o_sizemem),
+     .i_instruccion     (i_instruccion),
+     .o_ex              (control_mux[8:5]),
+     .o_mem             (control_mux[4:2]),
+     .o_wb              (control_mux[1:0]),
+     .o_sizemem         (o_sizemem),
      .o_signedmem       (o_signedmem),
-     .o_beq_or_bne   (beq_or_bne),
-     .o_halt   (o_halt)
+     .o_beq_or_bne      (beq_or_bne),
+     .o_halt            (o_halt)
     );
 
     MUX_CONTROL_PRINCIPAL 
     mux_control_principal (
-     .i_control   (control_mux),
-     .i_burbuja       (i_burbuja),
-     .o_control       (control_id_ex)
+     .i_control         (control_mux),
+     .i_burbuja         (i_burbuja),
+     .o_control         (control_id_ex)
     );
 
     REG_BANK 
     #( 
      .DATA_WIDTH        (DATA_WIDTH)
     )
-     reg_bank (
+    reg_bank (
      .i_clock           (i_clock),
      .i_reset           (i_reset),
      .i_regwrite        (i_regwrite),
@@ -111,7 +111,7 @@ module I_DECODE
     #( 
      .DATA_WIDTH        (DATA_WIDTH)
     )
-     extensor (
+    extensor (
      .i_instruccion     (i_instruccion),
      .o_branchoffset    (o_extendido)
     );
@@ -120,17 +120,17 @@ module I_DECODE
     #( 
      .DATA_WIDTH        (DATA_WIDTH)
     )
-     decode_adder (
+    decode_adder (
      .i_currentpc       (i_currentpc),
      .i_extendido       (o_extendido),
      .o_pcbranch        (o_pcbranch)
     );
 
     U_BRANCH
-      #( 
+    #( 
      .DATA_WIDTH        (DATA_WIDTH)
     )
-     u_branch (
+    u_branch (
      .i_branch          (o_mem[0]),
      .i_regA            (o_regA),
      .i_regB            (o_regB),
@@ -139,25 +139,24 @@ module I_DECODE
     );
 
     U_JUMP
-      #( 
+    #( 
      .DATA_WIDTH        (DATA_WIDTH)
     )
-     u_jump (
-     .i_currentpc          (i_currentpc),
-     .i_instruccion        (i_instruccion),
+    u_jump (
+     .i_currentpc       (i_currentpc),
+     .i_instruccion     (i_instruccion),
      .i_regA            (o_regA),
-     .o_pcjump              (o_pcjump),
-     .o_return_address       (o_return_address),
-     .o_rd_selector          (rd_selector),
-     .o_jump          (o_jump),
-     .o_return      (o_return)
+     .o_pcjump          (o_pcjump),
+     .o_return_address  (o_return_address),
+     .o_rd_selector     (rd_selector),
+     .o_jump            (o_jump),
+     .o_return          (o_return)
     );
 
     MUX_RD_31
-     mux_rd_31 (
-     .i_rd          (i_instruccion[15:11]),
-     .i_rd_selector    (rd_selector),
-     .o_rd            (o_rd)
+    mux_rd_31 (
+     .i_rd              (i_instruccion[15:11]),
+     .i_rd_selector     (rd_selector),
+     .o_rd              (o_rd)
     );
-
 endmodule

@@ -41,27 +41,28 @@ module MEM_DATOS
     assign o_dataread = dataread;
 
     always @(*) begin
+        dataread <= 32'bx; 
         if(i_memread) begin
             case (i_size)
                 // byte
                 2'b01: begin
                     if(i_signed)
-                    dataread <= {{24{memoria_datos[i_address][7]}}, memoria_datos[i_address][7:0]};
+                        dataread <= {{24{memoria_datos[i_address][7]}}, memoria_datos[i_address][7:0]};
                     else
-                    dataread <= {24'b0, memoria_datos[i_address][7:0]};
+                        dataread <= {24'b0, memoria_datos[i_address][7:0]};
                 end
                 // halfword
                 2'b10: begin
                     if(i_signed)
-                    dataread <= {{16{memoria_datos[i_address][15]}}, memoria_datos[i_address][15:0]};
+                        dataread <= {{16{memoria_datos[i_address][15]}}, memoria_datos[i_address][15:0]};
                     else
-                    dataread <= {16'b0, memoria_datos[i_address][15:0]};
+                        dataread <= {16'b0, memoria_datos[i_address][15:0]};
                 end
                 default: begin
                     if(i_signed)
-                    dataread <= memoria_datos[i_address];
+                        dataread <= memoria_datos[i_address];
                     else
-                    dataread <= memoria_datos[i_address];
+                        dataread <= memoria_datos[i_address];
                 end
             endcase    
         end

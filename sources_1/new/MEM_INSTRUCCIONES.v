@@ -48,8 +48,6 @@ module MEM_INSTRUCCIONES
     assign o_haltsignal     = haltsignal;
     
     always @(*) begin
-        if (i_reset)
-        haltsignal = 1'b0;
         if(i_loading)
             memoria_instrucciones[i_address] = i_instruccion;
         else if (!haltsignal)
@@ -57,9 +55,13 @@ module MEM_INSTRUCCIONES
     end
 
     always @(negedge i_clock) begin
-        if (instr[31:26] == HALT)
-            haltsignal = 1'b1;
-        else
+        if (i_reset)
             haltsignal = 1'b0;
+        else begin
+            if (instr[31:26] == HALT)
+                haltsignal = 1'b1;
+            else
+                haltsignal = 1'b0;
+        end
     end
 endmodule
