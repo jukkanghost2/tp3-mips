@@ -35,8 +35,8 @@ module TOP_MIPS
         input                     i_start,
         input                     i_step,
         //OUTPUTS
-        output [DATA_WIDTH - 1:0]   o_result_wb,
-        output o_finish
+        output [DATA_WIDTH - 1:0] o_result_wb,
+        output                    o_finish
     );
 
     //I_DECODE - I_FETCH
@@ -67,8 +67,8 @@ module TOP_MIPS
     wire [1:0]              sizemem_id_ex;
     wire                    signedmem_id_ex;
     wire [DATA_WIDTH - 1:0] return_address_id_ex;
-    wire return_id_ex;
-    wire halt_id_ex;
+    wire                    return_id_ex;
+    wire                    halt_id_ex;
     // ID_EX - EXECUTE
     wire [DATA_WIDTH - 1:0] regA_execute;
     wire [DATA_WIDTH - 1:0] regB_execute;
@@ -87,8 +87,8 @@ module TOP_MIPS
     wire [1:0]              sizemem_ex_mem;
     wire                    signedmem_ex_mem;
     wire [DATA_WIDTH - 1:0] return_address_ex_mem;
-    wire return_ex_mem;
-    wire halt_ex_mem;
+    wire                    return_ex_mem;
+    wire                    halt_ex_mem;
     // EX_MEM - MEM
     wire [DATA_WIDTH - 1:0] aluresult_mem;
     wire [DATA_WIDTH - 1:0] regB_mem;
@@ -101,8 +101,8 @@ module TOP_MIPS
     wire [4:0]              rd_rt_mem_wb;
     wire [1:0]              wb_mem_wb;
     wire [DATA_WIDTH - 1:0] return_address_mem_wb;
-    wire return_mem_wb;
-    wire halt_mem_wb;
+    wire                    return_mem_wb;
+    wire                    halt_mem_wb;
     // MEM_WB - WB
     wire [DATA_WIDTH - 1:0] dataread_wb;
     wire [DATA_WIDTH - 1:0] address_wb;
@@ -134,7 +134,7 @@ module TOP_MIPS
      .i_clock           (i_clock),
      .i_reset           (i_reset),
      .i_start           (i_start),
-     .i_step           (i_step),
+     .i_step            (i_step),
      .i_pcburbuja       (pcburbuja),
      .i_instruccion     (i_instruccion),
      .i_address         (i_address),
@@ -154,7 +154,7 @@ module TOP_MIPS
      .i_clock           (i_clock),
      .i_reset           (i_reset),
      .i_start           (i_start),
-     .i_step           (i_step),
+     .i_step            (i_step),
      .i_if_id_burbuja   (if_id_burbuja),
      .i_instruccion     (instr_if_id),
      .i_pc              (pc_if_id),
@@ -190,21 +190,21 @@ module TOP_MIPS
      .o_sizemem         (sizemem_id_ex),
      .o_signedmem       (signedmem_id_ex),
      .o_pcjump          (pcjump_i_fetch),
-     .o_jump             (select[1]),
-     .o_return_address   (return_address_id_ex),
-     .o_return           (return_id_ex),
-     .o_halt           (halt_id_ex)
+     .o_jump            (select[1]),
+     .o_return_address  (return_address_id_ex),
+     .o_return          (return_id_ex),
+     .o_halt            (halt_id_ex)
     );
 
     ID_EX
     #( 
      .DATA_WIDTH        (DATA_WIDTH)
     )
-     id_ex (
+    id_ex (
      .i_clock           (i_clock),
      .i_reset           (i_reset),
      .i_start           (i_start),
-     .i_step           (i_step),
+     .i_step            (i_step),
      .i_regA            (regA_id_ex), 
      .i_regB            (regB_id_ex), 
      .i_extendido       (extendido_id_ex),
@@ -219,7 +219,7 @@ module TOP_MIPS
      .i_signedmem       (signedmem_id_ex),
      .i_return_address  (return_address_id_ex),
      .i_return          (return_id_ex),
-     .i_halt          (halt_id_ex),
+     .i_halt            (halt_id_ex),
      .o_regA            (regA_execute),
      .o_regB            (regB_execute),
      .o_extendido       (extendido_execute),
@@ -233,8 +233,8 @@ module TOP_MIPS
      .o_sizemem         (sizemem_ex_mem),
      .o_signedmem       (signedmem_ex_mem),
      .o_return_address  (return_address_ex_mem),
-     .o_return           (return_ex_mem),
-     .o_halt             (halt_ex_mem)
+     .o_return          (return_ex_mem),
+     .o_halt            (halt_ex_mem)
     );  
 
     EXECUTE
@@ -268,7 +268,7 @@ module TOP_MIPS
      .i_clock           (i_clock),
      .i_reset           (i_reset),
      .i_start           (i_start),
-     .i_step           (i_step),
+     .i_step            (i_step),
      .i_aluresult       (aluresult_ex_mem), 
      .i_regB            (regB_ex_mem), 
      .i_rd_rt           (rd_rt_ex_mem), 
@@ -278,7 +278,7 @@ module TOP_MIPS
      .i_signedmem       (signedmem_ex_mem),
      .i_return_address  (return_address_ex_mem),
      .i_return          (return_ex_mem),
-     .i_halt          (halt_ex_mem),
+     .i_halt            (halt_ex_mem),
      .o_aluresult       (aluresult_mem),
      .o_regB            (regB_mem),
      .o_rd_rt           (rd_rt_mem_wb),
@@ -286,9 +286,9 @@ module TOP_MIPS
      .o_wb              (wb_mem_wb),
      .o_sizemem         (sizemem_mem),
      .o_signedmem       (signedmem_mem),
-     .o_return_address   (return_address_mem_wb),
+     .o_return_address  (return_address_mem_wb),
      .o_return          (return_mem_wb),
-     .o_halt             (halt_mem_wb)
+     .o_halt            (halt_mem_wb)
     );
 
     MEM
@@ -296,7 +296,7 @@ module TOP_MIPS
      .DATA_WIDTH        (DATA_WIDTH)
     )
     mem (
-     .i_reset           (i_reset),
+     .i_clock           (i_clock),
      .i_address         (aluresult_mem), 
      .i_datawrite       (regB_mem), 
      .i_mem             (mem_mem), 
@@ -313,21 +313,21 @@ module TOP_MIPS
      .i_clock           (i_clock),
      .i_reset           (i_reset),
      .i_start           (i_start),
-     .i_step           (i_step),
+     .i_step            (i_step),
      .i_dataread        (dataread_mem_wb), 
      .i_address         (aluresult_mem), 
      .i_rd_rt           (rd_rt_mem_wb), 
      .i_wb              (wb_mem_wb), 
      .i_return_address  (return_address_mem_wb),
      .i_return          (return_mem_wb),
-     .i_halt          (halt_mem_wb),
+     .i_halt            (halt_mem_wb),
      .o_dataread        (dataread_wb), 
      .o_address         (address_wb),
      .o_rd_rt           (rt_rd_i_decode),
      .o_wb              (wb_i_decode_wb),
      .o_return_address  (return_address_wb),
      .o_return          (return_wb),
-     .o_halt             (o_finish)
+     .o_halt            (o_finish)
     );
 
     WB

@@ -56,6 +56,7 @@ module REG_BANK
         rt <= i_rt;
     end
 
+    //always @(negedge i_clock) begin
     always @(*) begin
         if (i_regwrite)
         registros[i_rd] <= i_writedata;

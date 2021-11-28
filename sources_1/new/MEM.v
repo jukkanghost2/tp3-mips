@@ -25,7 +25,7 @@ module MEM
         parameter DATA_WIDTH = 32
     )
     (   //INPUTS
-        input                       i_reset,
+        input                       i_clock,
         input                       i_signedmem,
         input [1:0]                 i_sizemem,
         input [DATA_WIDTH - 1:0]    i_address,
@@ -35,12 +35,12 @@ module MEM
         output [DATA_WIDTH - 1:0]   o_dataread
     );
 
-
      MEM_DATOS 
     #( 
      .DATA_WIDTH    (DATA_WIDTH)
     )
     mem_datos (
+     .i_clock       (i_clock),
      .i_signed      (i_signedmem),
      .i_size        (i_sizemem),
      .i_address     (i_address),
