@@ -25,52 +25,53 @@ module MEM_DATOS
         parameter DATA_WIDTH = 32
     )
     (   //INPUTS
-        input                       i_clock,
         input [DATA_WIDTH - 1:0]    i_address,
         input [DATA_WIDTH - 1:0]    i_datawrite,
         input                       i_memread,
         input                       i_memwrite,
         input                       i_signed,
         input [1:0]                 i_size,
+        input                 i_debug,
         //OUTPUTS
-        output [DATA_WIDTH - 1:0]   o_dataread
+        output [DATA_WIDTH - 1:0]   o_dataread,
+        output [DATA_WIDTH - 1:0]   o_mem_debug
     );
     //BLOQUE DE MEMORIA
     reg [DATA_WIDTH - 1:0] memoria_datos [DATA_WIDTH - 1:0];
     reg [DATA_WIDTH - 1:0] dataread;
+    reg [4:0] debug_counter;
 
     assign o_dataread = dataread;
+    assign o_mem_debug = memoria_datos[debug_counter];
 
     always @(*) begin
-        dataread <= 32'bx; 
         if(i_memread) begin
             case (i_size)
                 // byte
                 2'b01: begin
                     if(i_signed)
-                        dataread <= {{24{memoria_datos[i_address][7]}}, memoria_datos[i_address][7:0]};
+                    dataread <= {{24{memoria_datos[i_address][7]}}, memoria_datos[i_address][7:0]};
                     else
-                        dataread <= {24'b0, memoria_datos[i_address][7:0]};
+                    dataread <= {24'b0, memoria_datos[i_address][7:0]};
                 end
                 // halfword
                 2'b10: begin
                     if(i_signed)
-                        dataread <= {{16{memoria_datos[i_address][15]}}, memoria_datos[i_address][15:0]};
+                    dataread <= {{16{memoria_datos[i_address][15]}}, memoria_datos[i_address][15:0]};
                     else
-                        dataread <= {16'b0, memoria_datos[i_address][15:0]};
+                    dataread <= {16'b0, memoria_datos[i_address][15:0]};
                 end
                 default: begin
                     if(i_signed)
-                        dataread <= memoria_datos[i_address];
+                    dataread <= memoria_datos[i_address];
                     else
-                        dataread <= memoria_datos[i_address];
+                    dataread <= memoria_datos[i_address];
                 end
             endcase    
         end
     end
 
-    //always @(negedge i_clock) begin
-     always @(*) begin
+    always @(*) begin
         if(i_memwrite) begin
             case (i_size)
                 // byte
@@ -81,4 +82,14 @@ module MEM_DATOS
             endcase
         end
     end
+
+    always @(*) begin
+        if(i_debug) begin
+            debug_counter = debug_counter + 1;
+            if(debug_counter == 31) begin
+                debug_counter = 0;
+            end
+        end
+    end
+
 endmodule

@@ -26,7 +26,7 @@ module MUX_2_1_EX
     )
     (
         input [DATA_WIDTH - 1 : 0]  i_mux_ex_regb_result_mem,
-        input [DATA_WIDTH - 1 : 0]  i_extendido,
+        input [15:0]                i_extendido,
         input                       i_alusrc,
         output [DATA_WIDTH - 1 : 0] o_datoBAlu
     );

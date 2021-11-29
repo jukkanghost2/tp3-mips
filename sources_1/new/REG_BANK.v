@@ -32,9 +32,11 @@ module REG_BANK
         input [4:0]                 i_rs,
         input [4:0]                 i_rt,
         input [4:0]                 i_rd,
+        input                       i_debug,
         //OUTPUTS
         output [DATA_WIDTH - 1:0]   o_regA,
-        output [DATA_WIDTH - 1:0]   o_regB
+        output [DATA_WIDTH - 1:0]   o_regB,
+        output [DATA_WIDTH - 1:0]   o_reg_debug
     );
 
     //BANCO DE REGISTROS
@@ -42,9 +44,11 @@ module REG_BANK
 
     reg [4:0] rs;
     reg [4:0] rt;
+    reg [4:0] debug_counter;
     
     assign o_regA = registros[rs];
     assign o_regB = registros[rt];
+    assign o_reg_debug = registros[debug_counter];
     
     initial begin
         registros[1] = 1;
@@ -56,9 +60,17 @@ module REG_BANK
         rt <= i_rt;
     end
 
-    //always @(negedge i_clock) begin
     always @(*) begin
         if (i_regwrite)
         registros[i_rd] <= i_writedata;
+    end
+
+    always @(*) begin
+        if(i_debug) begin
+            debug_counter = debug_counter + 1;
+            if(debug_counter == 32) begin
+                debug_counter = 1;
+            end
+        end
     end
 endmodule
