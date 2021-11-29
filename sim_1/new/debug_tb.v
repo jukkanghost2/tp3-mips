@@ -37,6 +37,8 @@ module debug_tb;
         reg [DATA_WIDTH_UART - 1:0] i_tx_result;
         reg [PARITY_WIDTH_UART - 1:0] i_parity; 
         reg [DATA_WIDTH - 1:0] i_pc; 
+        reg [DATA_WIDTH - 1:0] i_reg; 
+        reg [DATA_WIDTH - 1:0] i_mem; 
         //OUTPUTS
         wire [DATA_WIDTH - 1:0]   o_instruccion;
         wire [DATA_WIDTH - 1:0]   o_address;
@@ -63,6 +65,8 @@ module debug_tb;
      .i_rx_data       (tx_data_debug),   
      .i_parity       (parity_debug),   
      .i_pc       (i_pc),   
+     .i_reg       (i_reg),   
+     .i_mem       (i_mem),   
      .o_parity       (),   
      .o_tx_data       (rx_uart),   
      .o_tx_done       (),   
@@ -70,7 +74,9 @@ module debug_tb;
      .o_address           (o_address), 
      .o_loading           (o_loading), 
      .o_start           (o_start),
-     .o_step          (o_step) 
+     .o_step          (o_step), 
+     .o_reg_send          (o_reg_send), 
+     .o_mem_send          (o_mem_send)
     );
 
     
@@ -106,6 +112,8 @@ module debug_tb;
         i_parity = 1'b0;  
         i_finish = 1'b0;
         i_pc = 32'b10000000111000010111000000100001;
+        i_reg = 32'b10111111111111111111000000100001;
+        i_mem = 32'b10000000000000010111000000100001;
         #200
         i_reset = 1'b1;
         #200
@@ -167,18 +175,30 @@ module debug_tb;
         #400
         i_tx_signal = 1'b0;
         #(demora*12)
-        #10000
 
-        #(demora*12)
-        result = rx_data;
-        #(demora*12)
-        result = rx_data;
-        #(demora*12)
-        result = rx_data;
-        #(demora*12)
-        result = rx_data;
+        
+        #((demora*12)*32*4)
+        #((demora*12)*32*4)
+        
+// //step
+//         i_tx_result = 8'b10101010;
+//         i_tx_signal = 1'b1;
+//         #400
+//         i_tx_signal = 1'b0;
+//         #(demora*12)
 
+//          #(demora*12)
+//         result = rx_data;
+//         #(demora*12)
+//         result = rx_data;
+//         #(demora*12)
+//         result = rx_data;
+//         #(demora*12)
+//         result = rx_data;
         i_finish = 1'b1;
+        #((demora*12)*32*4)
+        #((demora*12)*32*4)
+        #((demora*12)*32*4)
         #10000
         $finish;
     end
