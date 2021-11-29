@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company: UNC - FCEFyN
+// Engineer: Daniele - Gonzalez
 // 
 // Create Date: 28.11.2021 18:02:47
 // Design Name: 
 // Module Name: instr_tb
-// Project Name: 
+// Project Name: MIPS
 // Target Devices: 
 // Tool Versions: 
 // Description: 
@@ -71,182 +71,165 @@ module instr_tb;
         i_reset = 1'b0;
         #200
         i_loading = 1'b1;
+        // #200
+        // // NOP
+        // i_instruccion = 32'b111000_00000_00000_00000_00000_000000;
+        // #400
+        // i_address = i_address + 1;
+        // #200
+        // // NOP
+        // i_instruccion = 32'b111000_00000_00000_00000_00000_000000;
+        // #400
+        // i_address = i_address + 1;
         #200
-        // ADDI $1, $2, 32. -> r1 = 2 + r2 (2) = 4
-        i_instruccion = 32'b001000_00010_00001_0000000000000010;
-        #400
-        i_address = i_address + 1;
-        #200
-        // ANDI $1, $2, 32. -> r1 = 32 & r2 (2) = 0
-        i_instruccion = 32'b001100_00010_00001_0000000000100000;
-        #400
-        i_address = i_address + 1;
-        #200
-        // ORI $1, $2, 32. -> r1 = 32 | r2 (2) = 34
-        i_instruccion = 32'b001101_00010_00001_0000000000100000;
-        #400
-        i_address = i_address + 1;
-        #200
-        // XORI $1, $2, 32. -> r1 = 32 xor r2 (2) = 34
-        i_instruccion = 32'b001110_00010_00001_0000000000100000;
-        #400
-        i_address = i_address + 1;
-        #200
-        // LUI $1, $2, 32. -> r1 = 32 << 16 = 2097152 REVISAR. RS NO DEBERIA APARECER
-        i_instruccion = 32'b001111_00010_00001_0000000000100000;
-        #400
-        i_address = i_address + 1;
-        #200
-        // SLTI $1, $2, 32. -> r1 = R2 (2) < 32 = 1
-        i_instruccion = 32'b001010_00010_00001_0000000000100000;
-        #400
-        i_address = i_address + 1;
-        #200
-        // ADDI $1, $2, 2. -> r1 = 2 + r2 (2) = 4
-        i_instruccion = 32'b001000_00010_00001_0000000000000010;
-        #400
-        i_address = i_address + 1;
-        #200
-        // XORI $2, $4, 24. -> r2 = 24 xor r1 (4) = 28
-        i_instruccion = 32'b001110_00001_00010_0000000000011000;
-        #400
-        i_address = i_address + 1;
-        #200
-        // SLLV $3, $1, $2. -> R3 = R2 (28) << R1 (4) = 448 
-        i_instruccion = 32'b000000_00001_00010_00011_00000_000100;
-        #400
-        i_address = i_address + 1;
-        #200
-        // SRLV $3, $1, $2. -> R3 = R2 (28) >> R1 (4) = 1
-        i_instruccion = 32'b000000_00001_00010_00011_00000_000110;
-        #400
-        i_address = i_address + 1;
-        #200
-        // SRAV $3, $1, $2. -> R3 = R2 (28) >> (arithmetic) R1 (34) = 1
-        i_instruccion = 32'b000000_00001_00010_00011_00000_000111;
-        #400
-        i_address = i_address + 1;
-        #200
-        // ADDU $3, $1, $2. -> r3 = r1 (4) + r2 (28) = 32
-        i_instruccion = 32'b000000_00001_00010_00011_00000_100001;
-        #400
-        i_address = i_address + 1;
-        #200
-        // SUBU $3, $1, $2. -> r3 = r1 (4) - r2 (28) = -24 (4MILLONES UNSIGNED)
-        i_instruccion = 32'b000000_00001_00010_00011_00000_100011;
-        #400
-        i_address = i_address + 1;
-        #200
-        // XOR $3, $1, $2. -> r3 = r1 (4) xor r2 (28) = 24
-        i_instruccion = 32'b000000_00001_00010_00011_00000_100110;
-        #400
-        i_address = i_address + 1;
-        #200
-        // OR $3, $1, $2. -> r3 = r1 (4) or r2 (28) = 28
-        i_instruccion = 32'b000000_00001_00010_00011_00000_100101;
-        #400
-        i_address = i_address + 1;
-        #200
-        // AND $3, $1, $2. -> r3 = r1 (4) and r2 (28) = 4
-        i_instruccion = 32'b000000_00001_00010_00011_00000_100100;
-        #400
-        i_address = i_address + 1;
-        #200
-        // SLT $3, $1, $2. -> r3 = r1 (4) < r2 (28) = 1
-        i_instruccion = 32'b000000_00001_00010_00011_00000_101010;
-        #400
-        i_address = i_address + 1;
-        #200
-        // NOR $3, $1, $2. -> r3 = r1 (4) NOR r2 (28) = -29 (4MILLONES UNSIGNED)
-        i_instruccion = 32'b000000_00001_00010_00011_00000_100111;
-        #400
-        i_address = i_address + 1;
-        #200
-        // BEQ $1, $2, 100. -> SI R1 == R2 -> PC = PC + 104 -> NO
-        i_instruccion = 32'b000100_00001_00010_0000000001100100;
-        #400
-        i_address = i_address + 1;
-        #200
-        // BNE $1, $2, 100. -> SI R1 != R2 -> PC SIGUE, POR OFFSET 0 -> SI
-        i_instruccion = 32'b000101_00001_00010_0000000000000000;
-        #400
-        i_address = i_address + 1;
-        #200
-        // SW $1, 8 ($2). -> MEM[R2(28)+8] = R1 = 4;
+        // SW $1, 8 ($2). MEM[10] = 1
         i_instruccion = 32'b101011_00010_00001_0000000000001000;
         #400
         i_address = i_address + 1;
         #200
-        // LWU $1, 8 ($2). -> R1 = UNSIGNED(MEM[R2(28)+8]) = 4
-        i_instruccion = 32'b100111_00010_00001_0000000000001000;
+        // SB $2, 8 ($1). MEM[9] = 2
+        i_instruccion = 32'b101000_00001_00010_0000000000001000;
         #400
         i_address = i_address + 1;
         #200
-        // LW $1, 8 ($2). -> R1 = SIGNED(MEM[R2(28)+8]) = 4
-        i_instruccion = 32'b100011_00010_00001_0000000000001000;
+        // ADDI $3, $2, 5. R3 = 7
+        i_instruccion = 32'b001000_00010_00011_0000000000000101;
         #400
         i_address = i_address + 1;
         #200
-        // LB $1, 8 ($2). -> R1 = SIGNED(MEM[R2(28)+8][7:0]) = 4
-        i_instruccion = 32'b100000_00010_00001_0000000000001000;
+        // SH $3, 4 ($1). //mem 5 = 7
+        i_instruccion = 32'b101001_00001_00011_0000000000000100;
         #400
         i_address = i_address + 1;
         #200
-        // LBU $1, 8 ($2). -> R1 = UNSIGNED(MEM[R2(28)+8][7:0]) = 4
-        i_instruccion = 32'b100100_00010_00001_0000000000001000;
+        //LW $5, 3 ($2). //r5 = 7
+        i_instruccion = 32'b100011_00010_00101_0000000000000011;
         #400
         i_address = i_address + 1;
         #200
-        // LH $1, 8 ($2). -> R1 = SIGNED(MEM[R2(28)+8][15:0]) = 4
-        i_instruccion = 32'b100001_00010_00001_0000000000001000;
+        // BEQ $1, $2, 1.  //salto si r1 == r2  (1<<2) -> 4 instrucciones (primera vez no, despues si a slti)
+        i_instruccion = 32'b000100_00001_00010_0000000000000001;
         #400
         i_address = i_address + 1;
         #200
-        // LHU $1, 8 ($2). -> R1 = UNSIGNED(MEM[R2(28)+8][15:0]) = 4
-        i_instruccion = 32'b100101_00010_00001_0000000000001000;
+        // LWU $7, 8 ($2). //r7 = mem 10 = 1 (se ejecuta la primera vez, y la segunda por delay slot)
+        i_instruccion = 32'b100111_00010_00111_0000000000001000;
         #400
         i_address = i_address + 1;
         #200
-        // SB $1, 8 ($2). -> MEM[R2(28)+8] = R1[7:0] = 4;
-        i_instruccion = 32'b101000_00010_00001_0000000000001000;
+        // SLT $2, $7, $5.  //r2 = r7 < r5 = 1 (se ejecuta la primera vez, y la segunda no)
+        i_instruccion = 32'b000000_00111_00101_00010_00000_101010;
         #400
         i_address = i_address + 1;
         #200
-        // SH $1, 4 ($2). -> MEM[R2(28)+4] = R1[15:0] = 4;
-        i_instruccion = 32'b101001_00110_00001_0000000000000100;
+        // JR $5. //salto a pc = 7 (r5 = 7) (a beq, ahora va a saltar)
+        i_instruccion = 32'b000000_00101_000000000000000_001000;
         #400
         i_address = i_address + 1;
         #200
-        // JALR $4, $7. -> PC = r7 (x); REG[R4(x)] = pc + 2
-        i_instruccion = 32'b000000_00111_00000_00100_00000_001001;
+        //SLTI $1, $2, 32. //se ejecuta en delay slot -> r1 = 1 (r2 < 32) (se ejecuta la primera vez por delay slot y desp normal)
+        i_instruccion = 32'b001010_00010_00001_0000000000100000;
         #400
         i_address = i_address + 1;
         #200
-        // JAL 7. -> PC = PC + 1 + (7<<2) = 59
-        i_instruccion = 32'b000011_00000000000000000000000111;
+        // ORI $1, $2, 32. //r1 = 33
+        i_instruccion = 32'b001101_00010_00001_0000000000100000;
         #400
         i_address = i_address + 1;
         #200
-        // JR $7. NO LLEGA PORQUE PC SE FUE
-        i_instruccion = 32'b000000_00111_000000000000000_001000;
+        // XORI $2, $1, 24. r2 = 57
+        i_instruccion = 32'b001110_00001_00010_0000000000011000;
         #400
         i_address = i_address + 1;
         #200
-        // J 7. -> PC = PC + 1 + (7<<2)
-        i_instruccion = 32'b000010_00000000000000000000000111;
+        // LB $10, 8 ($7). //R10 = MEM 9[7:0] = 2
+        i_instruccion = 32'b100000_00111_01010_0000000000001000;
         #400
         i_address = i_address + 1;
         #200
-        // NOP 
-        i_instruccion = 32'b111000_00000_00000_00000_00000_000000;
+        // SLLV $3, $10, $2. r3 = 228 (57<<2)
+        i_instruccion = 32'b000000_01010_00010_00011_00000_000100;
         #400
         i_address = i_address + 1;
         #200
-        // HALT 
+        // SRLV $16, $3, $5. r16 = 0 (7<<228)
+        i_instruccion = 32'b000000_00011_00101_10000_00000_000110;
+        #400
+        i_address = i_address + 1;
+        #200
+        // SRAV $17, $1, $6. r17 = x (33<<x)
+        i_instruccion = 32'b000000_00001_00110_10001_00000_000111;
+        #400
+        i_address = i_address + 1;
+        #200
+        // ADDU $22, $1, $7. r22 = 34 (33 + 1)
+        i_instruccion = 32'b000000_00001_00111_10110_00000_100001;
+        #400
+        i_address = i_address + 1;
+        #200
+        // SUBU $11, $2, $6. r11 = x (57 - x)
+        i_instruccion = 32'b000000_00010_00110_01011_00000_100011;
+        #400
+        i_address = i_address + 1;
+        #200
+        // JAL 1. //SALTO 4 INSTR, r31 = pc + 2 (23) (revisar, deberia ser 22 porque esta es la instr 20, se ejecuta la sig (21) por delay slot)
+        i_instruccion = 32'b000011_00000000000000000000000001;
+        #400
+        i_address = i_address + 1; //R12 = R5 + 0 = 7
+        #200
+        // ADDI $12, $5, 0. r12 = 7 (7 + 0) (se ejecuta por delay slot)
+        i_instruccion = 32'b001000_00101_01100_0000000000000000;
+        #400
+        i_address = i_address + 1;
+        #200
+        //BNE $5, $12, 4. //no se ejecuta
+        i_instruccion = 32'b000101_00101_01100_0000000000000100;
+        #400
+        i_address = i_address + 1;
+        #200
+        // SRLV $26, $3, $5. //no se ejecuta
+        i_instruccion = 32'b000000_00011_00101_11010_00000_000110;
+        #400
+        i_address = i_address + 1;
+        #200
+        //SRAV $27, $1, $6. //r27 = x
+        i_instruccion = 32'b000000_00001_00110_11011_00000_000111;
+        #400
+        i_address = i_address + 1;
+        #200
+        //ADDU $21, $1, $7. r21 = 34 (33 + 1)
+        i_instruccion = 32'b000000_00001_00111_10101_00000_100001;
+        #400
+        i_address = i_address + 1;
+        #200
+        // J 1 (4 instr).
+        i_instruccion = 32'b000010_00000000000000000000000001;
+        #400
+        i_address = i_address + 1;
+        #200
+        // SUBU $29, $2, $6. r29 = x (ejecuta por delay slot)
+        i_instruccion = 32'b000000_00010_00110_11101_00000_100011;
+        #400
+        i_address = i_address + 1;
+        #200
+        // SUBU $25, $2, $6. r25 = x //no se ejecuta
+        i_instruccion = 32'b000000_00010_00110_11001_00000_100011;
+        #400
+        i_address = i_address + 1;
+        #200
+        // SUBU $25, $2, $6. r25 = x //no se ejecuta
+        i_instruccion = 32'b000000_00010_00110_11001_00000_100011;
+        #400
+        i_address = i_address + 1;
+        #200
+        // JR $32. salto a r32 = 23 << 2, revisar esto
+        i_instruccion = 32'b000000_11111_000000000000000_001000;
+        #400
+        i_address = i_address + 1;
+        #200
+        // HALT. se ejecuta por delay slot, ojo revisar porque no para
         i_instruccion = 32'b111111_00000_00000_00000_00000_000000;
         #400
-        i_address = i_address + 1;
-        #200
         i_reset = 1'b1;
         #400
         i_reset = 1'b0;
