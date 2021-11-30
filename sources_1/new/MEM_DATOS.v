@@ -25,6 +25,8 @@ module MEM_DATOS
         parameter DATA_WIDTH = 32
     )
     (   //INPUTS
+        input i_clock,
+        input i_reset,
         input [DATA_WIDTH - 1:0]    i_address,
         input [DATA_WIDTH - 1:0]    i_datawrite,
         input                       i_memread,
@@ -41,10 +43,15 @@ module MEM_DATOS
     reg [DATA_WIDTH - 1:0] dataread;
     reg [4:0] debug_counter;
 
+    // initial begin
+    //     debug_counter = 0;
+    // end
+
     assign o_dataread = dataread;
     assign o_mem_debug = memoria_datos[debug_counter];
 
     always @(*) begin
+        dataread <= 32'bx; 
         if(i_memread) begin
             case (i_size)
                 // byte
@@ -71,7 +78,7 @@ module MEM_DATOS
         end
     end
 
-    always @(*) begin
+    always @(negedge i_clock) begin
         if(i_memwrite) begin
             case (i_size)
                 // byte
@@ -83,8 +90,10 @@ module MEM_DATOS
         end
     end
 
-    always @(*) begin
-        if(i_debug) begin
+    always @(negedge i_clock) begin
+        if(i_reset)
+            debug_counter = 0;
+        else if(i_debug) begin
             debug_counter = debug_counter + 1;
             if(debug_counter == 31) begin
                 debug_counter = 0;

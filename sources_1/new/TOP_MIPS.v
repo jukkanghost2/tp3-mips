@@ -34,7 +34,6 @@ module TOP_MIPS
         input                     i_reset,
         input                     i_rx_data,
         input  [PARITY_WIDTH_UART - 1:0]    i_rx_parity,
-        input                     i_rx_done,
         // input [DATA_WIDTH - 1:0]  i_instruccion,
         // input [DATA_WIDTH - 1:0]  i_address,
         // input                     i_loading,
@@ -45,9 +44,7 @@ module TOP_MIPS
         //OUTPUTS
         output [DATA_WIDTH - 1:0]   o_result_wb,
         output                     o_tx_data,
-        output  [PARITY_WIDTH_UART - 1:0]   o_tx_parity,
-        output                     o_tx_done,
-        output                     o_tx_available
+        output  [PARITY_WIDTH_UART - 1:0]   o_tx_parity
         // output [DATA_WIDTH - 1:0]   o_pc_debug,
         // output [DATA_WIDTH - 1:0]   o_reg_debug,
         // output [DATA_WIDTH - 1:0]   o_mem_debug,
@@ -325,6 +322,7 @@ module TOP_MIPS
      .DATA_WIDTH        (DATA_WIDTH)
     )
     mem (
+     .i_clock           (i_clock),
      .i_reset           (i_reset),
      .i_address         (aluresult_mem), 
      .i_datawrite       (regB_mem), 
@@ -421,7 +419,7 @@ module TOP_MIPS
      .o_tx_data  (o_tx_data),
      .o_instruccion  (debug_instruccion),
      .o_address  (debug_address),
-     .o_loading  (loading_instruccion),
+     .o_loading  (loading),
      .o_start  (start),
      .o_step  (step),
      .o_reg_send  (reg_send),

@@ -75,7 +75,8 @@ module CONTROL_PRINCIPAL
     reg                 signedmem;
     reg                 beq_or_bne;
     reg                 halt;
-
+    reg [SIZEOP - 1:0]  funct;
+    
     assign o_ex         = ex;
     assign o_mem        = mem;
     assign o_wb         = wb;
@@ -86,15 +87,38 @@ module CONTROL_PRINCIPAL
 
     always @(*) begin
         opcode = i_instruccion[31:26];
+        funct       = i_instruccion[5:0];
         case (opcode)
             R_TYPE: begin
-                ex          = 4'b1010;
-                mem         = 3'b000;
-                wb          = 2'b11;
-                sizemem     = 2'bxx;
-                signedmem   = 1'bx;
-                beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                case(funct)
+                    JR: begin
+                        ex          = 4'bxxxx;
+                        mem         = 3'bxxx;
+                        wb          = 2'bxx;
+                        sizemem     = 2'bxx;
+                        signedmem   = 1'bx;
+                        beq_or_bne  = 1'b0;
+                        halt  = 1'b0;
+                    end
+                    JALR: begin
+                        ex          = 4'b1xxx;
+                        mem         = 3'bxxx;
+                        wb          = 2'b11;
+                        sizemem     = 2'bxx;
+                        signedmem   = 1'bx;
+                        beq_or_bne  = 1'b0;
+                        halt  = 1'b0;
+                    end
+                    default: begin
+                        ex          = 4'b1010;
+                        mem         = 3'b000;
+                        wb          = 2'b11;
+                        sizemem     = 2'bxx;
+                        signedmem   = 1'bx;
+                        beq_or_bne  = 1'b0;
+                        halt  = 1'b0;
+                    end
+                endcase
             end
             LW: begin
                 ex          = 4'b0100;
@@ -258,25 +282,8 @@ module CONTROL_PRINCIPAL
                 beq_or_bne  = 1'b0;
                 halt  = 1'b0;
             end
-            JR: begin
-                ex          = 4'bxxxx;
-                mem         = 3'bxxx;
-                wb          = 2'bxx;
-                sizemem     = 2'bxx;
-                signedmem   = 1'bx;
-                beq_or_bne  = 1'b0;
-                halt  = 1'b0;
-            end
+           
             JAL: begin
-                ex          = 4'b1xxx;
-                mem         = 3'bxxx;
-                wb          = 2'b11;
-                sizemem     = 2'bxx;
-                signedmem   = 1'bx;
-                beq_or_bne  = 1'b0;
-                halt  = 1'b0;
-            end
-            JALR: begin
                 ex          = 4'b1xxx;
                 mem         = 3'bxxx;
                 wb          = 2'b11;

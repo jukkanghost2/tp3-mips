@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+ `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -243,6 +243,7 @@ always @(posedge i_clock) //MEMORIA
                 end
             end
             if(i_finish) begin
+                next_pc_send_flag = 1'b1;
                 next_state = STATE_FINISH;
             end
         end
@@ -334,6 +335,7 @@ always @(posedge i_clock) //MEMORIA
         end
         STATE_CONTINUE: begin
             if(i_finish) begin
+                next_pc_send_flag = 1'b1;
                 next_state = STATE_FINISH;
             end
             else begin
@@ -427,7 +429,20 @@ always @(posedge i_clock) //MEMORIA
             end
         end
         default: begin
-            
+            next_address =       0;
+            next_byte_counter =  0;
+            next_instruccion =   0;
+            next_loading =       0;
+            next_step =          0;
+            next_pc_counter =    0;
+            next_pc_send_flag =  0;
+            next_reg_counter =   0;
+            next_reg_send_flag = 0;
+            next_reg_send =      0;
+            next_mem_counter =   0;
+            next_mem_send_flag = 0;
+            next_mem_send =      0;
+            next_state = STATE_RECEIVING_INSTRUCTION;
         end
     endcase
     end
@@ -474,7 +489,13 @@ always @(posedge i_clock) //MEMORIA
             mem_send = current_mem_send;
         end
         default: begin
-            
+            loading = 0;
+            instruccion = 0;
+            address = 0;
+            start = 1'b0;
+            step = 1'b0;
+            reg_send = 1'b0;
+            mem_send = 1'b0;
         end
     endcase
     end

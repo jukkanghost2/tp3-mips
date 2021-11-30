@@ -57,6 +57,10 @@ module I_DECODE
         output o_halt,
         output [DATA_WIDTH - 1:0]   o_reg_debug
     );
+    wire [8:0]  control_mux;
+    wire [8:0]  control_id_ex;
+    wire        beq_or_bne;
+    wire rd_selector;
 
     assign o_opcode = i_instruccion[31:26];
     assign o_rs     = i_instruccion[25:21];
@@ -65,10 +69,6 @@ module I_DECODE
     assign o_mem    = control_id_ex[4:2];
     assign o_wb     = control_id_ex[1:0];
 
-    wire [8:0]  control_mux;
-    wire [8:0]  control_id_ex;
-    wire        beq_or_bne;
-    wire rd_selector;
 
     CONTROL_PRINCIPAL 
     #( 

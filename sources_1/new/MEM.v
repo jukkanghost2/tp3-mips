@@ -25,6 +25,7 @@ module MEM
         parameter DATA_WIDTH = 32
     )
     (   //INPUTS
+        input                       i_clock,
         input                       i_reset,
         input                       i_signedmem,
         input [1:0]                 i_sizemem,
@@ -43,6 +44,8 @@ module MEM
      .DATA_WIDTH    (DATA_WIDTH)
     )
     mem_datos (
+     .i_clock        (i_clock),
+     .i_reset        (i_reset),
      .i_signed      (i_signedmem),
      .i_size        (i_sizemem),
      .i_address     (i_address),

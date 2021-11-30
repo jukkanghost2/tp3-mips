@@ -37,10 +37,6 @@ module U_JUMP
         output o_return
     );
 
-    initial begin
-        rd_selector = 1'b0;
-        jump = 1'b0;
-    end
 
     localparam [SIZEOP - 1:0]     J         = 6'b000010;
     localparam [SIZEOP - 1:0]     JAL       = 6'b000011;
@@ -54,6 +50,11 @@ module U_JUMP
     reg rd_selector;
     reg return;
 
+    initial begin
+        rd_selector = 1'b0;
+        jump = 1'b0;
+    end
+
     assign o_pcjump = pcjump;
     assign o_jump = jump;
     assign o_return_address = return_address;
@@ -64,15 +65,17 @@ module U_JUMP
         rd_selector = 1'b0;
         jump = 1'b0;
         return = 1'b0;
+        pcjump = 32'b0;
+        return_address = 32'b0;
         if(i_instruccion[31:26] == J) begin
-            pcjump = i_currentpc + (i_instruccion[25:0] << 2);
+            pcjump = i_currentpc + i_instruccion[25:0];
             rd_selector = 1'b0;
             return = 1'b0;
             jump = 1'b1;
         end
         if(i_instruccion[31:26] == JAL) begin
-            pcjump = i_currentpc + (i_instruccion[25:0] << 2);
-            return_address = i_currentpc + 2;
+            pcjump = i_currentpc + i_instruccion[25:0];
+            return_address = i_currentpc + 1;
             rd_selector = 1'b1;
             return = 1'b1;
             jump = 1'b1;
@@ -86,7 +89,7 @@ module U_JUMP
             end
             if(i_instruccion[5:0] == JALR) begin
                 pcjump = i_regA;
-                return_address = i_currentpc + 2;
+                return_address = i_currentpc + 1;
                 rd_selector = 1'b0;
                 return = 1'b1;
                 jump = 1'b1;

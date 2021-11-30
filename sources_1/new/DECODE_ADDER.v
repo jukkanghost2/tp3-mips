@@ -31,5 +31,5 @@ module DECODE_ADDER
         output [DATA_WIDTH - 1:0]   o_pcbranch
     );
 
-    assign o_pcbranch = i_currentpc + (i_extendido << 2);
+    assign o_pcbranch = i_currentpc + i_extendido;
 endmodule

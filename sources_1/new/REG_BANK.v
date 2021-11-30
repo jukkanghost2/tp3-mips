@@ -53,19 +53,21 @@ module REG_BANK
     initial begin
         registros[1] = 1;
         registros[2] = 2;
+        registros[10] = 4;
+        debug_counter = 1;
     end
 
     always @(*) begin
         rs <= i_rs;
         rt <= i_rt;
     end
-
-    always @(*) begin
+// negedge i_clock
+    always @(negedge i_clock) begin
         if (i_regwrite)
         registros[i_rd] <= i_writedata;
     end
 
-    always @(*) begin
+    always @(negedge i_clock) begin
         if(i_debug) begin
             debug_counter = debug_counter + 1;
             if(debug_counter == 32) begin
