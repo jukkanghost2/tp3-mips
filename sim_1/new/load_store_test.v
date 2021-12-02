@@ -1,11 +1,11 @@
-`timescale 1ns / 1ps
+`timescale 1ns / 100ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
 // 
-// Create Date: 11/30/2021 03:49:40 PM
+// Create Date: 12/02/2021 04:45:33 PM
 // Design Name: 
-// Module Name: test_jal_jalr
+// Module Name: load_store_test
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module test_jal_jalr;
+module load_store_test;
      //PARAMETERS
         parameter DATA_WIDTH = 32;
         parameter DATA_WIDTH_UART = 8;
@@ -111,21 +111,21 @@ module test_jal_jalr;
   
 
     initial begin
-    instrucciones[0] = 32'b001000_00010_00011_0000000000000001;
-    instrucciones[1] = 32'b000000_00011_00001_00100_00000_100001;
-    instrucciones[2] = 32'b101011_00001_00100_0000000000000010;
-    instrucciones[3] = 32'b100011_00001_01001_0000000000000010;
-    instrucciones[4] = 32'b001000_00001_10100_0000000000000010;
-    instrucciones[5] = 32'b001000_00001_01000_0000000000000011;
-    instrucciones[6] = 32'b000100_00100_01000_0000000000000011;
-    instrucciones[7] = 32'b001000_00001_10100_0000000000000010;
-    instrucciones[8] = 32'b111000_00000_00000_00000_00000_000000;
-    instrucciones[9] = 32'b001000_00001_10100_0000000000000011;
-    instrucciones[10] = 32'b111111_00000_00000_00000_00000_000000;
-    instrucciones[11] = 32'b000000_00000_00000_00000_00000_000000;
-    // instrucciones[12] = 32'b100000_00111_01010_0000000000001000;
-    // instrucciones[13] = 32'b000000_01010_00010_00011_00000_000100;
-    // instrucciones[14] = 32'b000000_00011_00101_10000_00000_000110;
+    instrucciones[0] = 32'b100011_00001_00011_0000000000000001;
+    instrucciones[1] = 32'b100011_00001_00100_0000000000011110;
+    instrucciones[2] = 32'b001000_00011_00101_0000010111011100;
+    instrucciones[3] = 32'b001000_00100_00110_0111111111101110;
+    instrucciones[4] = 32'b001000_00110_00111_0111111111101110;
+    instrucciones[5] = 32'b101011_00001_00110_0000000000010110;
+    instrucciones[6] = 32'b101000_00001_00101_0000000000001000;
+    instrucciones[7] = 32'b101001_00001_00111_0000000000001010;
+    instrucciones[8] = 32'b101011_00001_00111_0000000000000010;
+    instrucciones[9] = 32'b100000_00001_01010_0000000000000010;
+    instrucciones[10] = 32'b100100_00001_01011_0000000000000010;
+    instrucciones[11] = 32'b100001_00001_01100_0000000000010110;
+    instrucciones[12] = 32'b100101_00001_01101_0000000000000010;
+    instrucciones[13] = 32'b111111_00000_00000_00000_00000_000000;
+    instrucciones[14] = 32'b000000_00000_00000_00000_00000_000000;
     // instrucciones[15] = 32'b000000_00001_00110_10001_00000_000111;
     // instrucciones[16] = 32'b000000_00001_00111_10110_00000_100001;
     // instrucciones[17] = 32'b000000_00010_00110_01011_00000_100011;
@@ -171,7 +171,7 @@ module test_jal_jalr;
         #400
         i_reset = 1'b0;
         #200
-        for(integer instruccion_counter = 0; instruccion_counter < 12; instruccion_counter = instruccion_counter + 1) begin
+        for(integer instruccion_counter = 0; instruccion_counter < 15; instruccion_counter = instruccion_counter + 1) begin
             i_tx_byte = instrucciones[instruccion_counter][7:0];
             i_tx_signal = 1'b1; 
             #200
@@ -279,3 +279,4 @@ always #5 i_clock = ~i_clock;
 always #25 i_clock_uart = ~i_clock_uart;
 
 endmodule
+
