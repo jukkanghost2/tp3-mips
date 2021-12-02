@@ -25,7 +25,6 @@ module WB
         parameter DATA_WIDTH = 32
     )
     (   //INPUTS
-        input                       i_reset,
         input [DATA_WIDTH - 1:0]    i_dataread,
         input [DATA_WIDTH - 1:0]    i_address,
         input                       i_memtoreg,

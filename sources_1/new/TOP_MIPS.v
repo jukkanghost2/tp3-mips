@@ -32,6 +32,7 @@ module TOP_MIPS
     (   //INPUTS
         input                     i_clock,
         input                     i_reset,
+        input                     i_reset_clock,
         input                     i_rx_data,
         input  [PARITY_WIDTH_UART - 1:0]    i_rx_parity,
         // input [DATA_WIDTH - 1:0]  i_instruccion,
@@ -42,9 +43,10 @@ module TOP_MIPS
         // input                     i_debug_reg,
         // input                     i_debug_mem,
         //OUTPUTS
-        output [DATA_WIDTH - 1:0]   o_result_wb,
+        // output [DATA_WIDTH - 1:0]   o_result_wb,
         output                     o_tx_data,
-        output  [PARITY_WIDTH_UART - 1:0]   o_tx_parity
+        output  [PARITY_WIDTH_UART - 1:0]   o_tx_parity,
+        output o_locked
         // output [DATA_WIDTH - 1:0]   o_pc_debug,
         // output [DATA_WIDTH - 1:0]   o_reg_debug,
         // output [DATA_WIDTH - 1:0]   o_mem_debug,
@@ -146,16 +148,29 @@ module TOP_MIPS
     wire [DATA_WIDTH - 1:0] debug_address;
     wire [DATA_WIDTH - 1:0] reg_debug;
     wire [DATA_WIDTH - 1:0] mem_debug;
+    // CLOCK
+    wire clk_out1;
 
  
-    assign o_result_wb  = mem_or_reg_i_decode; 
+    // assign o_result_wb  = mem_or_reg_i_decode; 
+
+    clk_wiz_0 inst
+    (
+    // Clock out ports  
+    .clk_out1(clk_out1),
+    // Status and control signals               
+    .reset(i_reset_clock), 
+    .locked(o_locked),
+    // Clock in ports
+    .clk_in1(i_clock)
+    );
 
     I_FETCH 
     #( 
      .DATA_WIDTH        (DATA_WIDTH)
     )
     i_fetch (
-     .i_clock           (i_clock),
+     .i_clock           (clk_out1),
      .i_reset           (i_reset),
      .i_start           (start),
      .i_step           (step),
@@ -175,7 +190,7 @@ module TOP_MIPS
      .DATA_WIDTH        (DATA_WIDTH)
     )
     if_id (
-     .i_clock           (i_clock),
+     .i_clock           (clk_out1),
      .i_reset           (i_reset),
      .i_start           (start),
      .i_step           (step),
@@ -191,7 +206,7 @@ module TOP_MIPS
      .DATA_WIDTH        (DATA_WIDTH)
     )
     i_decode (
-     .i_clock           (i_clock),
+     .i_clock           (clk_out1),
      .i_reset           (i_reset),
      .i_regwrite        (wb_i_decode_wb[1]), 
      .i_writedata       (mem_or_reg_i_decode), 
@@ -227,7 +242,7 @@ module TOP_MIPS
      .DATA_WIDTH        (DATA_WIDTH)
     )
      id_ex (
-     .i_clock           (i_clock),
+     .i_clock           (clk_out1),
      .i_reset           (i_reset),
      .i_start           (start),
      .i_step           (step),
@@ -291,7 +306,7 @@ module TOP_MIPS
      .DATA_WIDTH        (DATA_WIDTH)
     )
     ex_mem (
-     .i_clock           (i_clock),
+     .i_clock           (clk_out1),
      .i_reset           (i_reset),
      .i_start           (start),
      .i_step           (step),
@@ -322,7 +337,7 @@ module TOP_MIPS
      .DATA_WIDTH        (DATA_WIDTH)
     )
     mem (
-     .i_clock           (i_clock),
+     .i_clock           (clk_out1),
      .i_reset           (i_reset),
      .i_address         (aluresult_mem), 
      .i_datawrite       (regB_mem), 
@@ -339,7 +354,7 @@ module TOP_MIPS
      .DATA_WIDTH        (DATA_WIDTH)
     )
     mem_wb (
-     .i_clock           (i_clock),
+     .i_clock           (clk_out1),
      .i_reset           (i_reset),
      .i_start           (start),
      .i_step           (step),
@@ -364,7 +379,6 @@ module TOP_MIPS
      .DATA_WIDTH        (DATA_WIDTH)
     )
     wb (
-     .i_reset           (i_reset),
      .i_dataread        (dataread_wb), 
      .i_address         (address_wb), 
      .i_memtoreg        (wb_i_decode_wb[0]), 
@@ -407,7 +421,7 @@ module TOP_MIPS
      .PARITY_WIDTH_UART        (PARITY_WIDTH_UART)
     )
     debug_unit (
-     .i_clock       (i_clock), 
+     .i_clock       (clk_out1), 
      .i_reset        (i_reset), 
      .i_rx_data              (i_rx_data), 
      .i_parity              (i_rx_parity), 

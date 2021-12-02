@@ -54,7 +54,8 @@ module REG_BANK
         registros[1] = 1;
         registros[2] = 2;
         registros[10] = 4;
-        debug_counter = 1;
+        registros[31] = 256;
+        // debug_counter = 1;
     end
 
     always @(*) begin
@@ -68,10 +69,12 @@ module REG_BANK
     end
 
     always @(negedge i_clock) begin
-        if(i_debug) begin
+        if(i_reset)
+            debug_counter = 0;
+        else if(i_debug) begin
             debug_counter = debug_counter + 1;
             if(debug_counter == 32) begin
-                debug_counter = 1;
+                debug_counter = 0;
             end
         end
     end

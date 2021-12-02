@@ -43,9 +43,10 @@ module MEM_DATOS
     reg [DATA_WIDTH - 1:0] dataread;
     reg [4:0] debug_counter;
 
-    // initial begin
-    //     debug_counter = 0;
-    // end
+    initial begin
+        memoria_datos[2] = 99;
+        memoria_datos[31] = 100;
+    end
 
     assign o_dataread = dataread;
     assign o_mem_debug = memoria_datos[debug_counter];
@@ -95,7 +96,7 @@ module MEM_DATOS
             debug_counter = 0;
         else if(i_debug) begin
             debug_counter = debug_counter + 1;
-            if(debug_counter == 31) begin
+            if(debug_counter == 32) begin
                 debug_counter = 0;
             end
         end

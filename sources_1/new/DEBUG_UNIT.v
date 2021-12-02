@@ -50,8 +50,12 @@ module DEBUG_UNIT
 
         wire [DATA_WIDTH_UART - 1:0]   instruccion_uart_debug;
         wire uart_done_rx;
-        reg tx_signal;
-        reg [DATA_WIDTH_UART - 1:0]  tx_send_byte;
+        reg current_tx_signal;
+        reg [DATA_WIDTH_UART - 1:0]  current_tx_send_byte;
+         reg next_tx_signal;
+        reg [DATA_WIDTH_UART - 1:0]  next_tx_send_byte;
+        wire tx_signal;
+        wire [DATA_WIDTH_UART - 1:0] tx_send_byte;
         wire tx_done_debug;
         wire tx_available_debug;
 
@@ -97,17 +101,15 @@ module DEBUG_UNIT
      reg [2:0] next_byte_counter; // byte a mandar de la instruccion
     reg [2:0] current_byte_counter; // byte a mandar de la instruccion
 
-    reg current_pc_counter;
-    reg next_pc_counter;
 
-    reg [4:0] current_reg_counter;
-    reg [4:0] next_reg_counter;
+    reg [5:0] current_reg_counter;
+    reg [5:0] next_reg_counter;
     reg reg_send;
     reg current_reg_send;
     reg next_reg_send;
     
-    reg [4:0] current_mem_counter;
-    reg [4:0] next_mem_counter;
+    reg [5:0] current_mem_counter;
+    reg [5:0] next_mem_counter;
     reg mem_send;
     reg current_mem_send;
     reg next_mem_send;
@@ -118,6 +120,8 @@ module DEBUG_UNIT
     reg next_reg_send_flag;
     reg current_mem_send_flag;
     reg next_mem_send_flag;
+    reg next_done_flag;
+    reg current_done_flag;
 
     assign o_instruccion = instruccion;
     assign o_loading = loading;
@@ -126,6 +130,8 @@ module DEBUG_UNIT
     assign o_address = address;
     assign o_reg_send = reg_send;
     assign o_mem_send = mem_send;
+    assign tx_signal = current_tx_signal;
+    assign tx_send_byte = current_tx_send_byte;
 
     // One-Hot, One-Cold  
   localparam STATE_RECEIVING_INSTRUCTION  = 6'b000001;
@@ -143,14 +149,16 @@ always @(posedge i_clock) //MEMORIA
             current_address = 32'b0;
             current_loading = 1'b0;
             current_step = 1'b0;
-            current_pc_counter = 1'b0;
             current_reg_counter = 0;
             current_mem_counter = 0;
-            current_pc_send_flag  = 0;
+            current_pc_send_flag  = 1;
             current_reg_send_flag = 0;
             current_mem_send_flag = 0;
             current_reg_send = 0;
             current_mem_send = 0;
+            current_tx_send_byte = 0;
+            current_tx_signal = 0;
+            current_done_flag = 1;
             current_state <= STATE_RECEIVING_INSTRUCTION; //ESTADO INICIAL
     end 
     else begin
@@ -160,7 +168,6 @@ always @(posedge i_clock) //MEMORIA
         current_state <= next_state; 
         current_loading <= next_loading; 
         current_step <= next_step; 
-        current_pc_counter <= next_pc_counter; 
         current_pc_send_flag <= next_pc_send_flag; 
         current_reg_counter <= next_reg_counter; 
         current_reg_send_flag <= next_reg_send_flag; 
@@ -168,6 +175,9 @@ always @(posedge i_clock) //MEMORIA
         current_mem_counter <= next_mem_counter; 
         current_mem_send_flag <= next_mem_send_flag; 
         current_mem_send <= next_mem_send; 
+        current_tx_send_byte <= next_tx_send_byte;
+        current_tx_signal <= next_tx_signal;
+        current_done_flag <= next_done_flag;
     end        
 
 
@@ -178,7 +188,6 @@ always @(posedge i_clock) //MEMORIA
     next_state = current_state;
     next_loading = current_loading;
     next_step = current_step;
-    next_pc_counter = current_pc_counter;
     next_pc_send_flag = current_pc_send_flag;
     next_reg_counter = current_reg_counter;
     next_reg_send_flag = current_reg_send_flag;
@@ -186,6 +195,9 @@ always @(posedge i_clock) //MEMORIA
     next_mem_counter = current_mem_counter;
     next_mem_send_flag = current_mem_send_flag;
     next_mem_send = current_mem_send;
+    next_tx_send_byte = current_tx_send_byte;
+    next_tx_signal = current_tx_signal;
+    next_done_flag = current_done_flag;
     case (current_state)
         STATE_RECEIVING_INSTRUCTION: begin
             if(current_loading) begin
@@ -248,89 +260,90 @@ always @(posedge i_clock) //MEMORIA
             end
         end
         STATE_DEBUG_SEND: begin
-            tx_signal = 1'b0;
+            next_tx_signal = 1'b0;
             next_step = 1'b0;
             next_state = STATE_DEBUG_SEND;
-            if(current_pc_send_flag) begin
-                if (tx_available_debug) begin
-                    if(current_byte_counter == 0)
-                        tx_send_byte = i_pc[7:0];
-                    if(current_byte_counter == 1)
-                        tx_send_byte = i_pc[15:8];
-                    if(current_byte_counter == 2)
-                        tx_send_byte = i_pc[23:16];
-                    next_byte_counter = current_byte_counter + 1;
-                    if(current_byte_counter == 3) begin
-                        tx_send_byte = i_pc[31:24];
-                        next_byte_counter = 0;
-                        next_pc_counter = 1;
-                    end
-                    tx_signal = 1'b1;
-                end
-                if(current_pc_counter == 1) begin
-                    next_pc_counter = 0;
-                    next_pc_send_flag = 0;
-                    next_reg_send_flag = 1;
-                end
+            if(tx_done_debug) begin
+                next_done_flag = 1;
             end
-            if(current_reg_send_flag) begin
-                next_reg_send = 1'b0;
+            if(current_reg_counter == 32) begin
+                    next_reg_send = 0;
+                    next_reg_counter = 0;
+                    next_reg_send_flag = 0;
+                    next_mem_send_flag = 1;
+                    next_state = STATE_DEBUG_SEND;
+            end
+            if(current_mem_counter == 32) begin
+                    next_mem_send = 1'b0;
+                    next_mem_counter = 0;
+                    next_mem_send_flag = 0;
+                    next_pc_send_flag = 1;
+                    next_state = STATE_DEBUG;
+            end
+            if(current_done_flag) begin
+                if(current_pc_send_flag) begin
                     if (tx_available_debug) begin
+                        next_done_flag = 0;
                         if(current_byte_counter == 0)
-                            tx_send_byte = i_reg[7:0];
+                            next_tx_send_byte = i_pc[7:0];
                         if(current_byte_counter == 1)
-                            tx_send_byte = i_reg[15:8];
+                            next_tx_send_byte = i_pc[15:8];
                         if(current_byte_counter == 2)
-                            tx_send_byte = i_reg[23:16];
+                            next_tx_send_byte = i_pc[23:16];
                         next_byte_counter = current_byte_counter + 1;
-                        next_state = STATE_DEBUG_SEND;
                         if(current_byte_counter == 3) begin
-                            tx_send_byte = i_reg[31:24];
+                            next_tx_send_byte = i_pc[31:24];
                             next_byte_counter = 0;
-                            next_reg_counter = current_reg_counter + 1;
-                            next_reg_send = 1'b1;
-                            next_state = STATE_DEBUG_SEND;
+                            next_pc_send_flag = 0;
+                            next_reg_send_flag = 1;
                         end
-                        tx_signal = 1'b1;
+                        next_tx_signal = 1'b1;
                     end
-                if(current_reg_counter == 31) begin
-                        next_reg_send = 0;
-                        next_reg_counter = 0;
-                        next_reg_send_flag = 0;
-                        next_mem_send_flag = 1;
-                        next_state = STATE_DEBUG_SEND;
                 end
-            end
-            if(current_mem_send_flag) begin
-                next_mem_send = 1'b0;
-                    if (tx_available_debug) begin
-                        if(current_byte_counter == 0)
-                            tx_send_byte = i_mem[7:0];
-                        if(current_byte_counter == 1)
-                            tx_send_byte = i_mem[15:8];
-                        if(current_byte_counter == 2)
-                            tx_send_byte = i_mem[23:16];
-                        next_byte_counter = current_byte_counter + 1;
-                        next_state = STATE_DEBUG_SEND;
-                        if(current_byte_counter == 3) begin
-                            tx_send_byte = i_mem[31:24];
-                            next_byte_counter = 0;
-                            next_mem_counter = current_mem_counter + 1;
-                            next_mem_send = 1'b1;
+                if(current_reg_send_flag) begin
+                    next_reg_send = 1'b0;
+                        if (tx_available_debug) begin
+                            next_done_flag = 0;
+                            if(current_byte_counter == 0)
+                                next_tx_send_byte = i_reg[7:0];
+                            if(current_byte_counter == 1)
+                                next_tx_send_byte = i_reg[15:8];
+                            if(current_byte_counter == 2)
+                                next_tx_send_byte = i_reg[23:16];
+                            next_byte_counter = current_byte_counter + 1;
                             next_state = STATE_DEBUG_SEND;
+                            if(current_byte_counter == 3) begin
+                                next_tx_send_byte = i_reg[31:24];
+                                next_byte_counter = 0;
+                                next_reg_counter = current_reg_counter + 1;
+                                next_reg_send = 1'b1;
+                                next_state = STATE_DEBUG_SEND;
+                            end
+                            next_tx_signal = 1'b1;
                         end
-                        tx_signal = 1'b1;
-                    end
-                if(current_mem_counter == 31) begin
-                        next_mem_send = 1'b0;
-                        next_mem_counter = 0;
-                        next_mem_send_flag = 0;
-                        next_pc_send_flag = 1;
-                        next_state = STATE_DEBUG;
                 end
-            end
-            else begin
-                next_state = STATE_DEBUG_SEND;
+                if(current_mem_send_flag) begin
+                    next_mem_send = 1'b0;
+                        if (tx_available_debug) begin
+                            next_done_flag = 0;
+                            if(current_byte_counter == 0)
+                                next_tx_send_byte = i_mem[7:0];
+                            if(current_byte_counter == 1)
+                                next_tx_send_byte = i_mem[15:8];
+                            if(current_byte_counter == 2)
+                                next_tx_send_byte = i_mem[23:16];
+                            next_byte_counter = current_byte_counter + 1;
+                            next_state = STATE_DEBUG_SEND;
+                            if(current_byte_counter == 3) begin
+                                next_tx_send_byte = i_mem[31:24];
+                                next_byte_counter = 0;
+                                next_mem_counter = current_mem_counter + 1;
+                                next_mem_send = 1'b1;
+                                next_state = STATE_DEBUG_SEND;
+                            end
+                            next_tx_signal = 1'b1;
+                        end
+                end
             end
         end
         STATE_CONTINUE: begin
@@ -343,89 +356,91 @@ always @(posedge i_clock) //MEMORIA
             end
         end
         STATE_FINISH: begin
-            tx_signal = 1'b0;
+            next_tx_signal = 1'b0;
             next_step = 1'b0;
+            next_mem_send = 1'b0;
+            next_reg_send = 1'b0;
             next_state = STATE_FINISH;
-            if(current_pc_send_flag) begin
-                if (tx_available_debug) begin
-                    if(current_byte_counter == 0)
-                        tx_send_byte = i_pc[7:0];
-                    if(current_byte_counter == 1)
-                        tx_send_byte = i_pc[15:8];
-                    if(current_byte_counter == 2)
-                        tx_send_byte = i_pc[23:16];
-                    next_byte_counter = current_byte_counter + 1;
-                    if(current_byte_counter == 3) begin
-                        tx_send_byte = i_pc[31:24];
-                        next_byte_counter = 0;
-                        next_pc_counter = 1;
-                    end
-                    tx_signal = 1'b1;
-                end
-                if(current_pc_counter == 1) begin
-                    next_pc_counter = 0;
-                    next_pc_send_flag = 0;
-                    next_reg_send_flag = 1;
-                end
+            if(tx_done_debug) begin
+                next_done_flag = 1;
             end
-            if(current_reg_send_flag) begin
-                next_reg_send = 1'b0;
+            if(current_reg_counter == 32) begin
+                    next_reg_send = 0;
+                    next_reg_counter = 0;
+                    next_reg_send_flag = 0;
+                    next_mem_send_flag = 1;
+                    next_state = STATE_FINISH;
+            end
+            if(current_mem_counter == 32) begin
+                    next_mem_send = 1'b0;
+                    next_mem_counter = 0;
+                    next_mem_send_flag = 0;
+                    next_pc_send_flag = 1;
+                    next_done_flag = 1;
+                    next_state = STATE_RECEIVING_INSTRUCTION;
+            end
+            if(current_done_flag) begin
+                if(current_pc_send_flag) begin
                     if (tx_available_debug) begin
+                        next_done_flag = 0;
                         if(current_byte_counter == 0)
-                            tx_send_byte = i_reg[7:0];
+                            next_tx_send_byte = i_pc[7:0];
                         if(current_byte_counter == 1)
-                            tx_send_byte = i_reg[15:8];
+                            next_tx_send_byte = i_pc[15:8];
                         if(current_byte_counter == 2)
-                            tx_send_byte = i_reg[23:16];
+                            next_tx_send_byte = i_pc[23:16];
                         next_byte_counter = current_byte_counter + 1;
-                        next_state = STATE_FINISH;
                         if(current_byte_counter == 3) begin
-                            tx_send_byte = i_reg[31:24];
+                            next_tx_send_byte = i_pc[31:24];
                             next_byte_counter = 0;
-                            next_reg_counter = current_reg_counter + 1;
-                            next_reg_send = 1'b1;
-                            next_state = STATE_FINISH;
+                            next_pc_send_flag = 0;
+                            next_reg_send_flag = 1;
                         end
-                        tx_signal = 1'b1;
+                        next_tx_signal = 1'b1;
                     end
-                if(current_reg_counter == 31) begin
-                        next_reg_send = 0;
-                        next_reg_counter = 0;
-                        next_reg_send_flag = 0;
-                        next_mem_send_flag = 1;
-                        next_state = STATE_FINISH;
                 end
-            end
-            if(current_mem_send_flag) begin
-                next_mem_send = 1'b0;
-                    if (tx_available_debug) begin
-                        if(current_byte_counter == 0)
-                            tx_send_byte = i_mem[7:0];
-                        if(current_byte_counter == 1)
-                            tx_send_byte = i_mem[15:8];
-                        if(current_byte_counter == 2)
-                            tx_send_byte = i_mem[23:16];
-                        next_byte_counter = current_byte_counter + 1;
-                        next_state = STATE_FINISH;
-                        if(current_byte_counter == 3) begin
-                            tx_send_byte = i_mem[31:24];
-                            next_byte_counter = 0;
-                            next_mem_counter = current_mem_counter + 1;
-                            next_mem_send = 1'b1;
+                if(current_reg_send_flag) begin
+                        if (tx_available_debug) begin
+                            next_done_flag = 0;
+                            if(current_byte_counter == 0)
+                                next_tx_send_byte = i_reg[7:0];
+                            if(current_byte_counter == 1)
+                                next_tx_send_byte = i_reg[15:8];
+                            if(current_byte_counter == 2)
+                                next_tx_send_byte = i_reg[23:16];
+                            next_byte_counter = current_byte_counter + 1;
                             next_state = STATE_FINISH;
+                            if(current_byte_counter == 3) begin
+                                next_tx_send_byte = i_reg[31:24];
+                                next_byte_counter = 0;
+                                next_reg_counter = current_reg_counter + 1;
+                                next_reg_send = 1'b1;
+                                next_state = STATE_FINISH;
+                            end
+                            next_tx_signal = 1'b1;
                         end
-                        tx_signal = 1'b1;
-                    end
-                if(current_mem_counter == 31) begin
-                        next_mem_send = 1'b0;
-                        next_mem_counter = 0;
-                        next_mem_send_flag = 0;
-                        next_pc_send_flag = 1;
-                        next_state = STATE_RECEIVING_INSTRUCTION;
                 end
-            end
-            else begin
-                next_state = STATE_FINISH;
+                if(current_mem_send_flag) begin
+                        if (tx_available_debug) begin
+                            next_done_flag = 0;
+                            if(current_byte_counter == 0)
+                                next_tx_send_byte = i_mem[7:0];
+                            if(current_byte_counter == 1)
+                                next_tx_send_byte = i_mem[15:8];
+                            if(current_byte_counter == 2)
+                                next_tx_send_byte = i_mem[23:16];
+                            next_byte_counter = current_byte_counter + 1;
+                            next_state = STATE_FINISH;
+                            if(current_byte_counter == 3) begin
+                                next_tx_send_byte = i_mem[31:24];
+                                next_byte_counter = 0;
+                                next_mem_counter = current_mem_counter + 1;
+                                next_mem_send = 1'b1;
+                                next_state = STATE_FINISH;
+                            end
+                            next_tx_signal = 1'b1;
+                        end
+                end
             end
         end
         default: begin
@@ -434,7 +449,6 @@ always @(posedge i_clock) //MEMORIA
             next_instruccion =   0;
             next_loading =       0;
             next_step =          0;
-            next_pc_counter =    0;
             next_pc_send_flag =  0;
             next_reg_counter =   0;
             next_reg_send_flag = 0;
@@ -442,6 +456,8 @@ always @(posedge i_clock) //MEMORIA
             next_mem_counter =   0;
             next_mem_send_flag = 0;
             next_mem_send =      0;
+            next_tx_send_byte = 0;
+            next_tx_signal = 0;
             next_state = STATE_RECEIVING_INSTRUCTION;
         end
     endcase
@@ -459,30 +475,45 @@ always @(posedge i_clock) //MEMORIA
             mem_send = 1'b0;
         end
         STATE_RECEIVE_MODE: begin
+            loading = 0;
+            instruccion = 0;
+            address = 0;
             start = 1'b0;
             step = 1'b0;
             reg_send = 1'b0;
             mem_send = 1'b0;
         end
         STATE_DEBUG: begin
+            loading = 0;
+            instruccion = 0;
+            address = 0;
             start = 1'b1;
             step = current_step;
             reg_send = 1'b0;
             mem_send = 1'b0;
         end
         STATE_DEBUG_SEND: begin
+            loading = 0;
+            instruccion = 0;
+            address = 0;
             start = 1'b1;
             step = current_step;
             reg_send = current_reg_send;
             mem_send = current_mem_send;
         end
         STATE_CONTINUE: begin
+            loading = 0;
+            instruccion = 0;
+            address = 0;
             start = 1'b1;
             step = 1'b1;
             reg_send = 1'b0;
             mem_send = 1'b0;
         end
         STATE_FINISH: begin
+            loading = 0;
+            instruccion = current_instruccion;
+            address = current_address;
             start = 1'b0;
             step = 1'b0;
             reg_send = current_reg_send;
