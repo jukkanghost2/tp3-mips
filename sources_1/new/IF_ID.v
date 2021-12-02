@@ -45,8 +45,8 @@ module IF_ID
     
     always @(posedge i_clock) begin
         if(i_reset) begin
-            instrout  <= 32'b0;
-            pcout <= 32'b0;
+            instrout    <= 32'b0;
+            pcout       <= 32'b0;
         end
         else if(!i_if_id_burbuja && i_start && i_step) begin
             instrout    <= i_instruccion;

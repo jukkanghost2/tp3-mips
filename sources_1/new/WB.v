@@ -36,25 +36,25 @@ module WB
 
     wire [DATA_WIDTH - 1:0] address;
 
-     MUX_WB 
+    MUX_WB 
     #( 
-     .DATA_WIDTH    (DATA_WIDTH)
+     .DATA_WIDTH        (DATA_WIDTH)
     )
     mux_wb (
-     .i_address     (address),
-     .i_dataread    (i_dataread),
-     .i_memtoreg    (i_memtoreg),
-     .o_mem_or_reg  (o_mem_or_reg)
+     .i_address         (address),
+     .i_dataread        (i_dataread),
+     .i_memtoreg        (i_memtoreg),
+     .o_mem_or_reg      (o_mem_or_reg)
     );
 
-     MUX_DATAREG 
+    MUX_DATAREG 
     #( 
-     .DATA_WIDTH    (DATA_WIDTH)
+     .DATA_WIDTH        (DATA_WIDTH)
     )
     mux_datareg (
-     .i_address     (i_address),
-     .i_return_address    (i_return_address),
-     .i_return    (i_return),
-     .o_address  (address)
+     .i_address         (i_address),
+     .i_return_address  (i_return_address),
+     .i_return          (i_return),
+     .o_address         (address)
     );
 endmodule

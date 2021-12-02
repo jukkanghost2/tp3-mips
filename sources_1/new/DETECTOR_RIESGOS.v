@@ -41,9 +41,9 @@ module DETECTOR_RIESGOS
     assign o_mux_zero       = mux_zero;
 
     initial begin
-        pc_write = 1'b0;
+        pc_write    = 1'b0;
         if_id_write = 1'b0;
-        mux_zero = 1'b0;
+        mux_zero    = 1'b0;
     end
     
     always @(*) begin

@@ -32,64 +32,59 @@ module U_JUMP
         //OUTPUTS
         output [DATA_WIDTH - 1:0]   o_pcjump,
         output [DATA_WIDTH - 1:0]   o_return_address,
-        output o_rd_selector,
-        output o_jump,
-        output o_return
+        output                      o_rd_selector,
+        output                      o_jump,
+        output                      o_return
     );
 
 
-    localparam [SIZEOP - 1:0]     J         = 6'b000010;
-    localparam [SIZEOP - 1:0]     JAL       = 6'b000011;
+    localparam [SIZEOP - 1:0]     J     = 6'b000010;
+    localparam [SIZEOP - 1:0]     JAL   = 6'b000011;
     // J-TYPE
-    localparam [SIZEOP - 1:0]     JR = 6'b001000;
-    localparam [SIZEOP - 1:0]     JALR = 6'b001001;
+    localparam [SIZEOP - 1:0]     JR    = 6'b001000;
+    localparam [SIZEOP - 1:0]     JALR  = 6'b001001;
 
-    reg [DATA_WIDTH - 1:0] pcjump;
-    reg [DATA_WIDTH - 1:0] return_address;
-    reg jump;
-    reg rd_selector;
-    reg return;
+    reg [DATA_WIDTH - 1:0]  pcjump;
+    reg [DATA_WIDTH - 1:0]  return_address;
+    reg                     jump;
+    reg                     rd_selector;
+    reg                     return;
 
     initial begin
         rd_selector = 1'b0;
-        jump = 1'b0;
+        jump        = 1'b0;
     end
 
-    assign o_pcjump = pcjump;
-    assign o_jump = jump;
+    assign o_pcjump         = pcjump;
+    assign o_jump           = jump;
     assign o_return_address = return_address;
-    assign o_rd_selector = rd_selector;
-    assign o_return = return;
+    assign o_rd_selector    = rd_selector;
+    assign o_return         = return;
     
     always @(*) begin
-        rd_selector = 1'b0;
-        jump = 1'b0;
-        return = 1'b0;
-        pcjump = 32'b0;
-        return_address = 32'b0;
+        rd_selector     = 1'b0;
+        jump            = 1'b0;
+        return          = 1'b0;
+        pcjump          = 32'b0;
+        return_address  = 32'b0;
+        rd_selector     = 1'b0;
+        return          = 1'b0;
+        pcjump          = i_currentpc + i_instruccion[25:0];
+        return_address  = i_currentpc + 1;
         if(i_instruccion[31:26] == J) begin
-            pcjump = i_currentpc + i_instruccion[25:0];
-            rd_selector = 1'b0;
-            return = 1'b0;
-            jump = 1'b1;
+            jump        = 1'b1;
         end
         if(i_instruccion[31:26] == JAL) begin
-            pcjump = i_currentpc + i_instruccion[25:0];
-            return_address = i_currentpc + 1;
             rd_selector = 1'b1;
             return = 1'b1;
             jump = 1'b1;
         end
         if(i_instruccion[31:26] == 6'b000000) begin
+            pcjump = i_regA;
             if(i_instruccion[5:0] == JR) begin
-                pcjump = i_regA;
-                rd_selector = 1'b0;
-                return = 1'b0;
                 jump = 1'b1;
             end
             if(i_instruccion[5:0] == JALR) begin
-                pcjump = i_regA;
-                return_address = i_currentpc + 1;
                 rd_selector = 1'b0;
                 return = 1'b1;
                 jump = 1'b1;

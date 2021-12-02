@@ -54,7 +54,7 @@ module I_FETCH
      .i_clock       (i_clock),
      .i_reset       (i_reset),
      .i_start       (i_start),
-     .i_step       (i_step),
+     .i_step        (i_step),
      .i_pcburbuja   (i_pcburbuja),
      .i_pc_mux      (pc_mux_wire),
      .i_haltsignal  (haltsignal_pc),

@@ -22,8 +22,8 @@
 
 module CONTROL_PRINCIPAL
     #(  //PARAMETERS
-        parameter DATA_WIDTH = 32,
-        parameter SIZEOP = 6
+        parameter DATA_WIDTH    = 32,
+        parameter SIZEOP        = 6
     )
     (   //INPUTS
         input   [DATA_WIDTH - 1:0]  i_instruccion,
@@ -61,8 +61,8 @@ module CONTROL_PRINCIPAL
     localparam [SIZEOP - 1:0]     J         = 6'b000010;
     localparam [SIZEOP - 1:0]     JAL       = 6'b000011;
     // J-TYPE
-    localparam [SIZEOP - 1:0]     JR = 6'b001000;
-    localparam [SIZEOP - 1:0]     JALR = 6'b001001;
+    localparam [SIZEOP - 1:0]     JR        = 6'b001000;
+    localparam [SIZEOP - 1:0]     JALR      = 6'b001001;
     //NOP y HALT
     localparam [SIZEOP - 1:0]     NOP       = 6'b111000;
     localparam [SIZEOP - 1:0]     HALT      = 6'b111111;
@@ -83,11 +83,11 @@ module CONTROL_PRINCIPAL
     assign o_sizemem    = sizemem;
     assign o_signedmem  = signedmem;
     assign o_beq_or_bne = beq_or_bne;
-    assign o_halt = halt;
+    assign o_halt       = halt;
 
     always @(*) begin
-        opcode = i_instruccion[31:26];
-        funct       = i_instruccion[5:0];
+        opcode  = i_instruccion[31:26];
+        funct   = i_instruccion[5:0];
         case (opcode)
             R_TYPE: begin
                 case(funct)
@@ -98,7 +98,7 @@ module CONTROL_PRINCIPAL
                         sizemem     = 2'bxx;
                         signedmem   = 1'bx;
                         beq_or_bne  = 1'b0;
-                        halt  = 1'b0;
+                        halt        = 1'b0;
                     end
                     JALR: begin
                         ex          = 4'b1xxx;
@@ -107,7 +107,7 @@ module CONTROL_PRINCIPAL
                         sizemem     = 2'bxx;
                         signedmem   = 1'bx;
                         beq_or_bne  = 1'b0;
-                        halt  = 1'b0;
+                        halt        = 1'b0;
                     end
                     default: begin
                         ex          = 4'b1010;
@@ -116,7 +116,7 @@ module CONTROL_PRINCIPAL
                         sizemem     = 2'bxx;
                         signedmem   = 1'bx;
                         beq_or_bne  = 1'b0;
-                        halt  = 1'b0;
+                        halt        = 1'b0;
                     end
                 endcase
             end
@@ -127,7 +127,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'b00;
                 signedmem   = 1'b1;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             LWU: begin
                 ex          = 4'b0100;
@@ -136,7 +136,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'b00;
                 signedmem   = 1'b0;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             LB: begin
                 ex          = 4'b0100;
@@ -145,7 +145,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'b01;
                 signedmem   = 1'b1;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             LBU: begin
                 ex          = 4'b0100;
@@ -154,7 +154,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'b01;
                 signedmem   = 1'b0;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             LH: begin
                 ex          = 4'b0100;
@@ -163,7 +163,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'b10;
                 signedmem   = 1'b1;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             LHU: begin
                 ex          = 4'b0100;
@@ -172,7 +172,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'b10;
                 signedmem   = 1'b0;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             SW: begin
                 ex          = 4'bx100;
@@ -181,7 +181,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'b00;
                 signedmem   = 1'bx;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             SB: begin
                 ex          = 4'bx100;
@@ -190,7 +190,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'b01;
                 signedmem   = 1'bx;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             SH: begin
                 ex          = 4'bx100;
@@ -199,7 +199,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'b10;
                 signedmem   = 1'bx;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             BEQ: begin
                 ex          = 4'bx001;
@@ -208,7 +208,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'bxx;
                 signedmem   = 1'bx;
                 beq_or_bne  = 1'b1;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             BNE: begin
                 ex          = 4'bx001;
@@ -217,7 +217,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'bxx;
                 signedmem   = 1'bx;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             ADDI: begin
                 ex          = 4'b0111;
@@ -226,7 +226,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'bxx;
                 signedmem   = 1'bx;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             ANDI: begin
                 ex          = 4'b0111;
@@ -235,7 +235,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'bxx;
                 signedmem   = 1'bx;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             ORI: begin
                 ex          = 4'b0111;
@@ -244,7 +244,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'bxx;
                 signedmem   = 1'bx;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             XORI: begin
                 ex          = 4'b0111;
@@ -253,7 +253,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'bxx;
                 signedmem   = 1'bx;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             LUI: begin
                 ex          = 4'b0111;
@@ -262,7 +262,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'bxx;
                 signedmem   = 1'bx;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             SLTI: begin
                 ex          = 4'b0111;
@@ -271,7 +271,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'bxx;
                 signedmem   = 1'bx;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             J: begin
                 ex          = 4'bxxxx;
@@ -280,7 +280,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'bxx;
                 signedmem   = 1'bx;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
            
             JAL: begin
@@ -290,7 +290,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'bxx;
                 signedmem   = 1'bx;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             NOP: begin
                 ex          = 4'bxx11;
@@ -299,7 +299,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'bxx;
                 signedmem   = 1'bx;
                 beq_or_bne  = 1'bx;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
             HALT: begin
                 ex          = 4'bxx11;
@@ -308,7 +308,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'bxx;
                 signedmem   = 1'bx;
                 beq_or_bne  = 1'bx;
-                halt  = 1'b1;
+                halt        = 1'b1;
             end
             default: begin
                 ex          = 4'b0000;
@@ -317,7 +317,7 @@ module CONTROL_PRINCIPAL
                 sizemem     = 2'bxx;
                 signedmem   = 1'bx;
                 beq_or_bne  = 1'b0;
-                halt  = 1'b0;
+                halt        = 1'b0;
             end
         endcase
     end

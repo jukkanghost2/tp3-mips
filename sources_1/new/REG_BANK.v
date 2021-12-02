@@ -46,36 +46,31 @@ module REG_BANK
     reg [4:0] rt;
     reg [4:0] debug_counter;
     
-    assign o_regA = registros[rs];
-    assign o_regB = registros[rt];
-    assign o_reg_debug = registros[debug_counter];
+    assign o_regA       = registros[rs];
+    assign o_regB       = registros[rt];
+    assign o_reg_debug  = registros[debug_counter];
     
     initial begin
-        registros[1] = 1;
-        registros[2] = 2;
+        registros[1]  = 1;
+        registros[2]  = 2;
         registros[10] = 4;
         registros[31] = 256;
-        // debug_counter = 1;
     end
 
     always @(*) begin
         rs <= i_rs;
         rt <= i_rt;
     end
-// negedge i_clock
+
     always @(negedge i_clock) begin
-        if (i_regwrite)
-        registros[i_rd] <= i_writedata;
+        if (i_regwrite) registros[i_rd] <= i_writedata;
     end
 
     always @(negedge i_clock) begin
-        if(i_reset)
-            debug_counter = 0;
+        if(i_reset) debug_counter = 0;
         else if(i_debug) begin
             debug_counter = debug_counter + 1;
-            if(debug_counter == 32) begin
-                debug_counter = 0;
-            end
+            if(debug_counter == 32) debug_counter = 0;
         end
     end
 endmodule

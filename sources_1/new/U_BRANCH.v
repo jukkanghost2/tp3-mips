@@ -44,10 +44,8 @@ module U_BRANCH
     always @(*) begin
         branch = 1'b0;
         if(i_branch) begin
-            if((i_beq_or_bne) && (i_regA == i_regB))
-                branch = 1'b1;    
-            if((!i_beq_or_bne) && (i_regA != i_regB))
-                branch = 1'b1;
+            if((i_beq_or_bne) && (i_regA == i_regB))  branch = 1'b1;    
+            if((!i_beq_or_bne) && (i_regA != i_regB)) branch = 1'b1;
         end
     end
 endmodule

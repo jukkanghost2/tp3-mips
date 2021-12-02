@@ -32,28 +32,27 @@ module MEM
         input [DATA_WIDTH - 1:0]    i_address,
         input [DATA_WIDTH - 1:0]    i_datawrite,
         input [2:0]                 i_mem,
-        input                  i_debug,
+        input                       i_debug,
         //OUTPUTS
         output [DATA_WIDTH - 1:0]   o_dataread,
         output [DATA_WIDTH - 1:0]   o_mem_debug
     );
 
-
-     MEM_DATOS 
+    MEM_DATOS 
     #( 
      .DATA_WIDTH    (DATA_WIDTH)
     )
     mem_datos (
-     .i_clock        (i_clock),
-     .i_reset        (i_reset),
+     .i_clock       (i_clock),
+     .i_reset       (i_reset),
      .i_signed      (i_signedmem),
      .i_size        (i_sizemem),
      .i_address     (i_address),
      .i_datawrite   (i_datawrite),
      .i_memwrite    (i_mem[1]),
      .i_memread     (i_mem[2]),
-     .i_debug     (i_debug),
-     .o_mem_debug     (o_mem_debug),
+     .i_debug       (i_debug),
+     .o_mem_debug   (o_mem_debug),
      .o_dataread    (o_dataread)
     );
 endmodule

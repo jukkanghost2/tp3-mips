@@ -38,14 +38,10 @@ module MUX_EX_REGB_RESULT_MEM
 
     always @(*) begin
         case(i_cortocircuitoB)
-        2'b00:
-            out = i_regB;
-        2'b01:
-            out = i_datawrite;
-        2'b10:
-            out = i_aluresult;
-        default:
-            out = 0;
+        2'b00:   out = i_regB;
+        2'b01:   out = i_datawrite;
+        2'b10:   out = i_aluresult;
+        default: out = 0;
         endcase
     end
 endmodule

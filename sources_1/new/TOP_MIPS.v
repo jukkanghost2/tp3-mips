@@ -22,18 +22,18 @@
 
 module TOP_MIPS
     #(  //PARAMETERS
-        parameter DATA_WIDTH = 32,
-        parameter SIZEOP = 6,
-        parameter SIZESA = 5,
-        parameter DATA_WIDTH_UART = 8,
-        parameter STOP_WIDTH_UART = 1,
+        parameter DATA_WIDTH        = 32,
+        parameter SIZEOP            = 6,
+        parameter SIZESA            = 5,
+        parameter DATA_WIDTH_UART   = 8,
+        parameter STOP_WIDTH_UART   = 1,
         parameter PARITY_WIDTH_UART = 1
     )
     (   //INPUTS
-        input                     i_clock,
-        input                     i_reset,
-        input                     i_reset_clock,
-        input                     i_rx_data,
+        input                               i_clock,
+        input                               i_reset,
+        input                               i_reset_clock,
+        input                               i_rx_data,
         input  [PARITY_WIDTH_UART - 1:0]    i_rx_parity,
         // input [DATA_WIDTH - 1:0]  i_instruccion,
         // input [DATA_WIDTH - 1:0]  i_address,
@@ -44,9 +44,9 @@ module TOP_MIPS
         // input                     i_debug_mem,
         //OUTPUTS
         // output [DATA_WIDTH - 1:0]   o_result_wb,
-        output                     o_tx_data,
+        output                              o_tx_data,
         output  [PARITY_WIDTH_UART - 1:0]   o_tx_parity,
-        output o_locked
+        output                              o_locked
         // output [DATA_WIDTH - 1:0]   o_pc_debug,
         // output [DATA_WIDTH - 1:0]   o_reg_debug,
         // output [DATA_WIDTH - 1:0]   o_mem_debug,
@@ -81,8 +81,8 @@ module TOP_MIPS
     wire [1:0]              sizemem_id_ex;
     wire                    signedmem_id_ex;
     wire [DATA_WIDTH - 1:0] return_address_id_ex;
-    wire return_id_ex;
-    wire halt_id_ex;
+    wire                    return_id_ex;
+    wire                    halt_id_ex;
     // ID_EX - EXECUTE
     wire [DATA_WIDTH - 1:0] regA_execute;
     wire [DATA_WIDTH - 1:0] regB_execute;
@@ -101,8 +101,8 @@ module TOP_MIPS
     wire [1:0]              sizemem_ex_mem;
     wire                    signedmem_ex_mem;
     wire [DATA_WIDTH - 1:0] return_address_ex_mem;
-    wire return_ex_mem;
-    wire halt_ex_mem;
+    wire                    return_ex_mem;
+    wire                    halt_ex_mem;
     // EX_MEM - MEM
     wire [DATA_WIDTH - 1:0] aluresult_mem;
     wire [DATA_WIDTH - 1:0] regB_mem;
@@ -115,14 +115,14 @@ module TOP_MIPS
     wire [4:0]              rd_rt_mem_wb;
     wire [1:0]              wb_mem_wb;
     wire [DATA_WIDTH - 1:0] return_address_mem_wb;
-    wire return_mem_wb;
-    wire halt_mem_wb;
+    wire                    return_mem_wb;
+    wire                    halt_mem_wb;
     // MEM_WB - WB
     wire [DATA_WIDTH - 1:0] dataread_wb;
     wire [DATA_WIDTH - 1:0] address_wb;
     wire [DATA_WIDTH - 1:0] mem_or_reg_wb;
     wire [DATA_WIDTH - 1:0] return_address_wb;
-    wire return_wb;
+    wire                    return_wb;
     // ID_EX - CORTOCIRCUITO
     wire [4:0]              rs_cortocircuito;
     // CORTOCIRCUITO - EXECUTE
@@ -138,18 +138,18 @@ module TOP_MIPS
     // RIESGO - IF_ID
     wire                    if_id_burbuja;
     // DEBUG
-    wire finish;
-    wire step;
-    wire start;
-    wire reg_send;
-    wire mem_send;
-    wire loading;
+    wire                    finish;
+    wire                    step;
+    wire                    start;
+    wire                    reg_send;
+    wire                    mem_send;
+    wire                    loading;
     wire [DATA_WIDTH - 1:0] debug_instruccion;
     wire [DATA_WIDTH - 1:0] debug_address;
     wire [DATA_WIDTH - 1:0] reg_debug;
     wire [DATA_WIDTH - 1:0] mem_debug;
     // CLOCK
-    wire clk_out1;
+    wire                    clk_out1;
 
  
     // assign o_result_wb  = mem_or_reg_i_decode; 
@@ -157,12 +157,12 @@ module TOP_MIPS
     clk_wiz_0 inst
     (
     // Clock out ports  
-    .clk_out1(clk_out1),
+    .clk_out1           (clk_out1),
     // Status and control signals               
-    .reset(i_reset_clock), 
-    .locked(o_locked),
+    .reset              (i_reset_clock), 
+    .locked             (o_locked),
     // Clock in ports
-    .clk_in1(i_clock)
+    .clk_in1            (i_clock)
     );
 
     I_FETCH 
@@ -173,7 +173,7 @@ module TOP_MIPS
      .i_clock           (clk_out1),
      .i_reset           (i_reset),
      .i_start           (start),
-     .i_step           (step),
+     .i_step            (step),
      .i_pcburbuja       (pcburbuja),
      .i_instruccion     (debug_instruccion),
      .i_address         (debug_address),
@@ -193,7 +193,7 @@ module TOP_MIPS
      .i_clock           (clk_out1),
      .i_reset           (i_reset),
      .i_start           (start),
-     .i_step           (step),
+     .i_step            (step),
      .i_if_id_burbuja   (if_id_burbuja),
      .i_instruccion     (instr_if_id),
      .i_pc              (pc_if_id),
@@ -214,7 +214,7 @@ module TOP_MIPS
      .i_currentpc       (pc_i_decode), 
      .i_rt_rd           (rt_rd_i_decode),
      .i_burbuja         (burbuja_i_decode), 
-     .i_debug         (reg_send), 
+     .i_debug           (reg_send), 
      .o_regA            (regA_id_ex),
      .o_regB            (regB_id_ex),
      .o_extendido       (extendido_id_ex),
@@ -230,11 +230,11 @@ module TOP_MIPS
      .o_sizemem         (sizemem_id_ex),
      .o_signedmem       (signedmem_id_ex),
      .o_pcjump          (pcjump_i_fetch),
-     .o_jump             (select[1]),
-     .o_return_address   (return_address_id_ex),
-     .o_return           (return_id_ex),
-     .o_halt           (halt_id_ex),
-     .o_reg_debug           (reg_debug)
+     .o_jump            (select[1]),
+     .o_return_address  (return_address_id_ex),
+     .o_return          (return_id_ex),
+     .o_halt            (halt_id_ex),
+     .o_reg_debug       (reg_debug)
     );
 
     ID_EX
@@ -245,7 +245,7 @@ module TOP_MIPS
      .i_clock           (clk_out1),
      .i_reset           (i_reset),
      .i_start           (start),
-     .i_step           (step),
+     .i_step            (step),
      .i_regA            (regA_id_ex), 
      .i_regB            (regB_id_ex), 
      .i_extendido       (extendido_id_ex),
@@ -260,7 +260,7 @@ module TOP_MIPS
      .i_signedmem       (signedmem_id_ex),
      .i_return_address  (return_address_id_ex),
      .i_return          (return_id_ex),
-     .i_halt          (halt_id_ex),
+     .i_halt            (halt_id_ex),
      .o_regA            (regA_execute),
      .o_regB            (regB_execute),
      .o_extendido       (extendido_execute),
@@ -274,8 +274,8 @@ module TOP_MIPS
      .o_sizemem         (sizemem_ex_mem),
      .o_signedmem       (signedmem_ex_mem),
      .o_return_address  (return_address_ex_mem),
-     .o_return           (return_ex_mem),
-     .o_halt             (halt_ex_mem)
+     .o_return          (return_ex_mem),
+     .o_halt            (halt_ex_mem)
     );  
 
     EXECUTE
@@ -309,7 +309,7 @@ module TOP_MIPS
      .i_clock           (clk_out1),
      .i_reset           (i_reset),
      .i_start           (start),
-     .i_step           (step),
+     .i_step            (step),
      .i_aluresult       (aluresult_ex_mem), 
      .i_regB            (regB_ex_mem), 
      .i_rd_rt           (rd_rt_ex_mem), 
@@ -319,7 +319,7 @@ module TOP_MIPS
      .i_signedmem       (signedmem_ex_mem),
      .i_return_address  (return_address_ex_mem),
      .i_return          (return_ex_mem),
-     .i_halt          (halt_ex_mem),
+     .i_halt            (halt_ex_mem),
      .o_aluresult       (aluresult_mem),
      .o_regB            (regB_mem),
      .o_rd_rt           (rd_rt_mem_wb),
@@ -327,9 +327,9 @@ module TOP_MIPS
      .o_wb              (wb_mem_wb),
      .o_sizemem         (sizemem_mem),
      .o_signedmem       (signedmem_mem),
-     .o_return_address   (return_address_mem_wb),
+     .o_return_address  (return_address_mem_wb),
      .o_return          (return_mem_wb),
-     .o_halt             (halt_mem_wb)
+     .o_halt            (halt_mem_wb)
     );
 
     MEM
@@ -344,8 +344,8 @@ module TOP_MIPS
      .i_mem             (mem_mem), 
      .i_sizemem         (sizemem_mem),
      .i_signedmem       (signedmem_mem),
-     .i_debug     (mem_send),
-     .o_mem_debug     (mem_debug),
+     .i_debug           (mem_send),
+     .o_mem_debug       (mem_debug),
      .o_dataread        (dataread_mem_wb)
     );
 
@@ -357,21 +357,21 @@ module TOP_MIPS
      .i_clock           (clk_out1),
      .i_reset           (i_reset),
      .i_start           (start),
-     .i_step           (step),
+     .i_step            (step),
      .i_dataread        (dataread_mem_wb), 
      .i_address         (aluresult_mem), 
      .i_rd_rt           (rd_rt_mem_wb), 
      .i_wb              (wb_mem_wb), 
      .i_return_address  (return_address_mem_wb),
      .i_return          (return_mem_wb),
-     .i_halt          (halt_mem_wb),
+     .i_halt            (halt_mem_wb),
      .o_dataread        (dataread_wb), 
      .o_address         (address_wb),
      .o_rd_rt           (rt_rd_i_decode),
      .o_wb              (wb_i_decode_wb),
      .o_return_address  (return_address_wb),
      .o_return          (return_wb),
-     .o_halt             (finish)
+     .o_halt            (finish)
     );
 
     WB
@@ -416,27 +416,27 @@ module TOP_MIPS
     DEBUG_UNIT
     #( 
      .DATA_WIDTH        (DATA_WIDTH),
-     .DATA_WIDTH_UART        (DATA_WIDTH_UART),
-     .STOP_WIDTH_UART        (STOP_WIDTH_UART),
-     .PARITY_WIDTH_UART        (PARITY_WIDTH_UART)
+     .DATA_WIDTH_UART   (DATA_WIDTH_UART),
+     .STOP_WIDTH_UART   (STOP_WIDTH_UART),
+     .PARITY_WIDTH_UART (PARITY_WIDTH_UART)
     )
     debug_unit (
-     .i_clock       (clk_out1), 
-     .i_reset        (i_reset), 
-     .i_rx_data              (i_rx_data), 
-     .i_parity              (i_rx_parity), 
+     .i_clock           (clk_out1), 
+     .i_reset           (i_reset), 
+     .i_rx_data         (i_rx_data), 
+     .i_parity          (i_rx_parity), 
      .i_finish          (finish), 
-     .i_pc           (pc_i_decode), 
-     .i_reg  (reg_debug), 
-     .i_mem  (mem_debug), 
-     .o_parity  (o_tx_parity),
-     .o_tx_data  (o_tx_data),
-     .o_instruccion  (debug_instruccion),
-     .o_address  (debug_address),
-     .o_loading  (loading),
-     .o_start  (start),
-     .o_step  (step),
-     .o_reg_send  (reg_send),
-     .o_mem_send  (mem_send)
+     .i_pc              (pc_i_decode), 
+     .i_reg             (reg_debug), 
+     .i_mem             (mem_debug), 
+     .o_parity          (o_tx_parity),
+     .o_tx_data         (o_tx_data),
+     .o_instruccion     (debug_instruccion),
+     .o_address         (debug_address),
+     .o_loading         (loading),
+     .o_start           (start),
+     .o_step            (step),
+     .o_reg_send        (reg_send),
+     .o_mem_send        (mem_send)
      );
 endmodule

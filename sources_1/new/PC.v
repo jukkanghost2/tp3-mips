@@ -41,9 +41,7 @@ module PC
     assign o_pc = pcout;
     
     always @(posedge i_clock) begin
-        if (i_reset)
-        pcout <= 32'b0;
-        else if ((!i_haltsignal) && (!i_pcburbuja) && (i_start) && (i_step))
-        pcout <= i_pc_mux;
+        if      (i_reset)                                                    pcout <= 32'b0;
+        else if ((!i_haltsignal) && (!i_pcburbuja) && (i_start) && (i_step)) pcout <= i_pc_mux;
     end
 endmodule
