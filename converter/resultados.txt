@@ -1,0 +1,26 @@
+LOAD STORE TEST:
+99 -> REG 3
+100 -> REG 4
+1599 -> REG 5
+32850 -> REG 6
+65600 -> REG 7
+32850 (x) -> POS [23]
+63 (x) -> POS [9]
+64 (x) -> POS [11]
+65600 (x) -> POS [3]
+64 -> REG 10
+64 -> REG 11
+numero con signo extendido -> REG 12
+64 -> REG 13
+
+JUMPS TEST:
+1 -> REG 3
+0 -> REG 4
+2 -> REG 4
+8 -> REG 2
+jr...
+0 -> REG 4
+8 -> REG 4
+32 -> REG 2
+10 -> REG 10
+no se -> REG 8

@@ -58,13 +58,13 @@ module instr_tb;
 
 
     initial begin
-        i_clock = 1'b0;
-        i_reset = 1'b0;
-        i_instruccion = 32'b0;
-        i_address = 32'b0;
-        i_loading = 1'b0;
-        i_start = 1'b0;
-        i_step = 1'b0;
+        i_clock         = 1'b0;
+        i_reset         = 1'b0;
+        i_instruccion   = 32'b0;
+        i_address       = 32'b0;
+        i_loading       = 1'b0;
+        i_start         = 1'b0;
+        i_step          = 1'b0;
         #200
         i_reset = 1'b1;
         #400
