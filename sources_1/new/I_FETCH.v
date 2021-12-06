@@ -38,13 +38,18 @@ module I_FETCH
         input                       i_loading,
         //OUTPUTS
         output [DATA_WIDTH - 1:0]   o_instruccion,
-        output [DATA_WIDTH - 1:0]   o_pc_incr
+        output [DATA_WIDTH - 1:0]   o_pc_incr,
+        output [DATA_WIDTH - 1:0]   o_pc_debug
     );
 
     wire [DATA_WIDTH - 1:0] current_pc;
     wire [DATA_WIDTH - 1:0] pc_mux_wire;
     wire [DATA_WIDTH - 1:0] instr_mux;
     wire                    haltsignal_pc;
+    wire [1:0] halt_branch;
+
+    assign halt_branch = {haltsignal_pc, i_select[0]};
+    assign o_pc_debug = current_pc;
 
     PC 
     #( 
@@ -103,7 +108,7 @@ module I_FETCH
     )
     mux_instr_nop (
      .i_instruccion (instr_mux),
-     .i_branch      (i_select[0]),
+     .i_halt_branch      (halt_branch),
      .o_instr_nop   (o_instruccion)
     );
 endmodule

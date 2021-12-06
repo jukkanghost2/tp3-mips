@@ -56,6 +56,6 @@ module MEM_INSTRUCCIONES
     always @(negedge i_clock) begin
         if      (i_reset)               haltsignal = 1'b0;
         else if (instr[31:26] == HALT)  haltsignal = 1'b1;
-        else                            haltsignal = 1'b0;
+        // else                            haltsignal = 1'b0;
     end
 endmodule

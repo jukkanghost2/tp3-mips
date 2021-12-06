@@ -61,11 +61,11 @@ module DEBUG_UNIT
 
 
     UART
-    #(
-        .DATA_WIDTH     (DATA_WIDTH_UART),
-        .STOP_WIDTH     (STOP_WIDTH_UART),
-        .PARITY_WIDTH   (PARITY_WIDTH_UART)
-    )
+    // #(
+    //     .DATA_WIDTH     (DATA_WIDTH_UART),
+    //     .STOP_WIDTH     (STOP_WIDTH_UART),
+    //     .PARITY_WIDTH   (PARITY_WIDTH_UART)
+    // )
     uart_debug
     (
         .i_clock        (i_clock),
@@ -234,6 +234,7 @@ module DEBUG_UNIT
                     if(instruccion_uart_debug == 8'b10101010) begin
                         next_step           = 1'b1;
                         next_pc_send_flag   = 1'b1;
+                        next_done_flag = 1'b1;
                         next_state          = STATE_DEBUG_SEND;
                     end
                 end
@@ -245,6 +246,8 @@ module DEBUG_UNIT
             STATE_DEBUG_SEND: begin
                 next_tx_signal  = 1'b0;
                 next_step       = 1'b0;
+                next_mem_send   = 1'b0;
+                next_reg_send   = 1'b0;
                 next_state      = STATE_DEBUG_SEND;
                 if(tx_done_debug) begin
                     next_done_flag = 1;

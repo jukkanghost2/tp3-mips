@@ -53,7 +53,7 @@ module REG_BANK
     initial begin
         registros[1]  = 1;
         registros[2]  = 2;
-        registros[10] = 4;
+        registros[10] = 6;
         registros[31] = 256;
     end
 
@@ -63,7 +63,9 @@ module REG_BANK
     end
 
     always @(negedge i_clock) begin
-        if (i_regwrite) registros[i_rd] <= i_writedata;
+        if(i_rd != 5'b00000) begin
+            if (i_regwrite) registros[i_rd] <= i_writedata;
+        end
     end
 
     always @(negedge i_clock) begin

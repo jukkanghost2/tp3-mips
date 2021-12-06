@@ -26,12 +26,23 @@ module MUX_INSTR_NOP
     )
     (   //INPUTS
         input [DATA_WIDTH - 1:0]    i_instruccion,
-        input                       i_branch,
+        input [1:0]                      i_halt_branch,
         //OUTPUTS
         output [DATA_WIDTH - 1:0]   o_instr_nop
     );
 
     localparam [DATA_WIDTH - 1:0]     NOP = 32'b11100000000000000000000000000000;
+    localparam [DATA_WIDTH - 1:0]     HALT = 32'b11111100000000000000000000000000;
+    reg [DATA_WIDTH - 1:0] instr_nop;
 
-    assign o_instr_nop = i_branch ? NOP : i_instruccion;
+    assign o_instr_nop = instr_nop;
+
+    always @(*) begin
+        case(i_halt_branch)
+            2'b00:   instr_nop = i_instruccion;
+            2'b01:   instr_nop = NOP;
+            2'b10:   instr_nop = HALT;
+            default: instr_nop = HALT;
+        endcase
+    end
 endmodule
