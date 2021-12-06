@@ -34,9 +34,9 @@ module alu_tb;
 
   
  
-  // duration for each bit = 20 * timescale = 20 * 1 ns  = 20ns
+   // duration for each bit = 20 * timescale = 20 * 1 ns  = 20ns
   localparam                        period = 20;
-  //OPERATIONS
+ //OPERATIONS
   //R-TYPE
   localparam [SIZEOP - 1:0]     SLL = 6'b000000;
   localparam [SIZEOP - 1:0]     SRL = 6'b000010;
@@ -67,7 +67,7 @@ module alu_tb;
   );
      
     initial // initial block executes only once
-      begin
+        begin
         OPS[0] = SLL;
         OPS[1] = SRL;
         OPS[2] = SRA;
@@ -88,26 +88,30 @@ module alu_tb;
         OPS[17] = LUI;
         OPS[18] = SLTI;
             
+                      
         i_datoa = 8'b0;
         i_datob = 8'b0;
         i_opcode = 6'b0;
         #10
         
-        for(integer i = 0; i < N_OPS; i = i+1) 
-		    begin
-		      #(period)
-		      i_datoa =  $urandom; 
+            
+        
+     for(integer i = 0; i < N_OPS; i = i+1) 
+		     begin
+		     #(period)
+		       i_datoa =  $urandom; 
 		      
-		      #(period*2);
+		       #(period*2);
 		       
-		      i_datob = $urandom;
-		      if(i > 5) i_datob = 3; //PARA OPS SRA Y SRL
+		        i_datob = $urandom;
+		       if( i > 5) i_datob = 3; //PARA OPS SRA Y SRL
 		
-		      #(period*2);
+		       #(period*2);
+                
+                
 		      i_opcode = OPS[i]; 
-		      #(period*2);
-
-		      case(i)
+		       #(period*2);
+		       case(i)
 		          0: if((i_datoa << i_datob) != o_result) $display("%d %d %d %d error en sll", i_datoa, i_datob, o_result, i_datoa << i_datob);
 		          1: if((i_datoa >> i_datob) != o_result) $display("%d %d %d %d error en srl", i_datoa, i_datob, o_result, i_datoa >> i_datob);
 		          2: if((i_datoa >>> i_datob) != o_result) $display("%b %b %b %b error en sra", i_datoa, i_datob, o_result, i_datoa >>> i_datob);
@@ -128,8 +132,14 @@ module alu_tb;
 		          17: if((i_datoa << i_datob) != o_result) $display("%b %b %b %b error en lui", i_datoa, i_datob, o_result, i_datoa << i_datob);
 		          18: if((i_datoa < i_datob) != o_result) $display("%b %b %b %b error en slti", i_datoa, i_datob, o_result, i_datoa < i_datob);
 		       endcase
+		       
 		      end
 		      #(period);
-          $finish;
+
+            $finish;
+        
+            
      end
+       
 endmodule
+

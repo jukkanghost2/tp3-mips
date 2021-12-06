@@ -26,7 +26,7 @@ module extensor_tb;
 
 	//INPUTS
   reg     [DATA_WIDTH - 1:0]    i_instruccion;
-  //OUTPUTS
+  	//OUTPUTS
   wire   [DATA_WIDTH - 1:0]    o_branchoffset;
 
   EXTENSOR extensorcito (
@@ -34,11 +34,11 @@ module extensor_tb;
     .o_branchoffset     (o_branchoffset)
   );
     
-  initial begin
-      i_instruccion = 32'b00000000000000001001001001000000;
-      #20
-      i_instruccion = 32'b00000000000000000001001001000000;
-      #20
-      $finish;
-  end
+    initial begin
+        i_instruccion = 32'b00000000000000001001001001000000;
+        #20
+        i_instruccion = 32'b00000000000000000001001001000000;
+        #20
+        $finish;
+    end
 endmodule

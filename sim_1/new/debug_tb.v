@@ -21,36 +21,37 @@
 
 
 module debug_tb;
-    //PARAMETERS
-    parameter DATA_WIDTH = 32;
-    parameter DATA_WIDTH_UART = 8;
-    parameter PARITY_WIDTH_UART = 1;
-    parameter STOP_WIDTH_UART = 1;
+       //PARAMETERS
+        parameter DATA_WIDTH = 32;
+        parameter DATA_WIDTH_UART = 8;
+        parameter PARITY_WIDTH_UART = 1;
+        parameter STOP_WIDTH_UART = 1;
 
-    //INPUTS
-    reg                             i_clock;
-    reg                             i_reset;
-    reg                             i_finish;
-    reg                             i_uart_done_rx;
-    reg                             i_tx_signal;
-    reg [DATA_WIDTH_UART - 1:0]     i_tx_result;
-    reg [PARITY_WIDTH_UART - 1:0]   i_parity; 
-    reg [DATA_WIDTH - 1:0]          i_pc; 
-    reg [DATA_WIDTH - 1:0]          i_reg; 
-    reg [DATA_WIDTH - 1:0]          i_mem; 
-    //OUTPUTS
-    wire [DATA_WIDTH - 1:0]         o_instruccion;
-    wire [DATA_WIDTH - 1:0]         o_address;
-    wire                            o_loading;
-    wire                            o_start;
-    wire                            o_step;
-    wire                            rx_uart;
-    wire [DATA_WIDTH_UART - 1:0]    rx_data;
-    wire                            rx_done;
+    
+      //INPUTS
+        reg                     i_clock;
+        reg                     i_reset;
+        reg                     i_finish;
+        reg i_uart_done_rx;
+        reg i_tx_signal;
+        reg [DATA_WIDTH_UART - 1:0] i_tx_result;
+        reg [PARITY_WIDTH_UART - 1:0] i_parity; 
+        reg [DATA_WIDTH - 1:0] i_pc; 
+        reg [DATA_WIDTH - 1:0] i_reg; 
+        reg [DATA_WIDTH - 1:0] i_mem; 
+        //OUTPUTS
+        wire [DATA_WIDTH - 1:0]   o_instruccion;
+        wire [DATA_WIDTH - 1:0]   o_address;
+        wire o_loading;
+        wire o_start;
+        wire o_step;
+        wire rx_uart;
+        wire [DATA_WIDTH_UART - 1:0] rx_data;
+        wire rx_done;
 
-    localparam demora = 12800;
+        reg [DATA_WIDTH_UART - 1:0] result;
 
-    reg [DATA_WIDTH_UART - 1:0]     result;
+        localparam demora = 12800;
 
     DEBUG_UNIT
     #(
@@ -77,6 +78,7 @@ module debug_tb;
      .o_reg_send          (o_reg_send), 
      .o_mem_send          (o_mem_send)
     );
+
     
     UART
     #(
@@ -100,16 +102,18 @@ module debug_tb;
         .o_tx_available        ()
     );
 
+
+
     initial begin
-        i_clock     = 1'b0;
-        i_reset     = 1'b0;
+        i_clock = 1'b0;
+        i_reset = 1'b0;
         i_tx_signal = 1'b0;
         i_tx_result = 1'b0;
-        i_parity    = 1'b0;  
-        i_finish    = 1'b0;
-        i_pc        = 32'b10000000111000010111000000100001;
-        i_reg       = 32'b10111111111111111111000000100001;
-        i_mem       = 32'b10000000000000010111000000100001;
+        i_parity = 1'b0;  
+        i_finish = 1'b0;
+        i_pc = 32'b10000000111000010111000000100001;
+        i_reg = 32'b10111111111111111111000000100001;
+        i_mem = 32'b10000000000000010111000000100001;
         #200
         i_reset = 1'b1;
         #200
@@ -198,6 +202,7 @@ module debug_tb;
         #10000
         $finish;
     end
+
 
 always #100 i_clock = ~i_clock;
 
