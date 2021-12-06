@@ -1,82 +1,7 @@
-/* Instruction Fields in bits */
-// opcode
-#define	R_FORMAT	"000000"
-#define	LW			"100011"
-#define	LWU			"100111"
-#define	LB			"100000"
-#define	LBU			"100100"
-#define	LH			"100001"
-#define	LHU			"100101"
-#define	SW			"101011"
-#define	SB			"101000"
-#define	SH			"101001"
-#define BEQ  "000100"
-#define BNE  "000101"
-#define ADDI  "001000"
-#define ANDI  "001100"
-#define ORI  "001101"
-#define XORI  "001110"
-#define LUI  "001111"
-#define SLTI  "001010"
-#define J  "000010"
-#define JAL  "000011"
-#define JR  "001000"
-#define JALR  "001001"
-#define NOP  "111000"
-#define HALT  "111111"
-
-// funct
-#define SLL  "000000"
-#define SRL  "000010"
-#define SRA  "000011"
-#define SLLV  "000100"
-#define SRLV  "000110"
-#define SRAV  "000111"
-#define ADDU  "100001"
-#define SUBU  "100011"
-#define OR  "100101"
-#define XOR "100110"
-#define AND "100100"
-#define NOR  "100111"
-#define SLT  "101010"
-
-// regs
-#define	REG0		"00000"
-#define	REG1		"00001"
-#define	REG2		"00010"
-#define	REG3		"00011"
-#define	REG4		"00100"
-#define	REG5		"00101"
-#define	REG6		"00110"
-#define	REG7		"00111"
-#define	REG8		"01000"
-#define	REG9		"01001"
-#define	REG10		"01010"
-#define	REG11		"01011"
-#define	REG12		"01100"
-#define	REG13		"01101"
-#define	REG14		"01110"
-#define	REG15		"01111"
-#define	REG16		"10000"
-#define	REG17		"10001"
-#define	REG18		"10010"
-#define	REG19		"10011"
-#define	REG20		"10100"
-#define	REG21		"10101"
-#define	REG22		"10110"
-#define	REG23		"10111"
-#define	REG24		"11000"
-#define	REG25		"11001"
-#define	REG26		"11010"
-#define	REG27		"11011"
-#define	REG28		"11100"
-#define	REG29		"11101"
-#define	REG30		"11110"
-#define	REG31		"11111"
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "define_opcode_reg.h"
 
 int is_i_format(int , char **, const char *, char *);
 int is_r_format(int , char **, const char *, char *);
@@ -96,8 +21,6 @@ int main(int argc, char **argv){
 	char final_fld[200];
 	unsigned int i;
     char* delim = " ";
-	char *rs, *rt;
-	char *binary;
 	/* File manipulation */
 	// open input file .txt with assembler
 	if(NULL == (fpr = fopen(argv[1], "r"))){
@@ -122,20 +45,6 @@ int main(int argc, char **argv){
 		fprintf(stderr, "Error: Can't allocate memory for the line buffer!\n");
 		exit(3);
 	}
-
-	if(NULL == (rs = malloc(6*sizeof(char)))){
-			printf("Error: Unable to allocate memory for rs.\n");
-			exit(1);
-		}
-		if(NULL == (rt = malloc(6*sizeof(char)))){
-			printf("Error: Unable to allocate memory for rt.\n");
-			exit(1);
-		}
-        /* Memory allocation for the string */
-		if(NULL == (binary = malloc(32*sizeof(char)))){
-			printf("Error: Unable to allocate memory for binary offset.\n");
-			exit(1);
-		}
 	
 	line_n = 1;
 	while( (read_characters = getline(&line, &line_length, fpr)) != -1){
@@ -151,14 +60,11 @@ int main(int argc, char **argv){
 		
 		if(0 == is_r_format(line_n, argv, op, new_field)){
 		printf("r-format\n");
-			
-
 			/*  STAGE 3  */
 			// A - Initialization of final_fld
 			for(i=0; i<strlen(final_fld); ++i){
 				final_fld[i] = '\0';
 			}		
-			
 			// B -  Write to the output file
 			strcpy(final_fld, new_field);
 			strcat(final_fld, "\n");
@@ -167,13 +73,11 @@ int main(int argc, char **argv){
 		}
 		else if(0 == is_i_format(line_n, argv, op, new_field)){
 		printf("i-format\n");
-			
 			/*  STAGE 3  */
 			// A - Initialization of final_fld
 			for(i=0; i<strlen(final_fld); ++i){
 				final_fld[i] = '\0';
 			}
-		
 			// B -  Write to the output file
 			strcpy(final_fld, new_field);
 			strcat(final_fld, "\n");
@@ -182,13 +86,11 @@ int main(int argc, char **argv){
 		}
 		else if(0 == is_j_format(line_n, argv, op, new_field)){
 		printf("j-format\n");
-			
 			/*  STAGE 3  */
 			// A - Initialization of final_fld
 			for(i=0; i<strlen(final_fld); ++i){
 				final_fld[i] = '\0';
 			}
-		
 			// B -  Write to the output file
 			strcat(final_fld, new_field);
 			strcat(final_fld, "\n");
@@ -203,12 +105,9 @@ int main(int argc, char **argv){
 		// C - Increase counters
 		++ line_n;
 	}
-	
 	printf("\n Output is ready \n");
-	
 	fclose(fpr);
 	fclose(fpw);
-
 	return(0);
 }
 
@@ -222,39 +121,40 @@ int is_i_format(int line_n, char **argv, const char *op, char *new_field){
     char* delim = " ,.()";
 	int i;
 	char *rs, *rt;
-	char *binary;
 	int offset;
-	
-	if(!strcmp(op, "ADDI") || !strcmp(op, "ANDI") || !strcmp(op, "ORI") \
-     || !strcmp(op, "XORI") || !strcmp(op, "LUI") || !strcmp(op, "SLTI") ){
-		char *oper[] = {"\0\0\0\0\0\0", "\0\0\0\0\0\0", "\0\0\0\0\0\0\0\0\0\0\0\0\0"};
-		printf("%s %s %s \n", oper[0], oper[1], oper[2]);
+
+	if(NULL == (rs = malloc(6*sizeof(char)))){
+			printf("Error: Unable to allocate memory for rs.\n");
+			exit(1);
+		}
+		if(NULL == (rt = malloc(6*sizeof(char)))){
+			printf("Error: Unable to allocate memory for rs.\n");
+			exit(1);
+		}
 		
+	if(!strcmp(op, "ADDI") || !strcmp(op, "ANDI") || !strcmp(op, "ORI") \
+     || !strcmp(op, "XORI") || !strcmp(op, "SLTI") ){
+		char *oper[] = {"\0\0\0\0\0\0", "\0\0\0\0\0\0", "\0\0\0\0\0\0\0\0\0\0\0\0\0"};
+		char binary[16];
 		// Walk through other tokens
 		i = 0;
 		while(i < 3){	// strtok() saves the previous state :P
 			oper[i] = strtok(NULL, delim);
-            printf("%s\n", oper[i]);
+            // printf("%s\n", oper[i]);
 			i++;
 		}
-		
 		// Initialize the input/output string just to be sure
 		for(i=0; i<strlen(new_field); ++i) new_field[i] = '\0';
-		
 		// MAKE UP THE FIELDS -->
 		// OPCODE
 		if(!strcmp(op, "ADDI"))	strcat(new_field,ADDI );
         else if(!strcmp(op, "ANDI"))	strcat(new_field,ANDI );
 		else if(!strcmp(op, "ORI"))	strcat(new_field,ORI );
 		else if(!strcmp(op, "XORI"))	strcat(new_field,XORI );
-		else if(!strcmp(op, "LUI"))	    strcat(new_field,LUI );
         else if(!strcmp(op, "SLTI"))	    strcat(new_field,SLTI );
 		strcat(new_field, "_");
-
 		printf("%s\n", new_field);
 		
-		strcpy(rs, which_reg(oper[1]));
-        //printf("%s\n", rs);
 		if(NULL != (strcpy(rs, which_reg(oper[1]))))strcat(new_field, rs);
 		else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, oper[0]);
 		strcat(new_field, "_");
@@ -264,24 +164,69 @@ int is_i_format(int line_n, char **argv, const char *op, char *new_field){
 		strcat(new_field, "_");
 		printf("%s\n", new_field);
 		// IMMEDIATE
-		sscanf(oper[2], "%d ", &offset);	// convert the string to integer
-		
-		// Convert the decimal to binary representation
-		if(!dec_to_bin(offset, 32, binary)) return(-1);
-		printf("binary offset: %s\n", binary);
-		
-		binary += 16;
-		printf("binary +16: %s\n", binary);
-		strcat(new_field, binary);
+		sscanf(oper[2], "%d", &offset);	// convert the string to integer
+		for (int i = 15; i >= 0; i--) 
+		{
+			if (offset % 2 == 0) {binary[i] = '0';} 
+			else  {binary[i] = '1';}
+			offset = offset / 2;
+		}
+		binary[16] = '\0';
+		printf("%s\n", binary);
+		strncat(new_field, binary, 16);
 		printf("%s\n", new_field);
 		strcat(new_field, "\0");
 		printf("%s\n", new_field);
 		// <-- END
+		free(rs);
+		free(rt);
+		return(0);
+	}
+    else if(!strcmp(op, "LUI")) {
+		char *oper[] = {"\0\0\0\0\0\0", "\0\0\0\0\0\0\0\0\0\0\0\0\0"};
+		char binary[16];
+		// Walk through other tokens
+		i = 0;
+		while(i < 2){	// strtok() saves the previous state :P
+			oper[i] = strtok(NULL, delim);
+            printf("lui %s\n", oper[i]);
+			i++;
+		}
+		// Initialize the input/output string just to be sure
+		for(i=0; i<strlen(new_field); ++i) new_field[i] = '\0';
+		//OPCODE
+		strcat(new_field, LUI);
+		strcat(new_field, "_");
+		// RS
+		strcat(new_field, "00000");
+		strcat(new_field, "_");
+		if(NULL != (strcpy(rt, which_reg(oper[0])))) strcat(new_field, rt);
+		else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, oper[0]);
+		strcat(new_field, "_");
+		printf("%s\n", new_field);
+		// IMMEDIATE
+		sscanf(oper[1], "%d", &offset);	// convert the string to integer		
+		// Convert the decimal to binary representation
+		for (int i = 15; i >= 0; i--) 
+		{
+			if (offset % 2 == 0) {binary[i] = '0';} 
+			else  {binary[i] = '1';}
+			offset = offset / 2;
+		}
+		binary[16] = '\0';
+		printf("%s\n", binary);
+		strncat(new_field, binary, 16);
+		printf("%s\n", new_field);
+		strcat(new_field, "\0");
+		printf("%s\n", new_field);
+		// <-- END
+		free(rs);
+		free(rt);
 		return(0);
 	}
     else if(!strcmp(op, "BEQ") || !strcmp(op, "BNE")) {
 		char *oper[] = {"\0\0\0\0\0\0", "\0\0\0\0\0\0", "\0\0\0\0\0\0\0\0\0\0\0\0\0"};
-		
+		char binary[16];
 		// Walk through other tokens
 		i = 0;
 		while(i < 3){	// strtok() saves the previous state :P
@@ -289,10 +234,8 @@ int is_i_format(int line_n, char **argv, const char *op, char *new_field){
 			// printf("%s\n", oper[i]);
 			i++;
 		}
-		
 		// Initialize the input/output string just to be sure
 		for(i=0; i<strlen(new_field); ++i) new_field[i] = '\0';
-
 		// MAKE UP THE FIELDS -->
 		// OPCODE
 		if(!strcmp(op, "BEQ"))	    strcat(new_field,BEQ );
@@ -307,33 +250,39 @@ int is_i_format(int line_n, char **argv, const char *op, char *new_field){
 		else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, oper[1]);
 		strcat(new_field, "_");
 		// ADDRESS (IMMEDIATE)
-		sscanf(oper[2], "%d ", &offset);	// convert the string to integer
+		sscanf(oper[2], "%d", &offset);	// convert the string to integer
 		// Convert the decimal to binary representation
-		if(!dec_to_bin(offset, 32, binary)) return(-1);
-//		printf("binary offset: %s\n", binary);
-		binary += 16;
-		strcat(new_field, binary);
+		for (int i = 15; i >= 0; i--) 
+		{
+			if (offset % 2 == 0) {binary[i] = '0';} 
+			else  {binary[i] = '1';}
+			offset = offset / 2;
+		}
+		binary[16] = '\0';
+		printf("%s\n", binary);
+		strncat(new_field, binary, 16);
+		printf("%s\n", new_field);
 		strcat(new_field, "\0");
 		printf("%s\n", new_field);
 		// <-- END
+		free(rs);
+		free(rt);
 		return(0);
 	}
 	else if(!strcmp(op, "LW") || !strcmp(op, "LWU") || !strcmp(op, "SW") \
 			|| !strcmp(op, "LB") || !strcmp(op, "LBU") || !strcmp(op, "LH") \
 			|| !strcmp(op, "LHU") || !strcmp(op, "SB") || !strcmp(op, "SH")) {
         char *oper[] = {"\0\0\0\0\0\0", "\0\0\0\0\0\0\0\0\0\0\0\0\0", "\0\0\0\0\0\0"};
-		
+		char binary[16];
 		// Walk through other tokens
 		i = 0;
 		while(i < 3){	// strtok() saves the previous state :P
 			oper[i] = strtok(NULL, delim);
-			printf("%s\n", oper[i]);
+			// printf("%s\n", oper[i]);
 			i++;
 		}
-		
 		// Initialize the input/output string just to be sure
 		for(i=0; i<strlen(new_field); ++i) new_field[i] = '\0';
-
 		// MAKE UP THE FIELDS -->
 		// OPCODE
 		if(!strcmp(op, "LW"))	    strcat(new_field,LW );
@@ -348,26 +297,35 @@ int is_i_format(int line_n, char **argv, const char *op, char *new_field){
 		strcat(new_field, "_");
 
 		if(NULL != (strcpy(rs, which_reg(oper[2]))))strcat(new_field, rs);
-		else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, oper[0]);
+		else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, oper[2]);
 		strcat(new_field, "_");
 		if(NULL != (strcpy(rt, which_reg(oper[0])))) strcat(new_field, rt);
-		else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, oper[1]);
+		else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, oper[0]);
 		strcat(new_field, "_");
 		// ADDRESS (IMMEDIATE)
-		sscanf(oper[1], "%d ", &offset);	// convert the string to integer
+		sscanf(oper[1], "%d", &offset);	// convert the string to integer
 		// Convert the decimal to binary representation
-		if(!dec_to_bin(offset, 32, binary)) return(-1);
-//		printf("binary offset: %s\n", binary);
-		binary += 16;
-		strcat(new_field, binary);
+		printf("offset: %d\n", offset);
+		for (int i = 15; i >= 0; i--) 
+		{
+			if (offset % 2 == 0) {binary[i] = '0';} 
+			else  {binary[i] = '1';}
+			offset = offset / 2;
+		}
+		binary[16] = '\0';
+		printf("%s\n", binary);
+		strncat(new_field, binary, 16);
+		printf("%s\n", new_field);
 		strcat(new_field, "\0");
+		printf("%s\n", new_field);
 		// <-- END
+		free(rs);
+		free(rt);
 		return(0);
     }
 	else if(!strcmp(op, "NOP") || !strcmp(op, "HALT")) {
 		// Initialize the input/output string just to be sure
 		for(i=0; i<strlen(new_field); ++i) new_field[i] = '\0';
-
 		// MAKE UP THE FIELDS -->
 		// OPCODE
 		if(!strcmp(op, "NOP"))	    strcat(new_field,NOP );
@@ -384,38 +342,46 @@ int is_i_format(int line_n, char **argv, const char *op, char *new_field){
 		strcat(new_field, "000000");// FUNCT
 		strcat(new_field, "\0");
 		// <-- END
+		free(rs);
+		free(rt);
 		return(0);
 	}
 	else if(!strcmp(op, "J") || !strcmp(op, "JAL")) {
 		char *oper = {"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"};
-		
+		char binary[26];
 		// Walk through other tokens
-			oper = strtok(NULL, delim);
-			printf("%s\n", oper);
+		oper = strtok(NULL, delim);
+		// printf("%s\n", oper);
 		// Initialize the input/output string just to be sure
 		for(i=0; i<strlen(new_field); ++i) new_field[i] = '\0';
- 		/* Memory allocation for the string */
-		if(NULL == (binary = malloc(32*sizeof(char)))){
-			printf("Error: Unable to allocate memory for binary offset.\n");
-			exit(1);
-		}
 		// MAKE UP THE FIELDS -->
 		// OPCODE
 		if(!strcmp(op, "J"))	    strcat(new_field,J );
 		else if(!strcmp(op, "JAL"))	    strcat(new_field,JAL );
 		strcat(new_field, "_");
 		// ADDRESS (IMMEDIATE)
-		sscanf(oper, "%d ", &offset);	// convert the string to integer
+		sscanf(oper, "%d", &offset);	// convert the string to integer
 		// Convert the decimal to binary representation
-		if(!dec_to_bin(offset, 32, binary)) return(-1);
-		printf("binary offset: %s\n", binary);
-		binary += 6;
-		strcat(new_field, binary);
+		for (int i = 25; i >= 0; i--) 
+		{
+			if (offset % 2 == 0) {binary[i] = '0';} 
+			else  {binary[i] = '1';}
+			offset = offset / 2;
+		}
+		binary[26] = '\0';
+		printf("%s\n", binary);
+		strncat(new_field, binary, 26);
+		printf("%s\n", new_field);
 		strcat(new_field, "\0");
+		printf("%s\n", new_field);
 		// <-- END
+		free(rs);
+		free(rt);
 		return(0);
 	}
-	return(-1);
+		free(rs);
+		free(rt);
+		return(-1);
 }
 
 /*
@@ -439,12 +405,10 @@ int is_j_format(int line_n, char **argv, const char *op, char *new_field){
 		regs[0] = strtok(NULL, delim);
 		// Initialize the input/output string just to be sure
 		for(i=0; i<strlen(new_field); ++i) new_field[i] = '\0';
-
 		// MAKE UP THE FIELDS -->
 		// OPCODE
 		strcat(new_field, R_FORMAT);
 		strcat(new_field, "_");
-		
 		if(NULL != (strcpy(rs, which_reg(regs[0])))) strcat(new_field, rs);
 		else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, regs[0]);
 		strcat(new_field, "_");
@@ -452,19 +416,18 @@ int is_j_format(int line_n, char **argv, const char *op, char *new_field){
 		strcat(new_field, "_");
 		strcat(new_field, JR);
 		strcat(new_field, "\0");
-	return (0);
-
+		free(rs);
+		free(rd);
+		return (0);
 	}
 	else if(!strcmp(op, "JALR")){
 		i=0;
 		while(i<2) {
 			regs[i] = strtok(NULL, delim);
-
 			i++;
 		}
 		// Initialize the input/output string just to be sure
 		for(i=0; i<strlen(new_field); ++i) new_field[i] = '\0';
-
 		// MAKE UP THE FIELDS -->
 		// OPCODE
 		strcat(new_field, R_FORMAT);
@@ -490,11 +453,12 @@ int is_j_format(int line_n, char **argv, const char *op, char *new_field){
 		strcat(new_field, "_");
 		strcat(new_field, JALR);
 		strcat(new_field, "\0");
-	return (0);
-	
+		free(rs);
+		free(rd);
+		return (0);
 	}
 	free(rs);
-		free(rd);
+	free(rd);
 	return (-1);
 }
 
@@ -506,7 +470,6 @@ int is_r_format(int line_n, char **argv, const char *op, char *new_field){
 	char *rs, *rt, *rd;
 	int i;
 	char *regs[] = {"\0\0\0\0\0\0", "\0\0\0\0\0\0", "\0\0\0\0\0\0"};
-	char *binary;
 	int offset;
 
 	// REGISTERS
@@ -522,17 +485,10 @@ int is_r_format(int line_n, char **argv, const char *op, char *new_field){
 			printf("Error: Unable to allocate memory for rd.\n");
 			exit(1);
 		}
-		if(NULL == (binary = malloc(32*sizeof(char)))){
-			printf("Error: Unable to allocate memory for binary offset.\n");
-			exit(1);
-		}
-	//printf("es del tipo R\n");
-	if(!strcmp(op, "SLL") || !strcmp(op, "SRL") || !strcmp(op, "SRA") \
-		|| !strcmp(op, "SLLV") || !strcmp(op, "SRLV") || !strcmp(op, "SRAV") \
+	if( !strcmp(op, "SLLV") || !strcmp(op, "SRLV") || !strcmp(op, "SRAV") \
         || !strcmp(op, "ADDU") || !strcmp(op, "SUBU") || !strcmp(op, "OR") \
         || !strcmp(op, "XOR") || !strcmp(op, "AND") || !strcmp(op, "NOR") \
         || !strcmp(op, "SLT")){
-
 		// Walk through other tokens
 		i = 0;
 		while(i < 3){	// strtok() saves the previous state :P
@@ -540,76 +496,96 @@ int is_r_format(int line_n, char **argv, const char *op, char *new_field){
 		//	printf("%s\n", regs[i]);
 			i++;
 		}
-	
 		// Initialize the input/output string just to be sure
 		for(i=0; i<strlen(new_field); ++i) new_field[i] = '\0';
-		
 		// MAKE UP THE FIELDS -->
 		// OPCODE
 		strcat(new_field, R_FORMAT);
 		strcat(new_field, "_");
-
-		
-        if(!strcmp(op, "SLL") || !strcmp(op, "SRL") || !strcmp(op, "SRA")) {
-			/* Memory allocation for the string */
-		
-		    strcat(new_field, "00000");	// rs
-		    strcat(new_field, "_");
-		    if(NULL != (strcpy(rt, which_reg(regs[1])))) strcat(new_field, rt);
-		    else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, regs[2]);
-		    strcat(new_field, "_");
-		    if(NULL != (strcpy(rd, which_reg(regs[0])))) strcat(new_field, rd);
-		    else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, regs[0]);
-		    strcat(new_field, "_");
-		    // SHIFT AMOUNT
-		    sscanf(regs[2], "%d ", &offset);	// convert the string to integer		
-		    // Convert the decimal to binary representation
-		    if(!dec_to_bin(offset, 32, binary)) return(-1);
-            //printf("binary offset: %s\n", binary); 
-		    binary += 16;
-		    strcat(new_field, binary);
-		    strcat(new_field, "_");
-			// free(binary);
-        } else {
-		    if(NULL != (strcpy(rs, which_reg(regs[1]))))strcat(new_field, rs);
-		    else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, regs[1]);
-		    strcat(new_field, "_");
-		    if(NULL != (strcpy(rt, which_reg(regs[2])))) strcat(new_field, rt);
-		    else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, regs[2]);
-		    strcat(new_field, "_");
-		    if(NULL != (strcpy(rd, which_reg(regs[0])))) strcat(new_field, rd);
-		    else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, regs[0]);
-		    strcat(new_field, "_");  
-		    // SHIFT AMOUNT
-		    strcat(new_field, "00000");	// shamt
-		    strcat(new_field, "_");
-        }
-		// FUNC
-		if(!strcmp(op, "SLL"))	        strcat(new_field,SLL );
-		else if(!strcmp(op, "SRL"))	    strcat(new_field,SRL );
-		else if(!strcmp(op, "SRA"))	    strcat(new_field,SRA );
-		else if(!strcmp(op, "SLLV"))	strcat(new_field,SLLV );
+		//printf("%s\n", new_field);
+		if(NULL != (strcpy(rs, which_reg(regs[1]))))strcat(new_field, rs);
+		else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, regs[1]);
+		strcat(new_field, "_");
+		if(NULL != (strcpy(rt, which_reg(regs[2])))) strcat(new_field, rt);
+		else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, regs[2]);
+		strcat(new_field, "_");
+		if(NULL != (strcpy(rd, which_reg(regs[0])))) strcat(new_field, rd);
+		else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, regs[0]);
+		strcat(new_field, "_");  
+		// SHIFT AMOUNT
+		strcat(new_field, "00000");	// shamt
+		strcat(new_field, "_");
+		if(!strcmp(op, "SLLV"))	strcat(new_field,SLLV );
 		else if(!strcmp(op, "SRLV"))	strcat(new_field,SRLV );
-        else if(!strcmp(op, "SRAV"))	strcat(new_field,SRAV );
+		else if(!strcmp(op, "SRAV"))	strcat(new_field,SRAV );
 		else if(!strcmp(op, "ADDU"))	strcat(new_field,ADDU );
 		else if(!strcmp(op, "SUBU"))	strcat(new_field,SUBU );
 		else if(!strcmp(op, "OR"))	    strcat(new_field,OR );
-        else if(!strcmp(op, "XOR"))	    strcat(new_field,XOR );
+		else if(!strcmp(op, "XOR"))	    strcat(new_field,XOR );
 		else if(!strcmp(op, "AND"))	    strcat(new_field,AND );
 		else if(!strcmp(op, "NOR"))	    strcat(new_field,NOR );
 		else if(!strcmp(op, "SLT"))	    strcat(new_field,SLT );
 		strcat(new_field, "\0");
 		// <-- END
-		return(0);
-	
-	}
-	free(rs);
+		free(rs);
 		free(rt);
 		free(rd);
-		
-		return(-1);
+		return(0);
+		}
+        else if(!strcmp(op, "SLL") || !strcmp(op, "SRL") || !strcmp(op, "SRA")) {
+			char binary[5];
+			// Walk through other tokens
+			i = 0;
+			while(i < 3){	// strtok() saves the previous state :P
+				regs[i] = strtok(NULL, delim);
+			//	printf("%s\n", regs[i]);
+				i++;
+			}
+			// Initialize the input/output string just to be sure
+			for(i=0; i<strlen(new_field); ++i) new_field[i] = '\0';
+			/* Memory allocation for the string */
+		    strcat(new_field, "00000");	// rs
+		    strcat(new_field, "_");
+			printf("%s\n", new_field);
+		    if(NULL != (strcpy(rt, which_reg(regs[1])))) strcat(new_field, rt);
+		    else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, regs[1]);
+		    strcat(new_field, "_");
+			printf("%s\n", new_field);
+		    if(NULL != (strcpy(rd, which_reg(regs[0])))) strcat(new_field, rd);
+		    else printf("Error:%s:line:%d - Not supported register %s\n", argv[1], line_n, regs[0]);
+		    strcat(new_field, "_");
+			printf("%s\n", new_field);
+		    // SHIFT AMOUNT
+		    sscanf(regs[2], "%d", &offset);	// convert the string to integer		
+		    // Convert the decimal to binary representation
+		    for (int i = 4; i >= 0; i--) 
+			{
+				if (offset % 2 == 0) {binary[i] = '0';} 
+				else  {binary[i] = '1';}
+				offset = offset / 2;
+			}
+			binary[5] = '\0';
+			printf("%s\n", binary);
+			strncat(new_field, binary, 5);
+			printf("%s\n", new_field);
+			strcat(new_field, "\0");
+			printf("%s\n", new_field);
+			// FUNC
+			if(!strcmp(op, "SLL"))	        strcat(new_field,SLL );
+			else if(!strcmp(op, "SRL"))	    strcat(new_field,SRL );
+			else if(!strcmp(op, "SRA"))	    strcat(new_field,SRA );
+			strcat(new_field, "\0");
+			// <-- END
+			free(rs);
+			free(rt);
+			free(rd);
+			return(0);
+	}
+	free(rs);
+	free(rt);
+	free(rd);
+	return(-1);
 }
-
 
 /*
  * Check for legal registers and return the binary representation
@@ -649,31 +625,4 @@ char *which_reg(const char *reg){
 	else if(!strcmp(reg, "$30") || !strcmp(reg, "$fp")) return(REG30);
 	else if(!strcmp(reg, "$31") || !strcmp(reg, "$ra")) return(REG31);
 	return(NULL);
-}
-
-
-/* 
- * Input: Takes a decimal integer, the size of the representation (=32) and an
- *         address to the string result 
- * Output: Returns it's representation in binary system as a string and
- *         an integer: 0 for error, 1 for success.
- */
-int dec_to_bin(int dec, const int size, char *bin){
-	printf("dectobin\n");
-	long long int mask = 0x8000000000000000;
-	int i;
-	
-	if(size != 32) return(0);
-	
-	/* Memory allocation for the string */
-	// if(NULL == (*bin = malloc(size * sizeof(char)))) return(0);
-	// printf("dectobin2\n");
-
-	/* Creation of the Binary Representation */
-	strcpy(bin, mask == (dec & mask) ? "1" : "0");
-	for(dec <<= 1, i = 1; i < size; ++ i, dec <<= 1)
-		strcat(bin, mask == (dec & mask) ? "1" : "0");
-	
-	return(1);
-	
 }
