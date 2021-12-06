@@ -13,6 +13,7 @@ LOAD STORE TEST:
 numero con signo extendido -> REG 12
 64 -> REG 13
 
+
 JUMPS TEST:
 1 -> REG 3
 0 -> REG 4
@@ -20,7 +21,21 @@ JUMPS TEST:
 8 -> REG 2
 jr...
 0 -> REG 4
-8 -> REG 4
-32 -> REG 2
-10 -> REG 10
-no se -> REG 8
+10 -> REG 4
+40 -> REG 2
+12 -> REG 10
+34-> REG 8
+0 -> reg 7
+13-> REG 8
+1-> reg 7
+14 -> reg 31
+
+
+STEP TEST:
+3 -> REG 3
+3 (X) -> MEM [16]
+3 -> REG 14
+-- J 2 --
+1 -> REG 9
+2 -> REG 9 -> NO SE HACE
+HALT.
