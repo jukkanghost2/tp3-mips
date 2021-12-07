@@ -1,11 +1,11 @@
-`timescale 1ns / 100ps
+`timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
 // 
-// Create Date: 12/02/2021 04:45:33 PM
+// Create Date: 12/07/2021 05:00:31 PM
 // Design Name: 
-// Module Name: load_store_test
+// Module Name: branch_test
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,8 +20,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module load_store_test;
-     //PARAMETERS
+module branch_test;
+ //PARAMETERS
         parameter DATA_WIDTH = 32;
         parameter DATA_WIDTH_UART = 8;
         parameter PARITY_WIDTH_UART = 1;
@@ -47,7 +47,8 @@ module load_store_test;
     wire [PARITY_WIDTH_UART - 1:0] o_tx_parity;
     // wire o_locked;
 
-//conexiones uart con top
+
+    //conexiones uart con top
     wire                     tx_data_uart_debug;
     // wire                     tx_done_uart_debug;
     // wire                     tx_available_uart_debug;
@@ -110,28 +111,29 @@ module load_store_test;
     reg reg_receive_flag;
     reg mem_receive_flag;
     localparam demora = 12800;
-
+    integer instruccion_counter;
   
 
     initial begin
-    instrucciones[0] = 32'b100011_00001_00011_0000000000000001;
-    instrucciones[1] = 32'b001000_00011_00101_0000010111011100;
-    instrucciones[2] = 32'b100011_00001_00100_0000000000011110;
-    instrucciones[3] = 32'b001000_00100_00110_0111111111101110;
-    instrucciones[4] = 32'b001000_00110_00111_0111111111101110;
-    instrucciones[5] = 32'b101011_00001_00110_0000000000010110;
-    instrucciones[6] = 32'b101000_00001_00101_0000000000001000;
-    instrucciones[7] = 32'b101001_00001_00111_0000000000001010;
-    instrucciones[8] = 32'b101011_00001_00111_0000000000000010;
-    instrucciones[9] = 32'b100000_00001_01010_0000000000000010;
-    instrucciones[10] = 32'b100100_00001_01011_0000000000000010;
-    instrucciones[11] = 32'b100001_00001_01100_0000000000010110;
-    instrucciones[12] = 32'b100101_00001_01101_0000000000000010;
-    instrucciones[13] = 32'b111111_00000_00000_00000_00000_000000;
-    instrucciones[14] = 32'b000000_00000_00000_00000_00000_000000;
-    // instrucciones[15] = 32'b000000_00001_00110_10001_00000_000111;
-    // instrucciones[16] = 32'b000000_00001_00111_10110_00000_100001;
-    // instrucciones[17] = 32'b000000_00010_00110_01011_00000_100011;
+    instrucciones[0] = 32'b000000_00001_00010_00011_00000_100001;
+    instrucciones[1] = 32'b000100_00001_00010_0000000000000100;
+    instrucciones[2] = 32'b000000_00011_00010_00101_00000_100111;
+    instrucciones[3] = 32'b000000_00001_00010_00110_00000_100001;
+    instrucciones[4] = 32'b000101_00001_00010_0000000000000011;
+    instrucciones[5] = 32'b000000_00011_00010_00111_00000_100110;
+    instrucciones[6] = 32'b000000_00011_00010_01000_00000_100101;
+    instrucciones[7] = 32'b000000_00011_00010_01001_00000_100100;
+    instrucciones[8] = 32'b000101_00110_00011_0000000000000100;
+    instrucciones[9] = 32'b000000_00011_00010_01010_00000_101010;
+    instrucciones[10] = 32'b000100_00011_00110_0000000000000010;
+    instrucciones[11] = 32'b000000_00001_00010_01011_00000_100001;
+    instrucciones[12] = 32'b000000_00001_00010_01100_00000_100001;
+    instrucciones[13] = 32'b000000_00001_00010_01101_00000_100001;
+    instrucciones[14] = 32'b111111_00000_00000_00000_00000_000000; 
+    instrucciones[15] = 32'b000000_00000_00000_00000_00000_000000;
+    // instrucciones[16] = 32'b001000_00111_00111_0000000000000001;
+    // instrucciones[17] = 32'b000000_11111_000000000000000_001000;
+    // instrucciones[18] = 32'b000000_00000_00000_00000_00000_000000;
     // instrucciones[18] = 32'b000011_00000000000000000000000001;
     // instrucciones[19] = 32'b001000_00101_01100_0000000000000000;
     // instrucciones[20] = 32'b000101_00101_01100_0000000000000100;
@@ -161,7 +163,7 @@ module load_store_test;
         #400
         // i_reset_clock = 1'b1;
         // #400
-        // i_reset_clock = 1'b0;
+        // // i_reset_clock = 1'b0;
         // #2000
 
         
@@ -174,7 +176,7 @@ module load_store_test;
         #400
         i_reset = 1'b0;
         #200
-        for(integer instruccion_counter = 0; instruccion_counter < 15; instruccion_counter = instruccion_counter + 1) begin
+        for(instruccion_counter = 0; instruccion_counter < 16; instruccion_counter = instruccion_counter + 1) begin
             i_tx_byte = instrucciones[instruccion_counter][7:0];
             i_tx_signal = 1'b1; 
             #200
@@ -283,4 +285,6 @@ always #25 i_clock = ~i_clock;
 always #25 i_clock_uart = ~i_clock_uart;
 
 endmodule
+
+
 
