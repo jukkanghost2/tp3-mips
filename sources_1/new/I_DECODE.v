@@ -134,6 +134,7 @@ module I_DECODE
      .DATA_WIDTH        (DATA_WIDTH)
     )
      u_branch (
+     .i_reset         (i_reset),
      .i_branch          (o_mem[0]),
      .i_regA            (o_regA),
      .i_regB            (o_regB),
@@ -146,6 +147,7 @@ module I_DECODE
      .DATA_WIDTH        (DATA_WIDTH)
     )
      u_jump (
+     .i_reset         (i_reset),
      .i_currentpc       (i_currentpc),
      .i_instruccion     (i_instruccion),
      .i_regA            (o_regA),

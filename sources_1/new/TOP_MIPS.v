@@ -35,22 +35,10 @@ module TOP_MIPS
         // input                               i_reset_clock,
         input                               i_rx_data,
         input  [PARITY_WIDTH_UART - 1:0]    i_rx_parity,
-        // input [DATA_WIDTH - 1:0]  i_instruccion,
-        // input [DATA_WIDTH - 1:0]  i_address,
-        // input                     i_loading,
-        // input                     i_start,
-        // input                     i_step,
-        // input                     i_debug_reg,
-        // input                     i_debug_mem,
         //OUTPUTS
-        // output [DATA_WIDTH - 1:0]   o_result_wb,
         output                              o_tx_data,
         output  [PARITY_WIDTH_UART - 1:0]   o_tx_parity
         // output                              o_locked
-        // output [DATA_WIDTH - 1:0]   o_pc_debug,
-        // output [DATA_WIDTH - 1:0]   o_reg_debug,
-        // output [DATA_WIDTH - 1:0]   o_mem_debug,
-        // output o_finish
     );
 
     //I_DECODE - I_FETCH
@@ -151,9 +139,6 @@ module TOP_MIPS
     wire [DATA_WIDTH - 1:0] pc_debug;
     // CLOCK
     // wire                    clk_out1;
-
- 
-    // assign o_result_wb  = mem_or_reg_i_decode; 
 
     // clk_wiz_0 inst
     // (
@@ -406,6 +391,7 @@ module TOP_MIPS
 
     DETECTOR_RIESGOS
     detector_riesgos (
+     .i_reset           (i_reset),
      .i_rs              (instr_i_decode[25:21]), 
      .i_rt              (instr_i_decode[20:16]), 
      .i_id_ex_rt        (rt_execute), 

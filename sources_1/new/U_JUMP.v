@@ -26,6 +26,7 @@ module U_JUMP
         parameter SIZEOP = 6
     )
     (   //INPUTS
+        input    i_reset,
         input [DATA_WIDTH - 1:0]    i_currentpc,
         input [DATA_WIDTH - 1:0]    i_instruccion,
         input [DATA_WIDTH - 1:0]    i_regA,
@@ -50,11 +51,6 @@ module U_JUMP
     reg                     rd_selector;
     reg                     return;
 
-    initial begin
-        rd_selector = 1'b0;
-        jump        = 1'b0;
-    end
-
     assign o_pcjump         = pcjump;
     assign o_jump           = jump;
     assign o_return_address = return_address;
@@ -71,6 +67,10 @@ module U_JUMP
         return          = 1'b0;
         pcjump          = i_currentpc + i_instruccion[25:0];
         return_address  = i_currentpc + 1;
+        if(i_reset) begin
+            rd_selector     = 1'b0;
+            jump            = 1'b0;
+        end
         if(i_instruccion[31:26] == J) begin
             jump        = 1'b1;
         end
