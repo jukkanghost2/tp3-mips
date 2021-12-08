@@ -22,6 +22,7 @@
 
 module DETECTOR_RIESGOS
     (   //INPUTS
+        input    i_reset,
         input [4:0]     i_rs,
         input [4:0]     i_rt,
         input [4:0]     i_id_ex_rt,
@@ -40,16 +41,15 @@ module DETECTOR_RIESGOS
     assign o_if_id_write    = if_id_write;
     assign o_mux_zero       = mux_zero;
 
-    initial begin
-        pc_write    = 1'b0;
-        if_id_write = 1'b0;
-        mux_zero    = 1'b0;
-    end
-    
     always @(*) begin
         pc_write    = 1'b0;
         if_id_write = 1'b0;
         mux_zero    = 1'b0;
+        if(i_reset) begin
+            pc_write    = 1'b0;
+            if_id_write = 1'b0;
+            mux_zero    = 1'b0;
+        end
         if(i_id_ex_mem[2]) begin
             if((i_id_ex_rt == i_rs) || (i_id_ex_rt == i_rt)) begin
                 pc_write    = 1'b1;

@@ -25,6 +25,7 @@ module U_BRANCH
         parameter DATA_WIDTH = 32
     )
     (   //INPUTS
+        input                       i_reset,
         input                       i_branch,
         input [DATA_WIDTH - 1:0]    i_regA,
         input [DATA_WIDTH - 1:0]    i_regB,
@@ -37,12 +38,11 @@ module U_BRANCH
 
     assign o_branch = branch;
 
-    initial begin
-        branch = 1'b0;
-    end
-
     always @(*) begin
         branch = 1'b0;
+        if(i_reset) begin
+            branch = 1'b0;
+        end
         if(i_branch) begin
             if((i_beq_or_bne) && (i_regA == i_regB))  branch = 1'b1;    
             if((!i_beq_or_bne) && (i_regA != i_regB)) branch = 1'b1;
