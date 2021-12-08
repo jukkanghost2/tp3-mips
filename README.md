@@ -113,12 +113,17 @@ asdasdasd
 
 ---
 3. ### Analisis de tiempo
-adasda
+Para el sistema utilizamos un clock del clock wizard de IP-Core, que tiene una frecuencia de input de 100 MHz y alimenta al sistema con una frecuencia de salida de 69 MHz (periodo 14.49275 ns). Escogimos esta frecuencia de clock ya que según lo investigado (_https://support.xilinx.com/s/article/57304?language=en_US_) la forma de encontrar la maxima frecuencia posible es buscando un clock objetivo que en el reporte de timing de un WNS (_worst negative slack_) menor a 0. Una vez obtenido, en nuestro caso fue de 70 MHz, se realiza el siguiente calculo: $\frac{1}{T-WNS}$ con T = 14.286ns y WNS = -0.086ns. Esto nos da como resultado una frecuencia maxima de 69.579738 MHz. Luego, fuimos afinando hasta obtener el clock que nos de WNS, WHS y WPWS mayores a 0 y TNS, THS y TPWS iguales a 0 que según el manual _UltraFast Design Methodology Guide for Xilinx FPGAs and SoCs_ deben tener dichos valores. Este clock obtenido fue el de 69 MHz.
 
 ---
 4. ### Testbenches
 asdasdsd
 
 ---
-1. ### MIPS assembler a codigo maquina
+5. ### MIPS assembler a codigo maquina
 sadasdasd
+
+---
+6. ### Conclusiones
+sadasds
+
