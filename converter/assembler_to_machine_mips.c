@@ -543,6 +543,9 @@ int is_r_format(int line_n, char **argv, const char *op, char *new_field){
 			}
 			// Initialize the input/output string just to be sure
 			for(i=0; i<strlen(new_field); ++i) new_field[i] = '\0';
+			// OPCODE
+			strcat(new_field, R_FORMAT);
+			strcat(new_field, "_");
 			/* Memory allocation for the string */
 		    strcat(new_field, "00000");	// rs
 		    strcat(new_field, "_");
@@ -567,9 +570,9 @@ int is_r_format(int line_n, char **argv, const char *op, char *new_field){
 			binary[5] = '\0';
 			printf("%s\n", binary);
 			strncat(new_field, binary, 5);
+		    strcat(new_field, "_");
 			printf("%s\n", new_field);
-			strcat(new_field, "\0");
-			printf("%s\n", new_field);
+			// strcat(new_field, "\0");
 			// FUNC
 			if(!strcmp(op, "SLL"))	        strcat(new_field,SLL );
 			else if(!strcmp(op, "SRL"))	    strcat(new_field,SRL );
