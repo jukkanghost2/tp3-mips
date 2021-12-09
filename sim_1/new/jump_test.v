@@ -21,7 +21,7 @@
 
 
 module jump_test;
-  //PARAMETERS
+//PARAMETERS
         parameter DATA_WIDTH = 32;
         parameter DATA_WIDTH_UART = 8;
         parameter PARITY_WIDTH_UART = 1;
@@ -29,32 +29,26 @@ module jump_test;
         parameter SIZEOP = 6;
         parameter SIZESA = 5;
 
-      //INPUTS
+    //INPUTS
     reg i_clock;
     reg i_clock_uart;
     reg i_reset;
-    // reg i_reset_clock;
+    reg i_reset_clock;
     reg [DATA_WIDTH_UART - 1:0] i_tx_byte;
     reg i_tx_signal;
     reg [PARITY_WIDTH_UART - 1:0] i_tx_parity;
-    reg [PARITY_WIDTH_UART - 1:0] i_rx_parity;
     //outputs
     wire [DATA_WIDTH_UART - 1:0] o_rx_byte_from_top;
     wire o_rx_done_uart;
     wire o_tx_done_uart;
     wire o_tx_available_uart;
-    wire [PARITY_WIDTH_UART - 1:0] o_rx_parity;
-    wire [PARITY_WIDTH_UART - 1:0] o_tx_parity;
-    // wire o_locked;
-
+    wire o_locked;
 
     //conexiones uart con top
     wire                     tx_data_uart_debug;
-    // wire                     tx_done_uart_debug;
-    // wire                     tx_available_uart_debug;
-
+    wire [PARITY_WIDTH_UART - 1:0] tx_parity;
+    wire [PARITY_WIDTH_UART - 1:0] rx_parity;
     wire                     rx_data_uart_debug;
-    // wire                     rx_done_uart_debug;
     
     TOP_MIPS 
     #(
@@ -69,12 +63,12 @@ module jump_test;
     (
         .i_clock        (i_clock),
         .i_reset        (i_reset),
-        // .i_reset_clock        (i_reset_clock),
+        .i_reset_clock        (i_reset_clock),
         .i_rx_data        (tx_data_uart_debug),
-        .i_rx_parity        (i_rx_parity),
+        .i_rx_parity        (rx_parity),
         .o_tx_data        (rx_data_uart_debug),
-        // .o_locked        (o_locked),
-        .o_tx_parity        (o_tx_parity)
+        .o_locked        (o_locked),
+        .o_tx_parity        (tx_parity)
     );
 
 
@@ -91,10 +85,10 @@ module jump_test;
         .i_rx_data        (rx_data_uart_debug),
         .i_tx_signal        (i_tx_signal),
         .i_tx_result        (i_tx_byte),
-        .i_parity        (i_tx_parity),
+        .i_parity        (tx_parity),
         .o_rx_done        (o_rx_done_uart),
         .o_rx_data       (o_rx_byte_from_top),
-        .o_parity        (o_rx_parity),
+        .o_parity        (rx_parity),
         .o_tx_data        (tx_data_uart_debug),
         .o_tx_done        (o_tx_done_uart),
         .o_tx_available        (o_tx_available_uart)
@@ -134,19 +128,7 @@ module jump_test;
     instrucciones[16] = 32'b001000_00111_00111_0000000000000001;
     instrucciones[17] = 32'b000000_11111_000000000000000_001000;
     instrucciones[18] = 32'b000000_00000_00000_00000_00000_000000;
-    // instrucciones[18] = 32'b000011_00000000000000000000000001;
-    // instrucciones[19] = 32'b001000_00101_01100_0000000000000000;
-    // instrucciones[20] = 32'b000101_00101_01100_0000000000000100;
-    // instrucciones[21] = 32'b000000_00011_00101_11010_00000_000110;
-    // instrucciones[22] = 32'b000000_00001_00110_11011_00000_000111;
-    // instrucciones[23] = 32'b000000_00001_00111_10101_00000_100001;
-    // instrucciones[24] = 32'b000010_00000000000000000000000001;
-    // instrucciones[25] = 32'b000000_00010_00110_11101_00000_100011;
-    // instrucciones[26] = 32'b000000_00010_00110_11001_00000_100011;
-    // instrucciones[27] = 32'b000000_00010_00110_11001_00000_100011;
-    // instrucciones[28] = 32'b000000_11111_000000000000000_001000;
-    // instrucciones[29] = 32'b111111_00000_00000_00000_00000_000000;
-    // instrucciones[30] = 32'b000000_00000_00000_00000_00000_000000;
+   
         i_clock = 1'b0;
         i_clock_uart = 1'b0;
         i_reset = 1'b0;
@@ -281,8 +263,8 @@ always @(posedge i_clock_uart) begin
 end
 
 // always #5 i_clock = ~i_clock;
-always #25 i_clock = ~i_clock;
-always #25 i_clock_uart = ~i_clock_uart;
+always #7.24 i_clock = ~i_clock;
+always #7.24 i_clock_uart = ~i_clock_uart;
 
 endmodule
 
