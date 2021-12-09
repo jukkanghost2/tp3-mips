@@ -67,41 +67,82 @@ Está conectada a la debug unit con _o_reg_debug_ para ir pasando el contenido d
 
 ---
 #### Etapa EXECUTE
-dasdas
+Esta etapa consta de una ALU (_ALU.v_), donde se realizan todos los calculos, un modulo de control de la ALU (_ALU_CONTROL.v_), 1 mux (_MUX_EX_REGA_RESULT_MEM.v_) que define el dato a y 2 (_MUX_EX_REGA_RESULT_MEM.v_ y _MUX_2_1_EX.v_) que definen el dato b que ingresan a la ALU. Además hay otro mux (_MUX_RT_RD.v_) que define si el registro a escribir en la instruccion correspondiente es _rt_ o _rd_ segun _regdst_. 
+
+Inputs:
+-   i_cortocircuito A y B: son 2 bits que vienen de la unidad de cortocircuito que determinan de donde se obtienen los datos A y B de la ALU.
+-   i_reg A y B: son los valores que vienen del banco de registros (_rs_ y _rt_).
+-   i_aluresult: es el valor de la ultima operacion realizada por la ALU, para utilizar si hay que hacer cortocircuito.
+-   i_reg_mem: es el valor leido en memoria, para utilizar si hay que hacer cortocircuito de un load.
+-   i_ex: son los bits de control de esta etapa. Alusrc es el bit mas alto y determina que valor se seleccionara para el dato B de la ALU. Aluop son los 2 bits mas bajos y se usan para el control de la ALU.
+-   i_extendido: son los 16 bits mas bajos de la instruccion, pueden ser usados como dato B.
+-   i_rd, i_rt: son los registros de la instruccion y entran a _MUX_RT_RD.v_ para determinar cual será escrito.
+-   i_opcode: se utiliza para control de la ALU.
+
+Mediante sus outputs está conectado al latch _EX_MEM_:
+-   o_regB: en el caso de un _store_ es el valor que se escribira en memoria.
+-   o_aluresult: es el resultado de la ultima operacion.
+-   o_rd_rt: es el registro que será escrito en la etapa WB.
 
 ![EXECUTE schematic](images/mips_execute.png)
 
 ---
 #### Etapa MEM
-sads
+Consiste en una memoria de datos (_MEM_DATOS.v_).
+Inputs:
+-   i_address: direccion de la memoria donde se escribira o leera la memoria.
+-   i_datawrite: dato a escribir en la memoria.
+-   i_debug: ingresa a la memoria, es un pulso que va aumentando un contador para ir pasando uno a uno el contendido de la memoria hacia la unidad de debug.
+-   i_mem: son 2 bits de control de la etapa. Memread si es uno es un _load_ y memwrite es uno si es un _store_.
+-   i_signedmem: indica si la instruccion de _load_ es signada o no.
+-   i_sizemem: indica el tamaño de la operacion de memoria (byte, half word o word).
+
+Con sus outputs esta conectada al latch _MEM_WB_:
+-   o_dataread: es el dato leido.
+
+Con la salida o_mem_debug está conectada a la unidad de debug por la cual le enviara los datos leidos de la memoria.
 
 ![MEM schematic](images/mips_mem.png)
 
 ---
 #### Etapa WB
-asdasd
+Consiste en 2 mux (_MUX_DATAREG.v_ y _MUX_WB.v_). El primero en el caso de ser un JAL o JALR elige como salida i_return_address y en las demas i_address (el resultado de la ALU). El segundo MUX elige entre el dato leido en la memoria, en _loads_, y si es otra operacion elige la salida del mux anterior.
+
+Inputs:
+-   i_dataread: dato leido en MEM.
+-   i_address: resultado de la ALU.
+-   i_return: si es 1 se trata de un JAL o JALR.
+-   i_return_address: dato a escribir en un registro en caso de JAL o JALR.
+-   i_memtoreg: bit de control de la etapa, este indica si se debe escribir un registro.
+
+Su salida o_mem_or_reg es el dato a escribir en el reg bank o el dato leido en memoria que sirve para la unidad de cortocircuito.
 
 ![WB schematic](images/mips_wb.png)
 
 ---
 #### Latches
+Estos son quienes reciben y pasan informacion de una etapa a otra, los bits de control, etc. Estan manejados por el clock y tienen las entradas _i_start_ que se pone en 1 cuando la unidad de debug lanza el procesador, e _i_step_ que en caso de modo continuo es siempre 1 y en modo debug se activa con un comando por UART. Estas entradas permiten el avance de los datos, y por consiguiente del procesador, o no.
 -   IF_ID:
 ![IF_ID schematic](images/latch_if_id.png)
+
 -   ID_EX:
 ![ID_EX schematic](images/latch_id_ex.png)
+
 -   EX_MEM:
 ![EX_MEM schematic](images/latch_ex_mem.png)
+
 -   MEM_WB:
 ![MEM_WB schematic](images/latch_mem_wb.png)
+
 ---
 #### Unidad de cortocircuito
-asdasd
+Esta unidad recibe los registros _rs_ y _rt_ de la instruccion actual y los compara con los registros _rt_ o _rd_ que contienen los resultados de la ALU o de memoria de las 2 instrucciones anteriores y decide si debe hacer cortocircuito o no.
 
 ![CORTOCIRCUITO schematic](images/cortocircuito.png)
 
 ---
 #### Detector de riesgos
-asdadsa
+Esta unidad detecta si hay riesgo de load, que es cuando hay que hacer cortocircuito pero al ser un load hay que esperar un ciclo para tener el dato. En caso de ser necesario, se hace un stall que para el PC, intercala bits de control nulos entre la operacion actual y la siguiente.
 
 ![RIESGOS schematic](images/detector_riesgos.png)
 
