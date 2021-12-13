@@ -148,7 +148,14 @@ Esta unidad detecta si hay riesgo de load, que es cuando hay que hacer cortocirc
 
 ---
 2. ### Debug Unit
-asdasdasd
+Esta unidad es una FSM de 6 estados, con codificación One-Hot/One-Cold. Es una interfaz entre el procesador y el usuario y por esto cuenta con un modulo _UART.v_. Se encarga de proporcionarle las instrucciones y el modo de funcionamiento al MIPS, y los datos del PC, registros y memoria de datos al usuario. 
+Estados:
+-   STATE_RECEIVING_INSTRUCTION: es el estado inicial, recibe de a 8 bits mediante UART y forma las instrucciones de 32 bits, una vez que c/u está completa se las envía a la memoria de instrucciones del procesador. Hace esto hasta recibir una instrucción completa de '0s' que significa cambio al estado STATE_RECEIVE_MODE.
+-   STATE_RECEIVE_MODE: En este estado espera recibir 8 bits que son un código para decidir el modo de funcionamiento del procesador. Todos '1s' significa modo debug, por lo que luego pasa a STATE_DEBUG, y todos '0s' es modo continuo entonces pasa a STATE_CONTINUE.
+-   STATE_DEBUG: Se envía la señal de _start_ al procesador y está a la espera de recibir el código 8'b10101010 que envía un pulso de _step_ al procesador y pasa a STATE_DEBUG_SEND. Si recibe _i_finish_ significa que el procesador ejecutó todo el programa y entonces pasa a STATE_FINISH.
+-   STATE_DEBUG_SEND: obtiene cada vez el estado del PC, los registros y la memoria de datos del procesador y los va enviando mediante UART uno por uno de a 8 bits a la vez. Cuando termina vuelve a STATE_DEBUG.
+-   STATE_CONTINUE: espera a que el procesador termine y envie _i_finish_ entonces pasa a STATE_FINISH.
+-   STATE_FINISH: obtiene el estado final del PC, los registros y la memoria de datos del procesador y los va enviando mediante UART uno por uno de a 8 bits a la vez. Cuando termina pasa a STATE_RECEIVING_INSTRUCTION.
 
 ![DEBUG schematic](images/debug_unit.png)
 
@@ -158,13 +165,16 @@ Para el sistema utilizamos un clock del clock wizard de IP-Core, que tiene una f
 
 ---
 4. ### Testbenches
-asdasdsd
+A lo largo de todo el trabajo fuimos realizando distintos tests para ir probando las distintas partes y funcionalidades que ibamos agregando al diseño. Cómo la mayoría ya no sirve los fuimos eliminando del proyecto una vez que comprobabamos que lo que estaba bajo prueba funcionaba correctamente. Los tests finales del sistema son los siguientes:
+- branch_test.v: prueba el codigo assembler del archivo _/converter/branch_test.txt_ en modo continuo.
+- jump_test.v: prueba el codigo assembler del archivo _/converter/jump_test.txt_ en modo continuo.
+- load_store_test.v: prueba el codigo assembler del archivo _/converter/load_store_test.txt_ en modo continuo.
+- step_test.v: prueba el codigo assembler del archivo _/converter/step_test.txt_ en modo debug.
+
+Los cuatro instancian un modulo _TOP_MIPS.v_ y un _UART.v_ y mediante este ultimo envian las distintas instrucciones y el modo de funcionamiento, y luego reciben el estado del procesador.
 
 ---
 5. ### MIPS assembler a codigo maquina
-sadasdasd
+Para facilitar el testeo de distintas instrucciones y evitar el tedioso trabajo de ir escribiendo bit por bit los distintos codigos realizamos un programa en C, _assembler_to_machine_mips.c_ que traduce las instrucciones MIPS requeridas por el trabajo a su correspondiente código máquina.
 
 ---
-6. ### Conclusiones
-sadasds
-
