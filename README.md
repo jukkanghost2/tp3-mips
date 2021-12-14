@@ -5,6 +5,14 @@
 ### Desarrollo
 ---
 1. ### Pipeline
+#### **Top level design**
+Las siguientes imagenes son esquemas simplificados del diseño completo del pipeline MIPS, sus etapas con todos sus componentes dentro.
+
+![I_FETCH schematic](images/i_fetch_if_id.png)
+![I_FETCH schematic](images/i_decode_id_ex_detector_riesgos.png)
+![I_FETCH schematic](images/execute_ex_mem_cortocircuito.png)
+![I_FETCH schematic](images/mem_mem_wb.png)
+
 #### Etapa I_FETCH
 Este modulo, llamado _I_FETCH.v_ consiste en una memoria de instrucciones (_MEM_INSTRUCCIONES.v_), el program counter (_PC.v_), un sumador (_PC_ADDER.v_), un multiplexor para elegir el proximo pc (_PC_MUX.v_) y otro (_MUX_INSTR_NOP.v_) para seleccionar la instruccion obtenida de la memoria, intercalar una NOP en caso de un branch o una HALT en caso de esa instruccion.
 
@@ -161,6 +169,38 @@ Estados:
 
 ---
 3. ### Analisis de tiempo
+#### **Frecuencias limites**:
+-   **Limite superior 70 MHz**:
+Al setear el clock interno a este valor, no se cumplen los requerimientos de timing debido al setup time, ya que el clock es mucho más rápido que la lógica del sistema y no se llega a obtener el dato estable antes del flanco de clock en el tiempo necesario.  
+
+#### Resumen timing
+![a](images/design_timming_summary_max_frec.png)
+
+#### Paths criticos
+![b](images/path_falling_endpoints_max_frec.png)
+
+#### Informacion de path critico
+![c](images/information_timming_max_frec.png)
+
+#### Visualizacion en el diseño
+![d](images/clock_worst_path_max_frec.png)
+
+-   **Limite inferior 19 MHz**:
+Con el clock en esta frecuencia la lógica del sistema es más rápida que el clock y entonces el dato cambia antes de cumplir con el hold time necesario, lo que causa falla de requerimientos de timing.
+
+#### Resumen timing
+![a](images/design_timming_summary_min_frec.png)
+
+#### Paths criticos
+![b](images/path_falling_endpoints_min_frec.png)
+
+#### Informacion de path critico
+![c](images/information_timming_min_frec.png)
+
+#### Visualizacion en el diseño
+![d](images/clock_worst_path_min_frec.png)
+
+#### **Frecuencia del clock de sistema**
 Para el sistema utilizamos un clock del clock wizard de IP-Core, que tiene una frecuencia de input de 100 MHz y alimenta al sistema con una frecuencia de salida de 69 MHz (periodo 14.49275 ns). Escogimos esta frecuencia de clock ya que según lo investigado (_https://support.xilinx.com/s/article/57304?language=en_US_) la forma de encontrar la maxima frecuencia posible es buscando un clock objetivo que en el reporte de timing de un WNS (_worst negative slack_) menor a 0. Una vez obtenido, en nuestro caso fue de 70 MHz, se realiza el siguiente calculo: $\frac{1}{T-WNS}$ con T = 14.286ns y WNS = -0.086ns. Esto nos da como resultado una frecuencia maxima de 69.579738 MHz. Luego, fuimos afinando hasta obtener el clock que nos de WNS, WHS y WPWS mayores a 0 y TNS, THS y TPWS iguales a 0 que según el manual _UltraFast Design Methodology Guide for Xilinx FPGAs and SoCs_ deben tener dichos valores. Este clock obtenido fue el de 69 MHz.
 
 ---
